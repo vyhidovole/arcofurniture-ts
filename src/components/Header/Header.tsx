@@ -11,7 +11,7 @@ import ModalCall from "@/components/ui/Modal/ModalCall"; // Импортируе
 import ModalEntry from "@/components/ui/Modal/ModalEntry";// Импортируем диалоговое окно
 import { useRouter } from 'next/router';
 import { Drawer } from "@/components/Drawer/Drawer";
-import '@/components/Header.css';
+import '@/components/Header/Header.module.css';
 import BurgerButton from "@/components/ui/BurgerButton/BurgerButton";
 import  BurgerMenu  from "@/components/ui/BurgerMenu/BurgerMenu";
 import SearchInput from "@/components/ui/Input/SearchInput";
@@ -106,7 +106,7 @@ const Header = () => {
   if (!router) {
     return null; // или можно вернуть загрузочный индикатор
   }
-  return (<div className="container flex justify-between pt-4">
+  return (<div className="headerContainer">
     <BurgerButton onClick={handleOpenBurger} />
     <BurgerMenu isOpen={isBurgerOpen} onClose={handleCloseBurger} titleBurger="меню" />
     {loading ? (
@@ -120,19 +120,19 @@ const Header = () => {
         priority={true}
       />
     )}
-    <div className="hidden lg:block">
+    <div className="address">
       {loading ? (
         <Skeleton height={20} width={200} />
       ) : (
         <p>ул.Московская 144 корп.-1</p>
       )}
 
-      <button className="text-red-500 underline" onClick={handleOpenModal}>
+      <button className="button-adress" onClick={handleOpenModal}>
         {loading ? <Skeleton width={100} height={20} /> : 'Схема проезда'}
       </button>
     </div>
     <SearchInput />
-    <div className="hidden lg:flex">
+    <div className="call-container">
       {loading ? (
         <Skeleton height={20} width={100} />
       ) : (
@@ -144,7 +144,7 @@ const Header = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 "
+            className="svg "
             aria-hidden="true"
           >
             <path
@@ -155,7 +155,7 @@ const Header = () => {
           </svg>
           <div>
             <h4 className="">8(961)5259191</h4>
-            <button className="border-red-500 border-2 text-red-500 rounded pl-2 pr-2 hover:bg-gray-200" onClick={openCallDialog}>
+            <button className="button-call" onClick={openCallDialog}>
               Заказать звонок
             </button>
 
@@ -164,11 +164,11 @@ const Header = () => {
       )}
 
     </div>
-    <div className="flex gap-5 ">
+    <div className="container-entryDialog ">
 
-      <button type="button" className="entry hidden lg:block" onClick={openEntryDialog}>
+      <button type="button" className="button-openEntryDialog" onClick={openEntryDialog}>
         {loading ? (
-          <div className="round-skeleton mr-2"></div>
+          <div className="round-skeleton"></div>
 
         ) : (
           <svg
@@ -178,7 +178,7 @@ const Header = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 "
+            className="svg "
             aria-hidden="true"
           >
             <path
@@ -192,9 +192,9 @@ const Header = () => {
 
       </button>
 
-      <Link href="FavoritePage" className="mt-1">
+      <Link href="FavoritePage" className="link-favoritePage">
         {loading ? (
-          <div className="round-skeleton mr-2"></div>
+          <div className="round-skeleton"></div>
 
         ) : (
           <svg
@@ -204,7 +204,7 @@ const Header = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 "
+            className="svg "
             aria-hidden="true"
           >
             <path
@@ -217,9 +217,9 @@ const Header = () => {
         <p className="underline-animation">{loading ? <Skeleton width={50} /> : "Избранное"}</p>
       </Link>
       <div>
-        <button type="button" className="basket relative mt-1" onClick={handleOpenDrower}>
+        <button type="button" className="button-basket" onClick={handleOpenDrower}>
           {loading ? (
-            <div className="round-skeleton mr-2"></div>
+            <div className="round-skeleton"></div>
 
           ) : (
             <svg
@@ -229,7 +229,7 @@ const Header = () => {
               stroke="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 "
+              className="svg "
               aria-hidden="true"
             >
               <path
@@ -240,7 +240,7 @@ const Header = () => {
             </svg>
           )}
           <p className="underline-animation ">{loading ? <Skeleton width={50} /> : "Корзина"}</p>
-          <span className="absolute top-0 right-5 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+          <span className="header-count">
             {count} {/* Отображаем количество товаров в корзине */}
           </span>
         </button>
