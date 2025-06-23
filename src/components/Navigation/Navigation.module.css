@@ -1,0 +1,123 @@
+
+.header {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow из Tailwind */
+  height: 4rem; /* h-16 — 16 * 0.25rem = 4rem */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Общий стиль для контейнера */
+.container {
+  display: flex; /* flex для расположения элементов по горизонтали */
+  justify-content: space-between; /* Распределение элементов по краям */
+}
+
+/* Стиль для навигационного контейнера */
+.nav {
+  display: flex; /* располагать элементы по горизонтали */
+  align-items: center; /* вертикальное выравнивание по центру */
+  gap: 1.25rem; /* промежуток между элементами (аналог gap-5) в Tailwind (5 * 0.25rem) */
+}
+
+/* Общие стили для ссылок */
+.nav-link {
+  cursor: pointer;
+  /* добавьте другие базовые стили, если нужны, например: */
+  font-weight: 500;
+  font-size: 1rem;
+  /* и переходы для анимации */
+  transition: color 0.3s, text-decoration 0.3s;
+}
+
+/* Стиль активной или выделенной ссылки */
+.text-sky-500 {
+  color: #0ea5e9; /* голубой оттенок Tailwind для sky-500 */
+}
+
+.text-gray-800 {
+  color: #1f2937; /* темно-серый Tailwind */
+}
+
+
+/* Стиль для underline-анимации */
+.underline-animation {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-animation::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%; /* стартовая ширина */
+  height: 2px;
+  background-color: #0ea5e9;
+  transform: scaleX(0);
+  transition: transform 0.3s ease, width 0.3s ease;
+  transform-origin: left;
+}
+
+
+/* Стиль для hover и активных состояний */
+.nav-link:hover .underline-animation::after,
+.nav-link.active .underline-animation::after {
+  width: 100%;
+  transform: scaleX(1);
+}
+/* Стиль для контейнера переключателя */
+.switch-container {
+  position: relative;
+  width: 4rem; /* 16 в Tailwind (w-16) равен 4rem */
+  height: 2rem; /* 8 в Tailwind (h-8) равен 2rem */
+}
+
+/* Скрытый чекбокс для переключения */
+.switch {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* Стиль метки, которая служит визуальной кнопкой переключения */
+.switch-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 9999px; /* полностью скругленный, как у переключателя */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Цвет фона при темной теме */
+.switch-label.bg-dark {
+  background-color: #2563eb; /* аналог bg-blue-600 */
+}
+
+/* Цвет фона при светлой теме */
+.switch-label.bg-light {
+  background-color: #d1d5db; /* аналог bg-gray-300 */
+}
+
+/* Стиль для кружка (ползунка) */
+.toggle-circle {
+  position: absolute;
+  top: 0.125rem; /* 1 подъем (одна четверть от 0.5rem) */
+  left: 0.125rem; /* 1 подъем */
+  width: 1.5rem; /* 6 в Tailwind (w-6) равен 1.5rem */
+  height: 1.5rem; /* 6 в Tailwind (h-6) равен 1.5rem */
+  background-color: #ffffff; /* Белый цвет */
+  border-radius: 9999px; /* полностью скругленный */
+  transition: transform 0.3s ease;
+}
+
+/* Перемещение кружка при тёмной теме (направо) */
+.toggle-circle.move {
+  transform: translateX(2rem); /* перенос на 8 в Tailwind (translate-x-8) */
+}
