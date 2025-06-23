@@ -1,0 +1,565 @@
+{
+    "Products":[
+    {
+       "id": "1",
+       "name": "Мори кровать КРМ 900.1",
+       "category": "Lounge",
+       "color":  ["#808080", "#e19a44", "#6c4925"], 
+       "price": "5017 руб",
+        "imgSrc":"/images/KPM.jpg"
+          
+    },
+    {
+        "id": "2",
+        "name": "Мори кровать КРМ 900.1",
+        "category": "Lounge",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/KPM.jpg"
+           
+     },
+     {
+        "id": "3",
+        "name": "Мори кровать КРМ 900.1",
+        "category": "Lounge",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/KPM.jpg"
+           
+     },
+     {
+        "id": "4",
+        "name": "Мори кровать КРМ 900.1",
+        "category": "Lounge",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/KPM.jpg"
+           
+     },
+     {
+        "id": "5",
+        "name": "Мори кровать КРМ 900.1",
+        "category": "Lounge",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/KPM.jpg"
+           
+     },
+     {
+        "id": "6",
+        "name": "Мори кровать КРМ 900.1",
+        "category": "Lounge",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/KPM.jpg"
+           
+     }
+],
+"CatalogueProducts":[
+    {
+        "id": "1",
+        "name": "кухни",
+        "imgSrc":"/images/catalog1.jpg"
+        
+    },
+    {
+        "id": "2",
+        "name": "гостиные",
+        "imgSrc":"/images/lucido.jpg"
+        
+    },
+    {
+        "id": "3",
+        "name": "спальни",
+        "imgSrc":"/images/catalog3.jpg"
+        
+    },
+    {
+        "id": "4",
+        "name": "прихожие",
+        "imgSrc":"/images/catalog4.jpg"
+        
+    },
+    {
+        "id": "5",
+        "name": "шкафы-купе",
+        "imgSrc":"/images/catalog5.jpg"
+        
+    },
+    {
+        "id": "6",
+        "name": "детские",
+        "imgSrc":"/images/catalog6.jpg"
+        
+    },
+    {
+        "id": "7",
+        "name": "диваны",
+        "imgSrc":"/images/catalog7.jpg"
+        
+    },
+    {
+        "id": "8",
+        "name": "столы и стулья",
+        "imgSrc":"/images/catalog8.jpg"
+        
+    }
+],
+"Kitchen":[
+    {
+       "id": "1",
+       "name": "Глечер",
+       "category": "кухни",
+       "color":  ["#808080", "#e19a44", "#6c4925"], 
+       "price": "5017 руб",
+        "imgSrc":"/images/catalog1.jpg"
+          
+    },
+    {
+        "id": "2",
+        "name": "Лондон",
+        "category": "кухни",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog1.jpg"
+           
+     },
+     {
+        "id": "3",
+        "name": "Амели",
+        "category": "кухни",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog1.jpg"
+           
+     },
+     {
+        "id": "4",
+        "name": "Глечер",
+        "category": "кухни",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog1.jpg"
+           
+     },
+     {
+        "id": "5",
+        "name": "Лондон",
+        "category": "кухни",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog1.jpg"
+           
+     },
+     {
+        "id": "6",
+        "name": "Амели",
+        "category": "кухни",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog1.jpg"
+           
+     }
+],
+"Drawing_room":[
+    {
+       "id": "1",
+       "name": "Lucido",
+       "category": "гостиная",
+       "color":  ["#808080", "#e19a44", "#6c4925"], 
+       "price": "5017 руб",
+        "imgSrc":"/images/lucido.jpg"
+          
+    },
+    {
+        "id": "2",
+        "name": "Лусидо",
+        "category": "гостиная",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/lucido.jpg"
+           
+     },
+     {
+        "id": "3",
+        "name": "Денвер",
+        "category": "гостиная",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/denever.png"
+           
+     },
+     {
+        "id": "4",
+        "name": "Denver",
+        "category": "гостиная",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/denever.png"
+           
+     },
+     {
+        "id": "5",
+        "name": "Lucido",
+        "category": "гостиная",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/lucido.jpg"
+           
+     },
+     {
+        "id": "6",
+        "name": "Денвер",
+        "category": "гостиная",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/denever.png"
+           
+     }
+],
+"Nursery":[
+    {
+       "id": "1",
+       "name": "Фиеста",
+       "category": "детская",
+       "color":  ["#808080", "#e19a44", "#6c4925"], 
+       "price": "5017 руб",
+        "imgSrc":"/images/catalog6.jpg"
+          
+    },
+    {
+        "id": "2",
+        "name": "Банни",
+        "category": "детская",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog6.jpg"
+           
+     },
+     {
+        "id": "3",
+        "name": "Мори",
+        "category": "детская",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog6.jpg"
+           
+     },
+     {
+        "id": "4",
+        "name": "Бланка",
+        "category": "детская",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog6.jpg"
+           
+     },
+     {
+        "id": "5",
+        "name": "Геометрия",
+        "category": "детская",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog6.jpg"
+           
+     },
+     {
+        "id": "6",
+        "name": "Колибри",
+        "category": "детская",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog6.jpg"
+           
+     }
+],
+"Couch":[
+    {
+       "id": "1",
+       "name": "Прима",
+       "category": "диван",
+       "color":  ["#808080", "#e19a44", "#6c4925"], 
+       "price": "5017 руб",
+        "imgSrc":"/images/catalog7.jpg"
+          
+    },
+    {
+        "id": "2",
+        "name": "Инфинити",
+        "category": "диван",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog7.jpg"
+           
+     },
+     {
+        "id": "3",
+        "name": "Инфинити Лайф",
+        "category": "диван",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog7.jpg"
+           
+     },
+     {
+        "id": "4",
+        "name": "Лазурит",
+        "category": "диван",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog7.jpg"
+           
+     },
+     {
+        "id": "5",
+        "name": "Скай",
+        "category": "диван",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog7.jpg"
+           
+     },
+     {
+        "id": "6",
+        "name": "Шанталь",
+        "category": "диван",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog7.jpg"
+           
+     }
+],
+"Bedroom":[
+    {
+       "id": "1",
+       "name": "Фиеста",
+       "category": "спальня",
+       "color":  ["#808080", "#e19a44", "#6c4925"], 
+       "price": "5017 руб",
+        "imgSrc":"/images/catalog3.jpg"
+          
+    },
+    {
+        "id": "2",
+        "name": "Версаль",
+        "category": "спальня",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog3.jpg"
+           
+     },
+     {
+        "id": "3",
+        "name": "Апполия",
+        "category": "спальня",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog3.jpg"
+           
+     },
+     {
+        "id": "4",
+        "name": "Стефания",
+        "category": "спальня",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog3.jpg"
+           
+     },
+     {
+        "id": "5",
+        "name": "Лайт",
+        "category": "спальня",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog3.jpg"
+           
+     },
+     {
+        "id": "6",
+        "name": "Гарда Prime",
+        "category": "спальня",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog3.jpg"
+           
+     }
+],
+"Hallway":[
+    {
+       "id": "1",
+       "name": "Джаз",
+       "category": "прихожая",
+       "color":  ["#808080", "#e19a44", "#6c4925"], 
+       "price": "5017 руб",
+        "imgSrc":"/images/catalog4.jpg"
+          
+    },
+    {
+        "id": "2",
+        "name": "Лофт",
+        "category": "прихожая",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog4.jpg"
+           
+     },
+     {
+        "id": "3",
+        "name": "Неаполь",
+        "category": "прихожая",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog4.jpg"
+           
+     },
+     {
+        "id": "4",
+        "name": "Норд",
+        "category": "прихожая",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog4.jpg"
+           
+     },
+     {
+        "id": "5",
+        "name": "Оливия",
+        "category": "прихожая",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog4.jpg"
+           
+     },
+     {
+        "id": "6",
+        "name": "Санти",
+        "category": "прихожая",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog4.jpg"
+           
+     }
+],
+"Cupboard":[
+    {
+       "id": "1",
+       "name": "Шкаф-купе Экспенс трио 1800 ",
+       "category": "шкаф-купе",
+       "color":  ["#808080", "#e19a44", "#6c4925"], 
+       "price": "5017 руб",
+        "imgSrc":"/images/catalog5.jpg"
+          
+    },
+    {
+        "id": "2",
+        "name": "Шкаф-купе Экспенс трио 2100",
+        "category": "шкаф-купе",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog5.jpg"
+           
+     },
+     {
+        "id": "3",
+        "name": "Шкаф-купе Экспенс трио 2400 ",
+        "category": "шкаф-купе",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog5.jpg"
+           
+     },
+     {
+        "id": "4",
+        "name": "Шкаф-купе Элемент Дуо 1200",
+        "category": "шкаф-купе",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog5.jpg"
+           
+     },
+     {
+        "id": "5",
+        "name": " Дуо фото Калейдоскоп 1200",
+        "category": "шкаф-купе",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog5.jpg"
+           
+     },
+     {
+        "id": "6",
+        "name": " Дуо фото Квадраты 1400",
+        "category": "шкаф-купе",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog5.jpg"
+           
+     }
+],
+
+"Work":[
+    {
+       "id": "1",
+       "imgSrc":"/images/image_inst.png"
+          
+    } 
+],
+"Tables_and_chairs":[
+    {
+       "id": "1",
+       "name": "Lucido",
+       "category": "стулья",
+       "color":  ["#808080", "#e19a44", "#6c4925"], 
+       "price": "5017 руб",
+        "imgSrc":"/images/catalog8.jpg"
+          
+    },
+    {
+        "id": "2",
+        "name": "Лусидо",
+        "category": "стулья",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog8.jpg"
+           
+     },
+     {
+        "id": "3",
+        "name": "Денвер",
+        "category": "стулья",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog8.jpg"
+           
+     },
+     {
+        "id": "4",
+        "name": "Denver",
+        "category": "стулья",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog8.jpg"
+           
+     },
+     {
+        "id": "5",
+        "name": "Lucido",
+        "category": "стулья",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog8.jpg"
+           
+     },
+     {
+        "id": "6",
+        "name": "Денвер",
+        "category": "стулья",
+         "color": ["#808080", "#e19a44", "#6c4925"],
+         "price": "5017 руб",
+         "imgSrc":"/images/catalog8.jpg"
+           
+     }
+]
+
+}
