@@ -1,0 +1,11 @@
+.burger-button {
+  display: block;
+  padding: 1rem;
+}
+
+/* Скрыть на больших экранах (min-width: 1024px) */
+@media (min-width: 1024px) {
+  .burger-button {
+    display: none;
+  }
+}
