@@ -1,0 +1,87 @@
+.my-button {
+  border-radius: 0.375rem; /* rounded */
+  display: inline-flex; /* inline-flex */
+  align-items: center; /* items-center */
+  justify-content: center; /* justify-center */
+  padding: 0.5rem 0.5rem; /* py-2 px-2 */
+  /* Добавьте остальные стили по необходимости */
+}
+
+.primary {
+  background-color: #1e293b; /* slate-900 */
+  color: white;
+}
+.primary:hover {
+  background-color: #374151; /* slate-700 */
+}
+.dark .primary {
+  background-color: #f9fafb; /* slate-50 */
+  color: #0f172a; /* slate-900 */
+}
+
+/* Аналогично для других вариантов */
+.secondary {
+  background-color: transparent;
+  border: 1px solid #e5e7eb; /* slate-200 */
+}
+.secondary:hover {
+  background-color: #f3f4f6; /* slate-100 */
+}
+.dark .secondary {
+  border-color: #374151; /* slate-700 */
+  color: #f9fafb; /* slate-100 */
+}
+
+/* Для negative */
+.negative {
+  background-color: #ef4444; /* red-500 */
+}
+.negative:hover {
+  background-color: #dc2626; /* red-600 */
+}
+.text-white {
+  color: #ffffff;
+}
+
+/* Для ghost */
+.ghost {
+  background-color: transparent;
+}
+.ghost:hover {
+  background-color: #f3f4f6; /* slate-100 */
+}
+.dark .ghost {
+  color: #9ca3af; /* slate-500 */
+}
+.dark .hover\:bg-slate-800:hover {
+  background-color: #1e3a8a; /* slate-800 */
+}
+
+/* Для link */
+.link {
+  background-color: transparent;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: #111827; /* slate-900 */
+}
+.dark .link {
+  color: #f9fafb; /* slate-100 */
+}
+
+.biLoaderAlt {
+  animation: spin 1s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ml-2 {
+  margin-left: 0.5rem; /* что соответствует 8px, если базовый размер 16px */
+}
