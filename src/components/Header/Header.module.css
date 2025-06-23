@@ -1,0 +1,130 @@
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    /*(16px)*/
+}
+
+.address {
+    display: none;
+}
+
+@media(min-with:1024) {
+    .address {
+        display: block;
+    }
+
+}
+
+.button-adress {
+    color: #ef4444;
+    text-decoration: underline;
+
+}
+
+.call-container {
+    display: none;
+}
+
+@media (min-with:1024) {
+    .call-container {
+        display: flex;
+    }
+}
+
+.svg {
+    height: 1.25rem;
+    /*20px*/
+    width: 1.25rem;
+}
+
+.button-call {
+    border-color: #ef4444;
+    border-width: 2px;
+    border-style: solid;
+    color: #ef4444;
+    border-radius: 0.25rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    transition: background-color 0.2s;
+
+}
+
+.button-call:hover {
+    background-color: #e5e7eb;
+}
+
+.container-entryDialog {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.button-openEntryDialog {
+    display: none;
+}
+
+@media (min-width:1024) {
+    .button-openEntryDialog {
+        display: block;
+    }
+}
+
+.round-skeleton {
+    margin-right: 0.5rem;
+}
+
+.underline-animation {
+    position: relative;
+    cursor: pointer;
+    /* чтобы показать, что элемент интерактивный */
+    display: inline-block;
+    /* чтобы псевдоэлемент позиционировался относительно текста */
+}
+
+.underline-animation::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    /* толщина линии */
+    width: 0;
+    background-color: currentColor;
+    /* цвет линии совпадает с цветом текста */
+    transition: width 0.3s ease;
+}
+
+.underline-animation:hover::after {
+    width: 100%;
+    /* при наведении линия расширяется на всю ширину текста */
+}
+
+
+
+
+.link-favoritePage {
+    margin-top: 0.25rem;
+}
+
+
+
+.button-basket {
+    position: relative;
+    margin-top: 0.25rem;
+}
+
+.header-count {
+    position: absolute;
+    top: 0;
+    right: 1.25rem;
+    background-color: #ef4444;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    width: 1.25rem;
+    height: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
