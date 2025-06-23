@@ -1,0 +1,47 @@
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background-color: black;
+    opacity: 50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.modal-frame {
+    background-color: rgba(251, 244, 244, 0.967);
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+    width: 75%;
+    height: 83.3333%;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom:16px;
+
+}
+
+.modal-title {
+   font-size: 1.125rem;  
+  font-weight: 700;     
+}
+.modal-button {
+    color: #9CA3AF; /* серый цвет text-gray-600 */ 
+}
+.modal-button:hover {
+  color: #111827; /* почти черный, hover:text-gray-900 */
+}
+.modal-button:focus {
+  outline: none; /* исчезновение рамки при фокусе */
+}
+
+.modal-container {
+     display: flex;
+    justify-content: space-between;
+}
