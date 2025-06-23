@@ -1,0 +1,35 @@
+.product-container {
+  display: flex;
+  margin-bottom: 16px; /* Отступ снизу */
+}
+
+.product-image {
+  margin-right: 16px; /* Отступ справа от изображения */
+  object-fit: contain; /* Сохраняем пропорции изображения */
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column; /* Вертикальное расположение информации */
+}
+
+.product-name {
+  font-size: 14px;
+  font-weight: 600; /* Жирный шрифт */
+}
+
+.product-category,
+.product-price,
+.product-total {
+  font-size: 12px; /* Размер шрифта для остальных текстов */
+}
+
+.product-colors {
+  display: inline-flex; /* Горизонтальное расположение цветовых образцов */
+}
+
+.color-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 10%; 
+}
