@@ -1,0 +1,90 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.burger-menu {
+  position: absolute;
+  left: 0;
+
+  max-height: 100%;
+  height: 100%;
+  width: 24rem; /* 96 * 0.25rem = 24rem */
+
+  padding: 2rem; /* 8 * 0.25rem = 2rem */
+
+  background-color: #D1D5DB; /* Tailwind bg-gray-300 */
+
+  transition-property: transform;
+  transition-duration: 300ms;
+  transition-timing-function: ease-in-out;
+
+  overflow-y: auto;
+}
+.header-burger {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}
+
+.title-burger {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.close-burger {
+  color: #4B5563; /* gray-600 */
+}
+
+.close-burger:hover {
+  color: #1F2937; /* gray-800 */
+}
+
+.burger-container {
+    flex-grow: 1;
+}
+
+.burger-footer {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+}
+.address-button {
+  color: #EF4444; /* red-500 */
+  text-decoration: underline;
+}
+
+.phone-button {
+  border-color: #EF4444;      /* red-500 */
+  border-width: 2px;
+  border-style: solid;
+  color: #EF4444;             /* red-500 */
+  border-radius: 0.25rem;     /* 4px */
+  padding-left: 0.5rem;       /* 8px */
+  padding-right: 0.5rem;      /* 8px */
+  transition: background-color 0.2s; /* плавный переход (опционально) */
+}
+
+.phone-button:hover {
+  background-color: #E5E7EB;  /* gray-200 */
+}
+
+.li {
+    margin-top: 0.5rem;
+}
+
+.button-entry {
+    margin-top: 1rem;
+}
+
+
+
