@@ -3,15 +3,15 @@ import { useCart } from '@/context/CartContext';
 import { useTheme } from '@/context/ThemeContext';
 import Image from "next/image";
 import Link from "next/link";
-import { useLoading } from '@/context/LoadingContext'; // Импортируем контекст загрузки
-import Skeleton from 'react-loading-skeleton'; // Импортируем скелетон
-import 'react-loading-skeleton/dist/skeleton.css'; // Импортируем стили для скелетона
-import Modal from "@/components/ui/Modal/Modal"; // Импортируем модальное окно
-import ModalCall from "@/components/ui/Modal/ModalCall"; // Импортируем модальное окно
-import ModalEntry from "@/components/ui/Modal/ModalEntry";// Импортируем диалоговое окно
+import { useLoading } from '@/context/LoadingContext'; 
+import Skeleton from 'react-loading-skeleton'; 
+import 'react-loading-skeleton/dist/skeleton.css'; 
+import Modal from "@/components/ui/Modal/Modal"; 
+import ModalCall from "@/components/ui/ModalCall/ModalCall"; 
+import ModalEntry from "../../components/ui/ModalEntry/ModalEntry";
 import { useRouter } from 'next/router';
 import { Drawer } from "@/components/Drawer/Drawer";
-import '@/components/Header/Header.module.css';
+import styles from './Header.module.css';
 import BurgerButton from "@/components/ui/BurgerButton/BurgerButton";
 import  BurgerMenu  from "@/components/ui/BurgerMenu/BurgerMenu";
 import SearchInput from "@/components/ui/Input/SearchInput";
@@ -106,7 +106,7 @@ const Header = () => {
   if (!router) {
     return null; // или можно вернуть загрузочный индикатор
   }
-  return (<div className="headerContainer">
+  return (<div className={styles["headerContainer"]}>
     <BurgerButton onClick={handleOpenBurger} />
     <BurgerMenu isOpen={isBurgerOpen} onClose={handleCloseBurger} titleBurger="меню" />
     {loading ? (
@@ -120,19 +120,19 @@ const Header = () => {
         priority={true}
       />
     )}
-    <div className="address">
+    <div className={styles["address"]}>
       {loading ? (
         <Skeleton height={20} width={200} />
       ) : (
         <p>ул.Московская 144 корп.-1</p>
       )}
 
-      <button className="button-adress" onClick={handleOpenModal}>
+      <button className={styles["button-adress"]} onClick={handleOpenModal}>
         {loading ? <Skeleton width={100} height={20} /> : 'Схема проезда'}
       </button>
     </div>
     <SearchInput />
-    <div className="call-container">
+    <div className={styles["call-container"]}>
       {loading ? (
         <Skeleton height={20} width={100} />
       ) : (
@@ -144,7 +144,7 @@ const Header = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className="svg "
+            className={styles["svg"]}
             aria-hidden="true"
           >
             <path
@@ -155,7 +155,7 @@ const Header = () => {
           </svg>
           <div>
             <h4 className="">8(961)5259191</h4>
-            <button className="button-call" onClick={openCallDialog}>
+            <button className={styles["button-call"]} onClick={openCallDialog}>
               Заказать звонок
             </button>
 
@@ -164,11 +164,11 @@ const Header = () => {
       )}
 
     </div>
-    <div className="container-entryDialog ">
+    <div className={styles["container-entryDialog"]}>
 
-      <button type="button" className="button-openEntryDialog" onClick={openEntryDialog}>
+      <button type="button" className={styles["button-openEntryDialog"]} onClick={openEntryDialog}>
         {loading ? (
-          <div className="round-skeleton"></div>
+          <div className={styles["round-skeleton"]}></div>
 
         ) : (
           <svg
@@ -178,7 +178,7 @@ const Header = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className="svg "
+            className={styles.svg }
             aria-hidden="true"
           >
             <path
@@ -188,13 +188,13 @@ const Header = () => {
             ></path>
           </svg>
         )}
-        <p className="underline-animation">{loading ? <Skeleton width={50} /> : "Войти"}</p>
+        <p className={styles["underline-animation"]}>{loading ? <Skeleton width={50} /> : "Войти"}</p>
 
       </button>
 
-      <Link href="FavoritePage" className="link-favoritePage">
+      <Link href="FavoritePage" className={styles["link-favoritePage"]}>
         {loading ? (
-          <div className="round-skeleton"></div>
+          <div className={styles["round-skeleton"]}></div>
 
         ) : (
           <svg
@@ -204,7 +204,7 @@ const Header = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className="svg "
+            className={styles.svg} 
             aria-hidden="true"
           >
             <path
@@ -214,12 +214,12 @@ const Header = () => {
             ></path>
           </svg>
         )}
-        <p className="underline-animation">{loading ? <Skeleton width={50} /> : "Избранное"}</p>
+        <p className={styles["underline-animation"]}>{loading ? <Skeleton width={50} /> : "Избранное"}</p>
       </Link>
       <div>
-        <button type="button" className="button-basket" onClick={handleOpenDrower}>
+        <button type="button" className={styles["button-basket"]} onClick={handleOpenDrower}>
           {loading ? (
-            <div className="round-skeleton"></div>
+            <div className={styles["round-skeleton"]}></div>
 
           ) : (
             <svg
@@ -229,7 +229,7 @@ const Header = () => {
               stroke="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
-              className="svg "
+              className= {styles.svg} 
               aria-hidden="true"
             >
               <path
@@ -239,8 +239,8 @@ const Header = () => {
               ></path>
             </svg>
           )}
-          <p className="underline-animation ">{loading ? <Skeleton width={50} /> : "Корзина"}</p>
-          <span className="header-count">
+          <p className={styles["underline-animation"]}>{loading ? <Skeleton width={50} /> : "Корзина"}</p>
+          <span className={styles["header-count"]}>
             {count} {/* Отображаем количество товаров в корзине */}
           </span>
         </button>

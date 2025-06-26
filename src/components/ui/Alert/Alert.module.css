@@ -1,0 +1,62 @@
+.alert {
+  position: fixed;
+  top: 1rem; /* 16px */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24rem; /* 384px */
+  padding: 0.5rem 1rem; /* 8px 16px */
+  border-radius: 0.375rem; /* 6px */
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 50;
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.alert-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.alert-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem; /* 8px */
+  flex-shrink: 0;
+}
+
+.alert-content {
+  margin-left: 0.5rem;
+  flex: 1;
+}
+
+/* Варианты цветов */
+
+.alert-neutral {
+  background-color: #f3f4f6; /* светло-серый */
+  color: #1f2937; /* темно-серый */
+}
+
+.alert-info {
+  background-color: #dbeafe; /* светло-синий */
+  color: #1e40af; /* синий */
+}
+
+.alert-positive {
+  background-color: #d1fae5; /* светло-зеленый */
+  color: #065f46; /* темно-зеленый */
+}
+
+.alert-notice {
+  background-color: #fef3c7; /* светло-желтый */
+  color: #92400e; /* темно-желтый */
+}
+
+.alert-negative {
+  background-color: #fee2e2; /* светло-красный */
+  color: #991b1b; /* темно-красный */
+}

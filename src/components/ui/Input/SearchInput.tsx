@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import Link from "next/link";
-import Skeleton from 'react-loading-skeleton'; // Импортируем Skeleton для индикации загрузки
-import 'react-loading-skeleton/dist/skeleton.css'; // Импортируем стили для Skeleton
-import { useLoading } from '@/context/LoadingContext'; // Импорт кастомного хука
+import Skeleton from 'react-loading-skeleton'; 
+import 'react-loading-skeleton/dist/skeleton.css'; 
+import { useLoading } from '@/context/LoadingContext'; 
+import styles from "./SearchInput.module.css"
 
 /**
  * Компонент поля поиска для каталога товаров.
@@ -47,7 +48,7 @@ const SearchInput = () => {
     );
 
     return (
-        <div className="searchInput-container"> {/* Обёртка для позиционирования */}
+        <div className={styles["searchInput-container"]}> {/* Обёртка для позиционирования */}
             {loading ? (
                 <Skeleton count={1} height={40} width="100%" /> 
             ) : (
@@ -57,20 +58,20 @@ const SearchInput = () => {
                         value={searchTerm} // Значение поля ввода связано с состоянием
                         onChange={handleChange} // Устанавливаем обработчик изменения
                         placeholder="Поиск по каталогу"
-                        className="searchInput"
+                        className={styles["searchInput"]}
                     />
                     {searchTerm && ( // Показываем список только если есть текст в поле поиска
-                        <ul className="searchInput-ul">
+                        <ul className={styles["searchInput-ul"]}>
                             {filteredItems.length > 0 ? ( // Проверяем, есть ли отфильтрованные элементы
                                 filteredItems.map((item, index) => ( // Проходим по отфильтрованным элементам
-                                    <li key={index} className="searchInput-result">
-                                        <Link href={item.path} className="searchInput-resultLink"> {/* Ссылка на страницу по пути */}
+                                    <li key={index} className={styles["searchInput-result"]}>
+                                        <Link href={item.path} className={styles["searchInput-resultLink"]}> {/* Ссылка на страницу по пути */}
                                             {item.name} {/* Название элемента */}
                                         </Link>
                                     </li>
                                 ))
                             ) : (
-                                <li className="searchInput-noresult">Ничего не найдено</li>
+                                <li className={styles["searchInput-noresult"]}>Ничего не найдено</li>
                             )}
                         </ul>
                     )}

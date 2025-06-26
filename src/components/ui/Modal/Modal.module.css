@@ -1,47 +1,68 @@
 .modal-bg {
-    position: fixed;
-    inset: 0;
-    background-color: black;
-    opacity: 50;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
+  position: fixed;
+  inset: 0;
+  background-color: black;
+  opacity: 0.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
 }
 
 .modal-frame {
-    background-color: rgba(251, 244, 244, 0.967);
-    padding: 1rem;
-    border-radius: 4px;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
-    width: 75%;
-    height: 83.3333%;
-    flex-direction: column;
+  background-color: rgba(251, 244, 244, 0.967);
+  padding: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+  width: 75%;
+  height: 83.3333%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom:16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 
 }
 
 .modal-title {
-   font-size: 1.125rem;  
-  font-weight: 700;     
+  font-size: 1.125rem;
+  font-weight: 700;
 }
+
 .modal-button {
-    color: #9CA3AF; /* серый цвет text-gray-600 */ 
+  color: #9CA3AF;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
+
 .modal-button:hover {
-  color: #111827; /* почти черный, hover:text-gray-900 */
+  color: #111827;
+  /* почти черный, hover:text-gray-900 */
 }
+
 .modal-button:focus {
-  outline: none; /* исчезновение рамки при фокусе */
+  outline: none;
+  /* исчезновение рамки при фокусе */
 }
 
 .modal-container {
-     display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  gap: 1rem;
+}
+
+.dark-mode {
+  background-color: #1f2937;
+  color: aqua;
+}
+.light-mode {
+   background-color: #ffffff; 
+   color: black;
 }

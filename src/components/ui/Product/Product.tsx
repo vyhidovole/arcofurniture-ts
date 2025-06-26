@@ -5,22 +5,12 @@ import catalogueStore from "@/store/CatalogueStore";
 import Image from "next/image"; 
 import { useCart } from '@/context/CartContext'; 
 import { ProductItem } from '@/types/types';
+import styles from './Product.module.css'
 
 export interface ProductProps {
   item: ProductItem;
 }
-// Определяем интерфейс для типа продукта
-// interface ProductProps {
-//   item: {
-//     id: string;
-//     name: string;
-//     category: string;
-//     color: string | string[];
-//     price: string;
-//     imgSrc: string;
-//     quantity: number;
-//   };
-// }
+
 
 const Product: React.FC<ProductProps> = observer(({ item }) => {
   const { addToCart, removeFromCart, deleteProduct } = useCart(); // Используем контекст
@@ -53,46 +43,46 @@ const Product: React.FC<ProductProps> = observer(({ item }) => {
 
 
   return (
-    <div className="product-container"> {/* Основной контейнер */}
-      <Image width="100" src={imgSrc} alt={name} className="product-image" /> {/* Изображение */}
-      <div className="product-info"> {/* Информация о продукте */}
-        <h2 className="product-name">{name}</h2>
-        <p className="product-category">Категория: {category}</p>
-        <div className='product-colors'>
+    <div className={styles["product-container"]}> {/* Основной контейнер */}
+      <Image width="100" src={imgSrc} alt={name} className={styles["product-image"]} /> {/* Изображение */}
+      <div className={styles["product-info"]}> {/* Информация о продукте */}
+        <h2 className={styles["product-name"]}>{name}</h2>
+        <p className={styles["product-category"]}>Категория: {category}</p>
+        <div className={styles['product-colors']}>
           {Array.isArray(color) ? (
             color.map((c, index) => (
               <div
                 key={index}
-                className="color-swatch"
+                className={styles["color-swatch"]}
                 style={{ backgroundColor: c }}
               ></div>
             ))
           ) : (
             <div
-              className="color-swatch"
+              className={styles["color-swatch"]}
               style={{ backgroundColor: color }}
             ></div>
           )}
         </div>
-        <p className="product-price">Цена: {numericPrice.toFixed(2)}</p>
+        <p className={styles["product-price"]}>Цена: {numericPrice.toFixed(2)}</p>
         <p className="product-total">Всего: {total}</p>
       </div>
-      <div className="product-actions"> {/* Контейнер для кнопок */}
-        <div className="product-buttons"> {/* Flex для кнопок увеличения/уменьшения */}
+      <div className={styles["product-actions"]}> {/* Контейнер для кнопок */}
+        <div className={styles["product-buttons"]}> {/* Flex для кнопок увеличения/уменьшения */}
           <button
-            className="button-decrement"
+            className={styles["product-sub"]}
             onClick={handleDecrement}
             disabled={quantity === 1}
           >
             -
           </button>
-          <h3 className="product-count">{quantity}</h3> {/* Счетчик */}
-          <button className="button-increment" onClick={handleIncrement}>
+          <h3 className={styles["product-count"]}>{quantity}</h3> {/* Счетчик */}
+          <button className={styles["product-add"]} onClick={handleIncrement}>
             +
           </button>
         </div>
         <button 
-          className="button-delete"
+          className={styles["button-delete"]}
           onClick={handleDeleteProduct}
         >
           <VscTrash />

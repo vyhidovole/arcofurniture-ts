@@ -4,7 +4,7 @@ import CustomSlider2 from '@/components/ui/Slider/CustomSlider2';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import './actions.css'; // Импорт CSS стилей
+import styles from'./action.module.css'; // Импорт CSS стилей
 
 // Типизация одного продукта
 interface Product {
@@ -47,15 +47,15 @@ const Actions: React.FC = () => {
   return (
     <>
       {loading ? (
-        <div className="actions-skeleton-wrapper">
-          <Skeleton height={60} width={160} className="actions-skeleton-header" />
+        <div className={styles["actions-skeleton-wrapper"]}>
+          <Skeleton height={60} width={160} className={styles["actions-skeleton-header"]} />
           <Skeleton height={200} count={3} />
         </div>
       ) : (
         <>
-          <div className="actions-header">
-            <CiGrid41 className="actions-icon" />
-            <h2 className="actions-title">Акции</h2>
+          <div className={styles["actions-header"]}>
+            <CiGrid41 className={styles["actions-icon"]} />
+            <h2 className={styles["actions-title"]}>Акции</h2>
           </div>
           <CustomSlider2 data={data} loading={loading} />
         </>

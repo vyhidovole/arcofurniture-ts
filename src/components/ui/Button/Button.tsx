@@ -42,7 +42,7 @@ const Button: React.FC<ButtonProps>=({
         type = {type}
         >
             {isLoading?(
-                <BiLoaderAlt className="biLoaderAlt"/>
+                <BiLoaderAlt className={styles["biLoaderAlt"]}/>
             ):(
                 <>
                 {icon}

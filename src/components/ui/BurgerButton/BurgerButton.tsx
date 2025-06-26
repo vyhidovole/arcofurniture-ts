@@ -1,5 +1,6 @@
 import React from "react";
 import { CiMenuBurger } from "react-icons/ci"
+import styles from "./BurgerButton.module.css";
 /**
  * Компонент кнопки бургера для мобильного меню.
  *
@@ -25,7 +26,7 @@ const BurgerButton:React.FC<BurgerButtonProps> = ({ onClick }) => {
 
   return (
 
-    <button className="burger-button" onClick={onClick}>
+    <button className={styles["burger-button"]} onClick={onClick}>
       <CiMenuBurger />
       <p>Меню</p>
     </button>

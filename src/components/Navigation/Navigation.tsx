@@ -4,27 +4,23 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useLoading } from '@/context/LoadingContext';
 import { useTheme } from '@/context/ThemeContext';
-import styles from '@/components/Navigation/Navigation.module.css';
-// Типизация пунктов меню
+import styles from './Navigation.module.css';
+
 type NavItem = {
   name: string;
   path: string;
 };
 
-// Массив пунктов меню
 const navItems: NavItem[] = [
   { name: 'Главная', path: '/' },
-  { name: 'Акции', path: '/Actions' },
-  { name: 'Сборка', path: '/Assembling' },
-  { name: 'Оплата', path: '/Payment' },
-  { name: 'Доставка', path: '/Delivery' },
-  { name: 'Наши работы', path: '/Work' },
-  { name: 'Контакты', path: '/Contacts' },
+  { name: 'Акции', path: '/actions' },
+  { name: 'Сборка', path: '/assembling' },
+  { name: 'Оплата', path: '/payment' },
+  { name: 'Доставка', path: '/delivery' },
+  { name: 'Наши работы', path: '/work' },
+  { name: 'Контакты', path: '/contacts' },
 ];
 
-/**
- * Компонент Navigation отображает навигационное меню.
- */
 const Navigation: React.FC = () => {
   const { isDarkMode, toggleTheme } = useTheme();
   const { loading, setLoading } = useLoading();
@@ -47,39 +43,32 @@ const Navigation: React.FC = () => {
       });
       setActiveLink(link);
     }
-    console.log(activeLink);
   };
 
   return (
-    <header className={`header ${isDarkMode ? 'bg-dark' : 'bg-light'}`}>
+    <header className={`${styles.header} ${isDarkMode ? styles.bgDark : styles.bgLight}`}>
       <div className={styles.container}>
         {/* Левая часть меню */}
         <nav className={styles.nav}>
           {loading ? (
             Array(5)
               .fill(null)
-              .map((_, index) => (
-                <Skeleton key={index} width={100} height={20} />
-              ))
+              .map((_, index) => <Skeleton key={index} width={100} height={20} />)
           ) : (
-            navItems.slice(0, 5).map((item) => (
-              <a onClick={() => onClickHandler(item.name, item.path)} // передаем путь
-                className={`nav-link  ${item.name === activeLink ? 'text-sky-500 underline-animation' : 'text-gray-800'
-                  }`}
-                style={{
-                  color: item.name === activeLink
-                    ? (isDarkMode ? '#89cdd3' : '#0ea5e9')
-                    : (isDarkMode ? '#99a0a3' : '#1f2937'),
-                  cursor: 'pointer',
-                  fontWeight: 500,
-                  fontSize: '1rem',
-                }}
-
-                key={item.path}
-              >
-                {item.name}
-              </a>
-            ))
+            navItems.slice(0, 5).map((item) => {
+              const isActive = item.name === activeLink;
+              return (
+                <a
+                  key={item.path}
+                  onClick={() => onClickHandler(item.name, item.path)}
+                  className={`${styles.navLink} ${styles.relative} ${styles.cursorPointer} ${styles.underlineAnimation} ${isActive ? `${styles.textSky500} ${styles.active}` : styles.textGray800
+                    }`}
+                  tabIndex={0}
+                >
+                  {item.name}
+                </a>
+              );
+            })
           )}
         </nav>
 
@@ -88,89 +77,40 @@ const Navigation: React.FC = () => {
           {loading ? (
             Array(2)
               .fill(null)
-              .map((_, index) => (
-                <Skeleton key={index} width={80} height={20} />
-              ))
+              .map((_, index) => <Skeleton key={index} width={80} height={20} />)
           ) : (
-            navItems.slice(5).map((item) => (
-              // <a
-              // className="nav-link underline-animation"
-              //   key={item.path}
-              //   onClick={() => onClickHandler(item.name, item.path)}
-              //   style={{
-              //     ...(item.name === activeLink ? { color: '#0ea5e9' } : { color: '#1f2937' }),
-              //     cursor: 'pointer',
-              //     fontWeight: 500,
-              //     fontSize: '1rem',
-              //     ...(isDarkMode ? { color: '#99a0a3' } : {}),
-              //     // Добавьте другие стили по необходимости
-              //   }}
-              // >
-              //   {item.name}
-              // </a>
-              <a onClick={() => onClickHandler(item.name, item.path)}
-                className={`nav-link relative cursor-pointer ${item.name === activeLink ? 'text-sky-500 underline-animation' : 'text-gray-800'
-                  }`}
-                key={item.path}
-                style={{
-                  color: item.name === activeLink ? '#0ea5e9' : '#1f2937',
-                  cursor: 'pointer',
-                  fontWeight: 500,
-                  fontSize: '1rem',
-                  ...(isDarkMode ? { color: '#99a0a3' } : {}),
-                }}
-              >
-                {item.name}
-              </a>
-            ))
+            navItems.slice(5).map((item) => {
+              const isActive = item.name === activeLink;
+              return (
+                <a
+                  key={item.path}
+                  onClick={() => onClickHandler(item.name, item.path)}
+                  className={`${styles.navLink} ${styles.relative} ${styles.cursorPointer} ${styles.underlineAnimation} ${isActive ? `${styles.textSky500} ${styles.active}` : styles.textGray800
+                    }`}
+                  tabIndex={0}
+                >
+                  {item.name}
+                </a>
+              );
+            })
           )}
 
           {/* Переключатель темы */}
-          <fieldset style={{ position: 'relative', width: '4rem', height: '2rem', border: 'transparent' }}>
-            <input type="checkbox"
-              style={{
-                opacity: 0,
-                width: 0,
-                height: 0,
-                position: 'absolute',
-                overflow: 'hidden',
-                clip: 'rect(0, 0, 0, 0)',
-              }}
+          <fieldset className={styles.themeToggleFieldset}>
+            <input
+              type="checkbox"
               id="theme-toggle"
               checked={isDarkMode}
               onChange={toggleTheme}
+              className={styles.themeToggleInput}
+              aria-label="Переключить тему"
             />
-            <label
-              htmlFor="theme-toggle"
-              style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-                borderRadius: '9999px',
-                cursor: 'pointer',
-                backgroundColor: isDarkMode ? '#2563eb' : '#d1d5db',
-                transition: 'background-color 0.3s ease',
-              }}
-            >
-              <span style={{
-                position: 'absolute',
-                top: '0.125rem',
-                left: '0.125rem',
-                width: '1.5rem',
-                height: '1.5rem',
-                backgroundColor: '#ffffff',
-                borderRadius: '9999px',
-                transition: 'transform 0.3s ease',
-                transform: isDarkMode ? 'translateX(2rem)' : 'none',
-              }}
-              />
+            <label htmlFor="theme-toggle" className={styles.themeToggleLabel}>
+              <span className={isDarkMode ? styles.toggleThumbDark : styles.toggleThumbLight} />
             </label>
           </fieldset>
         </nav>
       </div>
-
     </header>
   );
 };

@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { LiaTimesSolid } from "react-icons/lia"
-import Modal from "@/components/ui/Modal/Modal"; // Импортируем модальное окно
-import ModalCall from "@/components/ui/Modal/ModalCall"; // Импортируем модальное окно
-import ModalEntry from "@/components/ui/Modal/ModalEntry";// Импортируем диалоговое окно
+import Modal from "@/components/ui/Modal/Modal"; 
+import ModalCall from "@/components/ui/ModalCall/ModalCall";
+import ModalEntry from "@/components/ui/ModalEntry/ModalEntry";
+import styles from "./BurgerMenu.module.css"
 
 
 interface BurgerMenuProps {
@@ -88,21 +89,21 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose, titleBurger,is
         <>
             {isOpen &&
                 createPortal(
-                    <div className="modal-overlay">
+                    <div className={styles["modal-overlay"]}>
                         <aside
                             ref={burgerRef}
-                            className={`burger-menu`}
+                            className={styles[`burger-menu`]}
                         >
-                            <header className="header-burger">
-                                <h2 className="title-burger">{titleBurger}</h2>
+                            <header className={styles["header-burger"]}>
+                                <h2 className={styles["title-burger"]}>{titleBurger}</h2>
                                 <button
                                     onClick={closeBurger}
-                                    className="close-burger"
+                                    className={styles["close-burger"]}
                                 >
                                     <LiaTimesSolid />
                                 </button>
                             </header>
-                            <main className="flex-grow" >
+                            <main className={styles["burger-container"]} >
                                 <ul>
                                     <Link href="/kitchen" passHref> <li>Кухни</li></Link>
                                     <Link href="/bedroom" passHref> <li>Спальни</li></Link>
@@ -113,26 +114,26 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose, titleBurger,is
                                     <Link href="/cupboard" passHref><li>Шкафы-купе</li></Link>
                                 </ul>
                             </main>
-                            <footer className="burger-footer">
+                            <footer className={styles["burger-footer"]}>
                                 <ul>
                                     <li>
                                         <div>
                                             <p>ул.Московская 144 корп.-1</p>
-                                            <button className="text-red-500 underline" onClick={handleOpenModal}>
+                                            <button className={styles["address-button "] }onClick={handleOpenModal}>
                                                 Схема проезда
                                             </button>
                                         </div>
                                     </li>
-                                    <li className="mt-4">
-                                        <div className="flex">
+                                    <li className={styles["li-callButton"]}>
+                                        <div className={styles["callButton-container"]}>
                                             <h4 className="">8(961)5259191</h4>
-                                            <button className="phone-button" onClick={openCallDialog}>
+                                            <button className={styles["phone-button"]} onClick={openCallDialog}>
                                                 Заказать звонок
                                             </button>
                                         </div>
                                     </li>
-                                    <li className="li">
-                                        <button type="button" className="button-entry" onClick={openEntryDialog}>
+                                    <li className={styles["li"]}>
+                                        <button type="button" className={styles["button-entry"]} onClick={openEntryDialog}>
                                             Войти
                                         </button>
                                     </li>

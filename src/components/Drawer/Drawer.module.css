@@ -1,0 +1,52 @@
+.drawer-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* чёрный с 50% прозрачностью */
+}
+
+.drawer-frame {
+    position: absolute;
+    max-height: 100%;
+    height: 100%;
+    width: 24rem;/* 384px */
+    padding: 2rem;
+    background-color: #D1D5DB;
+    transition-property: transform;
+    transition-duration: 300ms;
+    transition-timing-function: ease-in-out;
+    overflow-y: auto;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.titleDrawer {
+    font-size: 1.25rem;/* 20px */
+    font-weight: 700;/* жирный */
+    
+}
+
+.button-drawer {
+    color: #4B5563; /* text-gray-600 */
+
+}
+
+.button-drawer:hover {
+    color: #1F2937; /* text-gray-800 */
+
+}
+
+.footer-drawer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}

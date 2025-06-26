@@ -73,7 +73,12 @@
   padding-right: 0.5rem;      /* 8px */
   transition: background-color 0.2s; /* плавный переход (опционально) */
 }
-
+.li-callButton {
+  margin-top: 1rem;
+}
+.callButton-container {
+  display: flex;
+}
 .phone-button:hover {
   background-color: #E5E7EB;  /* gray-200 */
 }

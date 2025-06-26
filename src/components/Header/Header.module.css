@@ -2,16 +2,17 @@
     display: flex;
     justify-content: space-between;
     margin-top: 1rem;
-    /*(16px)*/
+   
 }
 
 .address {
     display: none;
 }
 
-@media(min-with:1024) {
+@media(min-width:1024) {
     .address {
         display: block;
+        
     }
 
 }
@@ -19,6 +20,7 @@
 .button-adress {
     color: #ef4444;
     text-decoration: underline;
+    cursor: pointer;
 
 }
 
@@ -26,9 +28,10 @@
     display: none;
 }
 
-@media (min-with:1024) {
+@media (min-width:1024) {
     .call-container {
         display: flex;
+        color: #ef4444;
     }
 }
 
@@ -39,24 +42,24 @@
 }
 
 .button-call {
+   white-space: nowrap;
     border-color: #ef4444;
     border-width: 2px;
     border-style: solid;
     color: #ef4444;
     border-radius: 0.25rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+    cursor: pointer;
     transition: background-color 0.2s;
-
+    
 }
 
-.button-call:hover {
-    background-color: #e5e7eb;
-}
 
 .container-entryDialog {
     display: flex;
     gap: 1.25rem;
+    align-items: center;
 }
 
 .button-openEntryDialog {
@@ -65,7 +68,11 @@
 
 @media (min-width:1024) {
     .button-openEntryDialog {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        border: none;
+        background-color: #ffffff;
+
     }
 }
 
@@ -104,13 +111,22 @@
 
 .link-favoritePage {
     margin-top: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    font-size: small;
+    font-weight: 500;
+
 }
 
 
 
 .button-basket {
     position: relative;
+    display: flex;
+    flex-direction: column;
     margin-top: 0.25rem;
+    background-color: #ffffff;
+    border: transparent;
 }
 
 .header-count {

@@ -5,7 +5,7 @@ import {
   FaExclamationCircle,
   FaTimesCircle,
 } from "react-icons/fa";
-import "@/components/ui/Alert/Alert.css";
+import styles from "./Alert.module.css";
 
 export type Variant = "neutral" | "info" | "positive" | "notice" | "negative";
 
@@ -13,7 +13,7 @@ interface AlertProps {
   variant?: Variant;
   children: ReactNode;
   isOpen: boolean;
-  onClose?: () => void; // в вашем примере onClose не используется, но можно добавить
+  onClose?: () => void; 
 }
 
 const Alert: React.FC<AlertProps> = ({
@@ -39,17 +39,22 @@ const Alert: React.FC<AlertProps> = ({
   return (
     isShowAlert && (
       <div
-        className={`alert alert-${variant}`}// Классы для стилизации алерта, например alert-info, alert-positive и т.д.
-        role="alert" // Атрибут для доступности: сообщает, что это важное сообщение (alert)
-        aria-live="assertive"// Указывает, что содержимое должно быть немедленно озвучено средствами чтения с экрана
-        aria-atomic="true"// Гарантирует, что всё содержимое будет прочитано целиком, а не частями
+        className={`alert alert-${variant}`}
+        role="alert" 
+        aria-live="assertive"
+        aria-atomic="true"
       >
-        <div className="alert-icon-wrapper">
+        {/* Классы для стилизации алерта, например alert-info, alert-positive и т.д. */}
+        {/*"alert" Атрибут для доступности: сообщает, что это важное сообщение (alert) */}
+        {/**"assertive" Указывает, что содержимое должно быть немедленно озвучено средствами чтения с экрана */}
+        {/** "true"Гарантирует, что всё содержимое будет прочитано целиком, а не частями*/}
+
+        <div className={styles["alert-icon-wrapper"]}>
           {/* Для neutral иконки нет */}
           {variant !== "neutral" && iconVariant[variant]}
           {/* Если variant не "neutral", показываем соответствующую иконку из объекта iconVariant по ключу variant */}
         </div>
-        <div className="alert-content">{children}</div>
+        <div className={styles["alert-content"]}>{children}</div>
       </div>
     )
   );

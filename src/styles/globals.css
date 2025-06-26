@@ -45,10 +45,12 @@ a {
 /* Для тёмного режима */
 .bg-dark {
   background-color: #1f2937; /* bg-gray-800 */
+  color: #ededed;
 }
 
 /* Для светлого режима */
 .bg-light {
   background-color: #ffffff; /* bg-white */
+  color: #1f2937;
 }
 

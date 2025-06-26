@@ -11,7 +11,7 @@ import 'swiper/css/pagination';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import './SliderStyles.css'; // Импорт стилей из CSS
+import styles from'./SliderStyles.module.css'; // Импорт стилей из CSS
 
 // Типизация товара
 interface Product {
@@ -38,14 +38,14 @@ interface CustomSlider2Props {
 const CustomSlider2: React.FC<CustomSlider2Props> = ({ data, loading }) => {
   if (loading) {
     return (
-      <div className="skeleton-wrapper">
+      <div className={styles["skeleton-wrapper"]}>
         <Skeleton height={250} width={200} count={3} style={{ marginRight: 15 }} />
       </div>
     );
   }
 
   return (
-    <div className="custom-slider-wrapper">
+    <div className={styles["custom-slider-wrapper"]}>
       <Swiper
         modules={[Navigation, Pagination, A11y]}
         slidesPerView={1}
@@ -62,32 +62,32 @@ const CustomSlider2: React.FC<CustomSlider2Props> = ({ data, loading }) => {
         }}
       >
         {data.map((item) => (
-          <SwiperSlide key={item.id} className="slide-center">
-            <div className="product-card">
+          <SwiperSlide key={item.id} className={styles["slide-center"]}>
+            <div className={styles["product-card"]}>
               <Image
                 src={item.imgSrc || '/path/to/default-image.jpg'}
                 alt={item.name}
-                className="product-image"
+                className={styles["product-image"]}
               />
-              <h2 className="product-name">{item.name}</h2>
-              <p className="product-category">{item.category}</p>
-              <div className="color-container">
+              <h2 className={styles["product-name"]}>{item.name}</h2>
+              <p className={styles["product-category"]}>{item.category}</p>
+              <div className={styles["color-container"]}>
                 {Array.isArray(item.color) ? (
                   item.color.map((color, index) => (
                     <div
                       key={index}
-                      className="color-circle"
+                      className={styles["color-circle"]}
                       style={{ backgroundColor: color, borderRadius: '10%' }}
                     />
                   ))
                 ) : (
                   <div
-                    className="color-circle"
+                    className={styles["color-circle"]}
                     style={{ backgroundColor: item.color, borderRadius: '50%' }}
                   />
                 )}
               </div>
-              <p className="product-price">{item.price}</p>
+              <p className={styles["product-price"]}>{item.price}</p>
             </div>
           </SwiperSlide>
         ))}

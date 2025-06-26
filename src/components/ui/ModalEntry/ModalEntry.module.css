@@ -1,0 +1,75 @@
+.modalEntry-bg {
+    position: fixed;
+    inset: 0;
+    background-color: black;
+    opacity: 0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+.dialogEntry {
+    border-radius: 12px;
+}
+
+.modalEntry-frame {
+  padding: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  width: 91.6667%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalEntry-frame.dark {
+  background-color: #1F2937; /* bg-gray-800 */
+}
+
+.modalEntry-frame.light {
+  background-color: #ffffff; /* bg-white */
+}
+
+/* Медиа-запросы */
+@media (min-width: 768px) {
+  .modalEntry-frame {
+    width: 75%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modalEntry-frame {
+    width: 18rem; /* 72 * 0.25rem */
+  }
+}
+
+.modalEntry-header {
+  bottom: 1rem;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  margin-left: 4rem;
+  position: relative; /* или absolute/fixed, если нужно, чтобы bottom работал */
+}
+
+.modalEntry-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.border-red {
+  border-color: #ef4444; /* Цвет red-500 из Tailwind */
+  border-width: 1px;
+  border-style: solid;
+}
+
+.linkPassword {
+  margin-top: 1.5rem;
+  cursor: pointer;
+}
+
+.block {
+  display: flex;
+}
+
+.hidden {
+  display: none;
+}

@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from 'clsx';
-import "@/components/ui/Input/Input.css";
+import styles from  "./Input.module.css";
 
 interface InputProps {
   value: string;
@@ -76,8 +76,8 @@ const inputClasses = clsx(
   };
 
   return (
-    <div className="input-container">
-      <label className="input-label" htmlFor={name}>
+    <div className={styles["input-container"]}>
+      <label className={styles["input-label"]} htmlFor={name}>
         {label}
       </label>
       <input
@@ -96,7 +96,7 @@ const inputClasses = clsx(
         onFocus={handleFocus}
         className={inputClasses}
       />
-      {error && <span className="error-message">{error}</span>}
+      {error && <span className={styles["error-message"]}>{error}</span>}
     </div>
   );
 };
