@@ -150,7 +150,7 @@ if (!show) return null;
             className={`${styles['modalEntry-bg']} ${show ? styles.block : styles.hidden}`}
             onClick={handleBackgroundClick} // Добавляем обработчик клика
         >
-            <dialog ref={dialogRef} className={styles["dialogEntry"]}>
+            <dialog ref={dialogRef} className={styles.dialogEntry}>
                 <form onSubmit={handleFormSubmit} method="dialog">
                     <div
                         className={`${styles['modalEntry-frame']} ${isDarkMode ? styles.dark :styles.light}`}
