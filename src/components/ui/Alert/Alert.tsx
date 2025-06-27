@@ -13,7 +13,7 @@ interface AlertProps {
   variant?: Variant;
   children: ReactNode;
   isOpen: boolean;
-  onClose?: () => void; 
+  onClose?: () => void;
 }
 
 const Alert: React.FC<AlertProps> = ({
@@ -30,29 +30,25 @@ const Alert: React.FC<AlertProps> = ({
   if (!isOpen) return null;
 
   const iconVariant: Record<Exclude<Variant, "neutral">, React.ReactNode> = {
-    info: <FaInfoCircle className="alert-icon" />,
-    positive: <FaCheckCircle className="alert-icon" />,
-    notice: <FaExclamationCircle className="alert-icon" />,
-    negative: <FaTimesCircle className="alert-icon" />,
+    info: <FaInfoCircle className={styles["alert-icon"]} />,
+    positive: <FaCheckCircle className={styles["alert-icon"]} />,
+    notice: <FaExclamationCircle className={styles["alert-icon"]} />,
+    negative: <FaTimesCircle className={styles["alert-icon"]} />,
   };
+
+  // Получаем класс варианта из CSS-модуля
+  const variantClass = styles[`alert-${variant}` as keyof typeof styles] || "";
 
   return (
     isShowAlert && (
       <div
-        className={`alert alert-${variant}`}
-        role="alert" 
+        className={`${styles.alert} ${variantClass}`}
+        role="alert"
         aria-live="assertive"
         aria-atomic="true"
       >
-        {/* Классы для стилизации алерта, например alert-info, alert-positive и т.д. */}
-        {/*"alert" Атрибут для доступности: сообщает, что это важное сообщение (alert) */}
-        {/**"assertive" Указывает, что содержимое должно быть немедленно озвучено средствами чтения с экрана */}
-        {/** "true"Гарантирует, что всё содержимое будет прочитано целиком, а не частями*/}
-
         <div className={styles["alert-icon-wrapper"]}>
-          {/* Для neutral иконки нет */}
           {variant !== "neutral" && iconVariant[variant]}
-          {/* Если variant не "neutral", показываем соответствующую иконку из объекта iconVariant по ключу variant */}
         </div>
         <div className={styles["alert-content"]}>{children}</div>
       </div>

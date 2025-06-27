@@ -46,10 +46,11 @@ const Input: React.FC<InputProps> = ({
 }) => {
 //   const inputClasses = `input-field ${className || ""}`;
 const inputClasses = clsx(
-  'input-field',
-  { 'input-disabled': disabled },
+  styles["input-field"],
+  { [styles["input-disabled"]]: disabled },
   className
 );
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
      if (onChange) {
