@@ -123,7 +123,13 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
       <dialog
         ref={dialogRef}
         className={styles.dialog}
-        onClick={e => e.stopPropagation()} // Предотвращаем закрытие при клике внутри
+        onClick={e => {
+    // Если клик был по самому dialog (фону), закрываем
+    if (e.target === dialogRef.current) {
+      resetForm();
+      onClose();
+    }
+  }}
       >
         <form onSubmit={handleFormSubmit} method="dialog">
           <div className={styles['modalCall-frame']}>
