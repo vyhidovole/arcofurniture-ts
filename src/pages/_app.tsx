@@ -4,6 +4,8 @@ import MainLayout from "@/Layouts/MainLayout";
 import { CartProvider } from '@/context/CartContext';
 import { ThemeProvider } from '@/context/ThemeContext'; 
 import { LoadingProvider } from '@/context/LoadingContext';
+import MenuBar from "@/components/ui/MenuBar/MenuBar";
+import { Provider } from "@/components/ui/provider"
 
 /**
  * Корневой элемент страницы.
@@ -21,12 +23,15 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LoadingProvider>
       <ThemeProvider>
-        <CartProvider>
+        <Provider>
+          <CartProvider>
           <MainLayout>
+             <MenuBar />
             <Component {...pageProps} />
           </MainLayout>
         </CartProvider>
-      </ThemeProvider>
+        </Provider>
+         </ThemeProvider>
     </LoadingProvider>
   );
 };
