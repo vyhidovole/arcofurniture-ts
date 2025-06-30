@@ -6,6 +6,7 @@ import styles from './Modal.module.css';
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
