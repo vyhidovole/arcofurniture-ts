@@ -14,7 +14,7 @@ import { Drawer } from "@/components/Drawer/Drawer";
 import styles from './Header.module.css';
 import BurgerButton from "@/components/ui/BurgerButton/BurgerButton";
 import  BurgerMenu  from "@/components/ui/BurgerMenu/BurgerMenu";
-import SearchInput from "@/components/ui/Input/SearchInput";
+import SearchInput from "@/components/ui/SearchInput/SearchInput";
 
 
 
@@ -118,6 +118,7 @@ const Header = () => {
         width={180}
         height={30}
         priority={true}
+        className={styles["img-header"]}
       />
     )}
     <div className={styles["address"]}>
@@ -247,7 +248,7 @@ const Header = () => {
       </div>
     </div>
 
-    <Modal isOpen={isModalOpen} onClose={handleCloseModal}isDarkMode={isDarkMode} /> {/* Добавляем модальное окно */}
+    <Modal isOpen={isModalOpen} onClose={handleCloseModal} /> {/* Добавляем модальное окно */}
     <ModalCall isOpen={isCallModalOpen} onClose={closeCallDialog}setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
     <ModalEntry show={isEntryModalOpen} onClose={closeEntryDialog}setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
     <Drawer isOpen={isDrowerOpen} onClose={handleCloseDrower} isDarkMode={isDarkMode} titleDrawer="корзина">
