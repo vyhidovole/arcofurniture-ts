@@ -1,7 +1,7 @@
 import { Button, Menu, Portal } from "@chakra-ui/react"
 
-const DropdownBaby = () => {
-  return (
+const  DropdownLiving = () => {
+ return (
     <Menu.Root>
       <Menu.Trigger asChild>
         <Button size="sm"
@@ -38,12 +38,12 @@ const DropdownBaby = () => {
             },
           }}
         >
-          детские
+           гостиные
         </Button>
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content p='16px'>
+          <Menu.Content p="16px">
             {links.map((link) => (
               <Menu.Item key={link.href} asChild value={link.title}>
                 <a href={link.href} target="_blank" rel="noreferrer">
@@ -60,25 +60,16 @@ const DropdownBaby = () => {
 
 const links = [
   {
-    title: "Кровати",
-    href: "/nursery",
+    title: " Модульные",
+    href: "/drawing-room",
   },
   {
-    title: "Полки",
-    href: "/nursery",
+    title: "Готовые комплекты",
+    href: "/drawing-room",
   },
   {
-    title: "Столы",
-    href: "/nursery",
+    title: "Маленькие",
+    href: "/drawing-room",
   },
-  {
-    title: "Шкафы",
-    href: "/nursery",
-  },
-  {
-    title: "Комоды",
-    href: "/nursery",
-  },
-
 ]
-export default DropdownBaby
+export default DropdownLiving
