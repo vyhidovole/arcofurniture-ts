@@ -6,6 +6,7 @@
   display: flex !important;/*что бы выровнить слайд по центру*/
   justify-content: center;
   align-items: center;
+  
 }
 
 .product-card {
@@ -13,8 +14,9 @@
   border-radius: 8px;
   overflow: hidden;
   width: 200px;
-  height: 250px;
+  height: 300px;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
   align-items: center;
   background-color: #a1a1aa; /* bg-zinc-400 */
@@ -44,7 +46,7 @@
 
 .color-container {
   display: inline-flex;
-  gap: 6px;
+  gap: 12px;
   margin-bottom: 8px;
 }
 
@@ -57,6 +59,7 @@
   font-weight: 600;
   font-size: 1rem;
   text-align: center;
+   margin-top: 8px;
 }
 
 /* Стили для скелетона */

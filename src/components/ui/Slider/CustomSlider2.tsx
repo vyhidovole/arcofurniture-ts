@@ -2,7 +2,7 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, A11y } from 'swiper/modules';
-import Image from 'next/image'; 
+import Image from 'next/image';
 
 import 'swiper/swiper-bundle.css';
 import 'swiper/css/navigation';
@@ -11,7 +11,7 @@ import 'swiper/css/pagination';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import styles from'./SliderStyles.module.css'; // Импорт стилей из CSS
+import styles from './SliderStyles.module.css'; // Импорт стилей из CSS
 
 // Типизация товара
 interface Product {
@@ -67,6 +67,8 @@ const CustomSlider2: React.FC<CustomSlider2Props> = ({ data, loading }) => {
               <Image
                 src={item.imgSrc || '/path/to/default-image.jpg'}
                 alt={item.name}
+                width={300}
+                height={200}
                 className={styles["product-image"]}
               />
               <h2 className={styles["product-name"]}>{item.name}</h2>
