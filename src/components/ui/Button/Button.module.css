@@ -85,3 +85,8 @@
 .ml-2 {
   margin-left: 0.5rem; /* что соответствует 8px, если базовый размер 16px */
 }
+
+.my-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
