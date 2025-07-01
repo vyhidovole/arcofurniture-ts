@@ -17,7 +17,7 @@ type ButtonProps = {
  * Компонент кнопки
  */
 const Button: React.FC<ButtonProps>=({
-    className = "",
+    className = styles["my-button"],
     onClick,
     variant = "primary",
     type = "submit",
