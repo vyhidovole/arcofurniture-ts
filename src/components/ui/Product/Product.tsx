@@ -20,7 +20,7 @@ const Product: React.FC<ProductProps> = observer(({ item }) => {
   }, []);
 
   const { name, category, color, price, imgSrc, id, quantity } = item;
-
+  
   const handleIncrement = () => {
     catalogueStore.incrementProductQuantity(id); // Увеличиваем количество в store
     addToCart();
@@ -44,7 +44,7 @@ const Product: React.FC<ProductProps> = observer(({ item }) => {
 
   return (
     <div className={styles["product-container"]}> {/* Основной контейнер */}
-      <Image width="100" src={imgSrc} alt={name} className={styles["product-image"]} /> {/* Изображение */}
+      <Image width="100"height='100' src={imgSrc} alt={name} className={styles["product-image"]} /> {/* Изображение */}
       <div className={styles["product-info"]}> {/* Информация о продукте */}
         <h2 className={styles["product-name"]}>{name}</h2>
         <p className={styles["product-category"]}>Категория: {category}</p>

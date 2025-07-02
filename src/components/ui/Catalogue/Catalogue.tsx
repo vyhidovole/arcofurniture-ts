@@ -71,9 +71,9 @@ const Catalogue = observer(() => {
           <Image
             src={item.imgSrc || "/path/to/default-image.jpg"}
             alt={item.name}
-            className={styles["catalogue-img"]}
             width={250}
             height={185}
+            className={styles["catalogue-img"]}
           />
           <Link href={href} passHref>
             <button className={styles["catalogue-button"]}>
