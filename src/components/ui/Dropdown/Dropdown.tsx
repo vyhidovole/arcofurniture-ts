@@ -59,7 +59,7 @@ const Dropdown = () => {
           <Menu.Content p='16px'>
             {links.map((link) => (
               <Menu.Item key={link.href} asChild value={link.title}>
-                <a href={link.href} target="_blank" rel="noreferrer">
+                <a href={link.href}  rel="noreferrer">
                   {link.title}
                 </a>
               </Menu.Item>
