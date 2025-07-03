@@ -61,15 +61,15 @@ const  DropdownLiving = () => {
 const links = [
   {
     title: " Модульные",
-    href: "/drawing-room",
+    href: "/drawingroom",
   },
   {
     title: "Готовые комплекты",
-    href: "/drawing-room",
+    href: "/drawingroom",
   },
   {
     title: "Маленькие",
-    href: "/drawing-room",
+    href: "/drawingroom",
   },
 ]
 export default DropdownLiving
