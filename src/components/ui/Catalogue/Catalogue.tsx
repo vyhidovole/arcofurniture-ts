@@ -25,12 +25,13 @@ const Catalogue = observer(() => {
   const { loading, setLoading } = useLoading();
 
   useEffect(() => {
-    const url = "/CatalogueProducts";
-    setLoading(true);
-    catalogueStore.getProducts(url).finally(() => {
-      setLoading(false);
-    });
-  }, [setLoading]);
+  setLoading(true);
+  catalogueStore.getProducts('CatalogueProducts').finally(() => {
+    setLoading(false);
+  });
+}, [setLoading]);
+
+
 
   const productLinks: Record<
     | "кухни"
