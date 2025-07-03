@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import Alert from "../Alert/Alert";
-import useForm,{InitialState} from "@/hooks/useForm";
+import useForm, { InitialState } from "@/hooks/useForm";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import styles from "./ModalCall.module.css"
@@ -30,9 +30,9 @@ import styles from "./ModalCall.module.css"
  */
 
 interface ModalCallProps {
-    isOpen:boolean
-    onClose:()=>void
-    setNewForm:(value:boolean)=> void
+  isOpen: boolean
+  onClose: () => void
+  setNewForm: (value: boolean) => void
 }
 type Variant = 'positive' | 'negative'; // пример типа Variant
 const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) => {
@@ -124,12 +124,12 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
         ref={dialogRef}
         className={styles.dialog}
         onClick={e => {
-    // Если клик был по самому dialog (фону), закрываем
-    if (e.target === dialogRef.current) {
-      resetForm();
-      onClose();
-    }
-  }}
+          // Если клик был по самому dialog (фону), закрываем
+          if (e.target === dialogRef.current) {
+            resetForm();
+            onClose();
+          }
+        }}
       >
         <form onSubmit={handleFormSubmit} method="dialog">
           <div className={styles['modalCall-frame']}>
@@ -202,13 +202,16 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
               </Button>
 
               {isShowAlert && (
-                <Alert variant={alertVariant} isOpen={isShowAlert} onClose={handleCloseAlert}>
+                <Alert
+                  variant={alertVariant}
+                  isOpen={isShowAlert}
+                  onClose={handleCloseAlert}>
                   {alertMessage}
                 </Alert>
               )}
-
               <p className={styles['modalCall-text']}>
-                Отправляя форму, я даю свое согласие на обработку моих персональных данных.
+                Отправляя форму, я даю свое согласие 
+                на обработку моих персональных данных.
               </p>
             </div>
           </div>
