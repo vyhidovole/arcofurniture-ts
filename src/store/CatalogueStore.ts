@@ -43,20 +43,30 @@ class CatalogueStore extends BaseStore {
      * Функция для использования товаров с сервера.
      * Использует fetch для отправк запроса на сервер и обновляет массив товаров.
      */
-    async getProducts(url: string): Promise<void> {
-       try {
-        const response = await fetch(`${this.baseUrl}${url}`)
-        if (!response.ok) {
-            throw new Error(`Ошибка HTTP: ${response.status}`)
-        }
-        const data: ProductItem[] = await response.json()
-        runInAction(()=>{
-            this.products = data // Предполагаем, что данные - это массив продуктов
-        })
-       }catch(error){
-        console.error('Ошибка при загрузке продуктов', error)
-       }
+   async getProducts(categoryKey: string): Promise<void> {
+  try {
+    const response = await fetch('/db.json');
+    if (!response.ok) {
+      throw new Error(`Ошибка HTTP: ${response.status}`);
     }
+    const json = await response.json();
+
+    // Убираем ведущий слэш, если есть
+    const key = categoryKey.startsWith('/') ? categoryKey.slice(1).toLowerCase() : categoryKey.toLowerCase();
+
+    const data: ProductItem[] = json[key];
+    if (!Array.isArray(data)) {
+      throw new Error(`Данные для категории ${categoryKey} не найдены`);
+    }
+    runInAction(() => {
+      this.products = data;
+    });
+  } catch (error) {
+    console.error('Ошибка при загрузке продуктов', error);
+    throw error;
+  }
+}
+
 
     async getWorkItems(url: string): Promise<void> {
         try {

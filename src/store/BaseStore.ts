@@ -9,7 +9,8 @@ class BaseStore {
   isLoading: boolean;
 
   constructor() {
-    this.baseUrl = "http://localhost:3000"; // Определяем базовый URL
+    // this.baseUrl = "http://localhost:3000"; // Определяем базовый URL
+    this.baseUrl = "";
     this.isLoading = false;
 
     /**
