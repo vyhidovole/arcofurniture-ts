@@ -44,7 +44,7 @@ const Catalogue = observer(() => {
     string
   > = {
     кухни: "/kitchen",
-    гостиные: "/drawing-room",
+    гостиные: "/drawingroom",
     детские: "/nursery",
     спальни: "/bedroom",
     диваны: "/couch",
@@ -75,10 +75,10 @@ const Catalogue = observer(() => {
             height={185}
             className={styles["catalogue-img"]}
           />
-          <Link href={href} passHref>
-            <button className={styles["catalogue-button"]}>
+          <Link href={href} className={styles["catalogue-button"]} >
+            
               {item.name}
-            </button>
+            
           </Link>
         </div>
       );
