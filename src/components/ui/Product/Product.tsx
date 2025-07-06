@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { VscTrash } from "react-icons/vsc";
 import { observer } from "mobx-react-lite"; // Импортируем observer
 import catalogueStore from "@/store/CatalogueStore";
@@ -9,37 +9,40 @@ import styles from './Product.module.css'
 
 export interface ProductProps {
   item: ProductItem;
+ 
 }
 
 
 const Product: React.FC<ProductProps> = observer(({ item }) => {
-  const { addToCart, removeFromCart, deleteProduct } = useCart(); // Используем контекст
+  const { deleteProduct } = useCart(); // Используем контекст
 
-  useEffect(() => {
-    catalogueStore.initializeBasket(); // Инициализация корзины после монтирования
-  }, []);
+  
 
-  const { name, category, color, price, imgSrc, id, quantity } = item;
+  const { name, category, color,  imgSrc, id } = item;
+  const productInBasket = catalogueStore.basket.find(p => p.id === item.id);
+const quantity = productInBasket?.quantity ?? 0;
+
   
   const handleIncrement = () => {
-    catalogueStore.incrementProductQuantity(id); // Увеличиваем количество в store
-    addToCart();
+    catalogueStore.incrementProductQuantity(item.id); // Увеличиваем количество в store
+    // addToCart(item);
   };
 
   const handleDecrement = () => {
     if (quantity > 1) {
-      catalogueStore.decrementProductQuantity(id); // Уменьшаем количество в store
-      removeFromCart();
+      catalogueStore.decrementProductQuantity(item.id); // Уменьшаем количество в store
+      // removeFromCart(id.toString());
     }
   };
 
   const handleDeleteProduct = () => {
-    deleteProduct(quantity); // Вызываем deleteProduct из контекста
-    catalogueStore.clearProduct(id); // Также вызываем метод из store для удаления товара
+    deleteProduct(item.id.toString()); // Вызываем deleteProduct из контекста
+    catalogueStore.clearProduct(id.toString()); // Также вызываем метод из store для удаления товара
   };
 
-  const numericPrice = parseFloat(price); // Преобразуем в число
- const total = Number((numericPrice * (catalogueStore.basket.find(p => p.id === id)?.quantity ?? 0)).toFixed(2));
+  const numericPrice = parseFloat(item.price); // Преобразуем в число
+  const total = Number((numericPrice * quantity).toFixed(2));
+//  const total = Number((numericPrice * (catalogueStore.basket.find(p => p.id === id)?.quantity ?? 0)).toFixed(2));
 
 
   return (
