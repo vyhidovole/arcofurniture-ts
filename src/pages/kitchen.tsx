@@ -6,7 +6,6 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import catalogueStore from "@/store/CatalogueStore";
 import Alert from "@/components/ui/Alert/Alert";
-import { useCart } from '@/context/CartContext';
 import {ProductItem} from '@/types/types'
 import styles from './kitchen.module.css'
 
@@ -23,7 +22,7 @@ import styles from './kitchen.module.css'
 
 const Kitchen = observer(() => {
     const { loading, setLoading } = useLoading(); // Получаем состояние загрузки
-    const { addToCart } = useCart(); // Используем контекст
+   
     // Стейт для закрытия компонента уведомления
     const [isShowAlert, setShowAlert] = useState(false);
     useEffect(() => {
@@ -47,7 +46,7 @@ const Kitchen = observer(() => {
       */
     const handleAddToBasket = (item:ProductItem) => {
         catalogueStore.addProductToBasket(item); // Добавляем продукт в корзину
-        addToCart()
+        
         console.log(`${item.name} добавлен в корзину!`);
         setShowAlert(true); // Показываем алерт
         console.log("Показать алерт:", true); // Логируем изменение состояния

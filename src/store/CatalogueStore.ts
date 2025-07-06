@@ -1,216 +1,169 @@
+
+import { makeObservable, observable, action, reaction, runInAction, computed } from "mobx";
 import BaseStore from "./BaseStore"
-import {makeObservable, observable, action, runInAction} from "mobx"
 import { ProductItem } from '@/types/types';
 
-/**
- * Интерфейс для работ
- */
 interface WorkItem {
-    id: string
-    description: string
+  id: string;
+  title: string;
+  description?: string;
+  // другие поля по необходимости
 }
-/**
- * Класс для управления состоянием товара
- */
+
 class CatalogueStore extends BaseStore {
-    products: ProductItem[] = []// Инициализируем массив товаров
-    workItems: WorkItem[] = []// Инициализируем массив работ
-    basket: ProductItem[] = []// Корзина
-    quantity: number = 0
+  products: ProductItem[] = [];
+  workItems: WorkItem[] = [];
+  basket: ProductItem[] = [];
 
-    constructor() {
-        super()
-        makeObservable(this,{
-            products: observable,// Делаем products наблюдаемым
-            workItems: observable,// Делаем workItems наблюдаемым
-            basket: observable,
-            quantity: observable,
-            getProducts: action,
-            addProductToBasket: action,
-            deleteProductFromBasket: action,
-            initializeBasket: action,
-            incrementProductQuantity: action,
-            decrementProductQuantity: action,
-            updateCount: action,
-            saveToLocalStorage: action,
-            clearProduct: action,
-            setBasket: action,
-            getWorkItems: action,
-
-        })
-    }
-    /**
-     * Функция для использования товаров с сервера.
-     * Использует fetch для отправк запроса на сервер и обновляет массив товаров.
-     */
-   async getProducts(categoryKey: string): Promise<void> {
-  try {
-    const response = await fetch('/db.json');
-    if (!response.ok) {
-      throw new Error(`Ошибка HTTP: ${response.status}`);
-    }
-    const json = await response.json();
-
-    // Убираем ведущий слэш, если есть
-    const key = categoryKey.startsWith('/') ? categoryKey.slice(1).toLowerCase() : categoryKey.toLowerCase();
-
-    const data: ProductItem[] = json[key];
-    if (!Array.isArray(data)) {
-      throw new Error(`Данные для категории ${categoryKey} не найдены`);
-    }
-    runInAction(() => {
-      this.products = data;
+  constructor() {
+    super();
+    makeObservable(this, {
+      products: observable,
+      workItems: observable,
+      basket: observable,
+      quantity: computed,
+      totalQuantity: computed,
+      getProducts: action,
+      addProductToBasket: action,
+      deleteProductFromBasket: action,
+      initializeBasket: action,
+      incrementProductQuantity: action,
+      decrementProductQuantity: action,
+      clearProduct: action,
+      getWorkItems: action,
+      addProductToBasketById: action,
     });
-  } catch (error) {
-    console.error('Ошибка при загрузке продуктов', error);
-    throw error;
+
+    // Сохраняем корзину в localStorage при любых изменениях (включая quantity)
+   reaction(
+  () => this.basket.map(item => ({ id: item.id, quantity: item.quantity })),
+  basketItems => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("basket", JSON.stringify(basketItems));
+    }
   }
-}
-
-
-    async getWorkItems(url: string): Promise<void> {
-        try {
-            const response = await fetch(`${this.baseUrl}${url}`)
-            if(!response.ok) {
-                throw new Error(`Ошибка HTTP: ${response.status}`)
-            }
-            const data: WorkItem[] = await response.json()
-            runInAction(()=>{
-                this.workItems = data
-            })
-        }catch(error){
-            console.error("Ошибка при загрузке работ:", error)
-        }
-    }
-
-    addProductToBasket(item: ProductItem):void {
-        console.log("Добавляем продукт в корзину:", item)// Логируем добавляемый продукт
-        const existingProduct = this.basket.find(product => product.id === item.id)
-
-        if (existingProduct) {
-            // Если продукт уже есть в корзине, увеличиваем его количество
-            existingProduct.quantity! +=1// Используем оператор !, чтобы указать, что quantity определено
-            console.log(`Увеличиваем количество для ${item.name}: ${existingProduct.quantity}`)
-        } else {
-            // Если продукта нет в корзине, добавляем его
-            this.basket.push({...item, quantity: 1})
-            console.log(`Товар ${item.name}добавлен в корзину с количеством 1`)
-        }
-        // Обновляем количество уникальных товаров в корзине
-        this.updateCount()
-        this.saveToLocalStorage()
-    }
-    //Метод для установки начального состояния корзины
-    setBasket(savedBasket: ProductItem[]): void {
-       runInAction(()=>{
-        console.log("Установка корзины:", savedBasket)// Отладочное сообщение
-        this.basket = savedBasket
-        this.updateCount()// Обновляем количество после установки
-       })
-    }
-    // Метод для увеличения количества товара
-    incrementProductQuantity(productId: string): void {
-        const product = this.basket.find(item => item.id === productId)
-        if(product) {
-            product.quantity! +=1// Увеличиваем количество на 1
-            this.updateCount()
-        }
-        console.log("количество товаров увеличено")
-    }
-     // Метод для уменьшения количества товара
-    decrementProductQuantity(productId: string): void {
-  const product = this.basket.find(item => item.id === productId);
-  if (product && product.quantity !== undefined) {
-    if (product.quantity > 1) {
-      product.quantity -= 1; // Уменьшаем количество на 1
-      this.updateCount();
-    } else if (product.quantity === 1) {
-      // Если количество товара 1, удаляем его из корзины
-      this.deleteProductFromBasket(productId);
-    }
-    console.log("Количество товаров уменьшено");
-  } else {
-    console.warn(`Товар с id ${productId} не найден в корзине или отсутствует quantity`);
+);
   }
-}
-/**
- * Удаляет товар из карзины по его ID.
- * @param itemId - ID товара, который нужно удалить.
- */
-deleteProductFromBasket(itemId:string): void {
-    console.log("Удаляем товар с ID", itemId)
-    console.log("Текущая корзина", this.basket)
 
-    runInAction(()=> {
-        const existingProduct = this.basket.find(item => item.id === itemId)
+  // Геттер для подсчёта общего количества товаров
+  get totalQuantity() {
+    return this.basket.reduce((total, item) => total + (item.quantity ?? 0), 0);
+  }
 
-        if(existingProduct) {
-            const itemIndex = this.basket.findIndex(item => item.id === itemId)
-            if (itemIndex !==-1) {
-                this.basket.splice(itemIndex,1)// Удаляем товар из корзины
-            }
-            this.updateCount()//Обновляем количество уникальных товаров
-            this.saveToLocalStorage()// Сохраняем изменения в localStorage
-        } else {
-            console.error("ТОвар не найден в корзине с ID:", itemId)
-        }
-    })
-}
+  get quantity() {
+    return this.totalQuantity;
+  }
 
-/**
- * Обновление количества товаров в корзине.
- */
-updateCount(): void {
-    this.quantity = this.basket.reduce((total,product)=> total + (product.quantity ?? 0), 0)
-     console.log("Обновлено количество товаров в корзине:", this.quantity);
-}
-/**
- * Сохраняет текущую корзину и количество товаров в localStorage.
- */
-saveToLocalStorage(): void {
-    try{
-        if (typeof window !== 'undefined'){
-            localStorage.setItem("basket", JSON.stringify(this.basket))
-            localStorage.setItem("quantity",this.quantity.toString())
-            console.log("Сохранено в localStorage:", this.basket, this.quantity)
-        }
-    }catch(error){
-        console.error("Ошибка при сохранении в localStorage:", error)
+  async getProducts(categoryKey: string): Promise<void> {
+    try {
+      const response = await fetch('/db.json');
+      if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
+
+      const json = await response.json();
+      const key = categoryKey.startsWith('/') ? categoryKey.slice(1).toLowerCase() : categoryKey.toLowerCase();
+
+      const data: ProductItem[] = json[key];
+      if (!Array.isArray(data)) throw new Error(`Данные для категории ${categoryKey} не найдены`);
+
+      runInAction(() => {
+        this.products = data;
+      });
+    } catch (error) {
+      console.error('Ошибка при загрузке продуктов', error);
+      throw error;
     }
-}
-/**
- * Инициализация корзины из localStorage.
- */
+  }
+
+  async getWorkItems(url: string): Promise<void> {
+    try {
+      const response = await fetch(`${this.baseUrl}${url}`);
+      if(!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
+
+      const data: WorkItem[] = await response.json();
+      runInAction(() => {
+        this.workItems = data;
+      });
+    } catch(error) {
+      console.error("Ошибка при загрузке работ:", error);
+    }
+  }
+
+  addProductToBasket(product: ProductItem): void {
+    const existingProduct = this.basket.find(item => String(item.id) === String(product.id));
+    if (existingProduct) {
+      existingProduct.quantity = (existingProduct.quantity ?? 0) + 1;
+    } else {
+      this.basket.push({ ...product, quantity: 1 });
+    }
+  }
+
+  incrementProductQuantity(productId: string): void {
+    const product = this.basket.find(item => String(item.id) === String(productId));
+    if (product) {
+      product.quantity = (product.quantity ?? 0) + 1;
+    }
+  }
+
+  decrementProductQuantity(productId: string): void {
+    const product = this.basket.find(item => String(item.id) === String(productId));
+    if (product && product.quantity !== undefined) {
+      if (product.quantity > 1) {
+        product.quantity -= 1;
+      } else {
+        this.deleteProductFromBasket(productId);
+      }
+    }
+  }
+
+  deleteProductFromBasket(itemId: string): void {
+    this.basket = this.basket.filter(item => String(item.id) !== String(itemId));
+  }
+
+  clearProduct(id: string) {
+    this.basket = this.basket.filter(item => String(item.id) !== String(id));
+  }
+
+  addProductToBasketById(productId: string): void {
+    const product = this.products.find(p => String(p.id) === String(productId));
+    if (product) {
+      this.addProductToBasket(product);
+    } else {
+      console.warn(`Product with id ${productId} not found in catalogue`);
+    }
+  }
+
+ // Инициализация корзины (вызывать после загрузки products)
 initializeBasket(): void {
-    if (typeof window !=='undefined') {
-        const savedBasketJson = localStorage.getItem("basket")
-        if(savedBasketJson){
-            try {
-                const savedBasket:ProductItem[] = JSON.parse(savedBasketJson)
-                runInAction(()=> {
-                    this.basket = savedBasket
-                    this.updateCount()
-                })
-                console.log("Корзина инициализированна:", this.basket)
-            } catch(error) {
-                console.error("Ошибка при парсинге корзины из localStorage:", error)
-            }
-        }
-    }else {
-        console.warn("localStorage недоступен, инициализация корзмны не выполнена.")
+  if (typeof window === 'undefined') return;
+
+  const savedBasketJson = localStorage.getItem("basket");
+  if (savedBasketJson) {
+    try {
+      const savedBasket: {id: string; quantity: number}[] = JSON.parse(savedBasketJson);
+      runInAction(() => {
+        this.basket = savedBasket.map(({ id, quantity }) => {
+          const product = this.products.find(p => String(p.id) === String(id));
+          if (!product) {
+            console.warn(`Product with id ${id} not found in catalogue during basket initialization`);
+            return null;
+          }
+          return { ...product, quantity };
+        }).filter(Boolean) as ProductItem[];
+      });
+    } catch (error) {
+      console.error("Ошибка при парсинге корзины из localStorage:", error);
     }
+  }
 }
-/**
- * Полностью очищает корзину от товара с указанным id.
- * @param id - ID товара для удаления.
- */
-clearProduct(id: string): void {
-    this.basket = this.basket.filter(item=> item.id !==id)
-    this.updateCount()
-    console.log("Корзина очищена")
+//  метод для загрузки продуктов и инициализации корзины вместе
+async loadInitialData(categoryKey?: string) {
+  if (categoryKey) {
+    await this.getProducts(categoryKey);
+  }
+  this.initializeBasket();
 }
 }
+
 const catalogueStore = new CatalogueStore();
 catalogueStore.initializeBasket();
-
 export default catalogueStore;

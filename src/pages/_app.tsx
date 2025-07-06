@@ -7,6 +7,7 @@ import { LoadingProvider } from '@/context/LoadingContext';
 import MenuBar from "@/components/ui/MenuBar/MenuBar";
 import { Provider } from "@/components/ui/provider"
 
+
 /**
  * Корневой элемент страницы.
  * Этот компонент оборачивает все страницы приложения в необходимые провайдеры

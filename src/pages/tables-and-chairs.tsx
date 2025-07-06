@@ -6,7 +6,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import catalogueStore from "@/store/CatalogueStore";
 import Alert from "@/components/ui/Alert/Alert";
-import { useCart } from '@/context/CartContext';
+
 import { ProductItem } from '@/types/types'
 import styles from './tables-and-chairs.module.css'
 /**
@@ -21,7 +21,7 @@ import styles from './tables-and-chairs.module.css'
  */
 const Tables_and_chairs = observer(() => {
     const { loading, setLoading } = useLoading(); // Получаем состояние загрузки
-    const { addToCart } = useCart(); // Используем контекст
+    
     // Стейт для закрытия компонента уведомления
     const [isShowAlert, setShowAlert] = useState(false);
     useEffect(() => {
@@ -35,16 +35,16 @@ const Tables_and_chairs = observer(() => {
      *
      * @param {Object} item - Объект товара, который нужно добавить в корзину.
      */
-    const handleAddToBasket = (item: ProductItem) => {
-        catalogueStore.addProductToBasket(item); // Добавляем продукт в корзину
-        addToCart()
-        console.log(`${item.name} добавлен в корзину!`);
-        setShowAlert(true); // Показываем алерт
-        console.log("Показать алерт:", true); // Логируем изменение состояния
-        setTimeout(() => {
-            setShowAlert(false); // Скрываем алерт
-        }, 3000);
-    };
+    function handleAddToBasket(item: ProductItem): void {
+    catalogueStore.addProductToBasket(item);
+    console.log(`${item.name} добавлен в корзину!`);
+    setShowAlert(true);
+    console.log("Показать алерт:", true);
+    setTimeout(() => {
+        setShowAlert(false);
+    }, 3000);
+}
+
     useEffect(() => {
         const url = '/Tables_and_chairs'; // Определяем конечный URL 
         setLoading(true); // Устанавливаем состояние загрузки в true
