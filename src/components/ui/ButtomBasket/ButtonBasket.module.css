@@ -1,0 +1,59 @@
+.button-basket {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.25rem;
+    background-color: #ffffff;
+    border: transparent;
+}
+.svg {
+    height: 1.25rem;
+    /*20px*/
+    width: 1.25rem;
+}
+
+.header-count {
+    position: absolute;
+    top: 0;
+    right: 1.25rem;
+    background-color: #ef4444;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    width: 1.25rem;
+    height: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.underline-animation {
+    position: relative;
+    cursor: pointer;
+    /* чтобы показать, что элемент интерактивный */
+    display: inline-block;
+    /* чтобы псевдоэлемент позиционировался относительно текста */
+}
+
+.underline-animation::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    /* толщина линии */
+    width: 0;
+    background-color: currentColor;
+    /* цвет линии совпадает с цветом текста */
+    transition: width 0.3s ease;
+}
+
+.underline-animation:hover::after {
+    width: 100%;
+    /* при наведении линия расширяется на всю ширину текста */
+}
+
+.round-skeleton {
+    margin-right: 0.5rem;
+}
+
