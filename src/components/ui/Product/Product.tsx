@@ -1,7 +1,6 @@
 import React from "react";
 import { VscTrash } from "react-icons/vsc";
 import { observer } from "mobx-react-lite"; // Импортируем observer
-import catalogueStore from "@/store/CatalogueStore";
 import Image from "next/image"; 
 import { useCart } from '@/context/CartContext'; 
 import { ProductItem } from '@/types/types';
@@ -14,35 +13,35 @@ export interface ProductProps {
 
 
 const Product: React.FC<ProductProps> = observer(({ item }) => {
-  const { deleteProduct } = useCart(); // Используем контекст
+  const cartStore = useCart(); // Используем контекст
 
   
 
   const { name, category, color,  imgSrc, id } = item;
-  const productInBasket = catalogueStore.basket.find(p => p.id === item.id);
+  const productInBasket = cartStore.basket.find(p => p.id === item.id);
 const quantity = productInBasket?.quantity ?? 0;
 
   
   const handleIncrement = () => {
-    catalogueStore.incrementProductQuantity(item.id); // Увеличиваем количество в store
-    // addToCart(item);
+    cartStore.incrementProductQuantity(item.id); // Увеличиваем количество в store
+    
   };
 
   const handleDecrement = () => {
     if (quantity > 1) {
-      catalogueStore.decrementProductQuantity(item.id); // Уменьшаем количество в store
-      // removeFromCart(id.toString());
+      cartStore.decrementProductQuantity(item.id); // Уменьшаем количество в store
+      
     }
   };
 
   const handleDeleteProduct = () => {
-    deleteProduct(item.id.toString()); // Вызываем deleteProduct из контекста
-    catalogueStore.clearProduct(id.toString()); // Также вызываем метод из store для удаления товара
+    cartStore.deleteProductFromBasket(item.id.toString()); // Вызываем deleteProduct из контекста
+    cartStore.clearProduct(id.toString()); // Также вызываем метод из store для удаления товара
   };
 
   const numericPrice = parseFloat(item.price); // Преобразуем в число
   const total = Number((numericPrice * quantity).toFixed(2));
-//  const total = Number((numericPrice * (catalogueStore.basket.find(p => p.id === id)?.quantity ?? 0)).toFixed(2));
+
 
 
   return (
