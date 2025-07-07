@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import React, { useEffect } from 'react';
 import type { AppProps } from "next/app";
 import MainLayout from "@/Layouts/MainLayout";
 import { CartProvider } from '@/context/CartContext';
@@ -6,6 +7,7 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import { LoadingProvider } from '@/context/LoadingContext';
 import MenuBar from "@/components/ui/MenuBar/MenuBar";
 import { Provider } from "@/components/ui/provider"
+import catalogueStore from '@/store/CatalogueStore';
 
 
 /**
@@ -21,6 +23,26 @@ import { Provider } from "@/components/ui/provider"
  * <App Component={MyPage} pageProps={myPageProps} />
  */
 const App = ({ Component, pageProps }: AppProps) => {
+   
+  useEffect(() => {
+    // Замените 'defaultCategoryKey' на нужный вам ключ категории
+    const defaultCategoryKey = 'all';
+
+    catalogueStore.loadInitialData(defaultCategoryKey)
+      .catch(error => {
+        console.error('Ошибка при загрузке данных каталога:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Замените 'defaultCategoryKey' на нужный вам ключ категории
+    const defaultCategoryKey = 'all';
+
+    catalogueStore.loadInitialData(defaultCategoryKey)
+      .catch(error => {
+        console.error('Ошибка при загрузке данных каталога:', error);
+      });
+  }, []);
   return (
     <LoadingProvider>
       <ThemeProvider>
