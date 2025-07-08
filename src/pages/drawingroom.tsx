@@ -59,7 +59,7 @@ const DrawingRoom = observer(() => {
   const renderData =
     catalogueStore.products.length > 0 &&
     catalogueStore.products.map((item) => (
-      <div key={item.id} className={styles['main-container']}>
+      <div key={item.uid} className={styles['main-container']}>
         <Image
           src={item.imgSrc || '/path/to/default-image.jpg'}
           alt={item.name}
