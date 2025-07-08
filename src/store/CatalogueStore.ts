@@ -1,7 +1,9 @@
 
 import { makeObservable, observable, action, reaction, runInAction, computed } from "mobx";
-import BaseStore from "./BaseStore"
+import BaseStore from "./BaseStore";
 import { ProductItem } from '@/types/types';
+import { nanoid } from 'nanoid';
+
 
 interface WorkItem {
   id: string;
@@ -10,42 +12,66 @@ interface WorkItem {
   // другие поля по необходимости
 }
 
+type DbJson = {
+  kitchen: ProductItem[];
+  drawingroom: ProductItem[];
+  nursery: ProductItem[];
+  couch: ProductItem[];
+  bedroom: ProductItem[];
+  hallway: ProductItem[];
+  cupboard: ProductItem[];
+  tables_and_chairs: ProductItem[];
+  products: ProductItem[];
+  catalogueproducts: ProductItem[];
+  work: WorkItem[];
+};
+
 class CatalogueStore extends BaseStore {
   products: ProductItem[] = [];
   workItems: WorkItem[] = [];
   basket: ProductItem[] = [];
+  selectedCategory: string = "all";
+  dbData: DbJson | null = null;
 
   constructor() {
     super();
+
     makeObservable(this, {
       products: observable,
       workItems: observable,
       basket: observable,
-      quantity: computed,
+      selectedCategory: observable,
       totalQuantity: computed,
-      getProducts: action,
-      addProductToBasket: action,
-      deleteProductFromBasket: action,
-      initializeBasket: action,
-      incrementProductQuantity: action,
-      decrementProductQuantity: action,
-      clearProduct: action,
-      getWorkItems: action,
-      addProductToBasketById: action,
+      quantity: computed,
+      getProducts: action.bound,
+      getWorkItems: action.bound,
+      addProductToBasket: action.bound,
+      addProductToBasketById: action.bound,
+      incrementProductQuantity: action.bound,
+      decrementProductQuantity: action.bound,
+      deleteProductFromBasket: action.bound,
+      clearProduct: action.bound,
+      initializeBasket: action.bound,
+      loadInitialData: action.bound,
+      loadDbJson: action.bound,
+      setSelectedCategory: action.bound,
     });
 
-    // Сохраняем корзину в localStorage при любых изменениях (включая quantity)
-   reaction(
-  () => this.basket.map(item => ({ id: item.id, quantity: item.quantity })),
-  basketItems => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("basket", JSON.stringify(basketItems));
-    }
-  }
-);
+    reaction(
+      () => this.basket.map(item => ({ id: item.id, quantity: item.quantity })),
+      basketItems => {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("basket", JSON.stringify(basketItems));
+        }
+      }
+    );
   }
 
-  // Геттер для подсчёта общего количества товаров
+  async setSelectedCategory(categoryKey: string) {
+    this.selectedCategory = categoryKey;
+    await this.getProducts(categoryKey);
+  }
+
   get totalQuantity() {
     return this.basket.reduce((total, item) => total + (item.quantity ?? 0), 0);
   }
@@ -55,35 +81,69 @@ class CatalogueStore extends BaseStore {
   }
 
   async getProducts(categoryKey: string): Promise<void> {
+    if (!categoryKey || typeof categoryKey !== 'string') {
+      console.warn('getProducts вызван с некорректным ключом категории:', categoryKey);
+      return;
+    }
     try {
-      const response = await fetch('/db.json');
+      const response = await fetch(`${this.baseUrl}/db.json`);
       if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
 
       const json = await response.json();
-      const key = categoryKey.startsWith('/') ? categoryKey.slice(1).toLowerCase() : categoryKey.toLowerCase();
 
-      const data: ProductItem[] = json[key];
-      if (!Array.isArray(data)) throw new Error(`Данные для категории ${categoryKey} не найдены`);
+      const key = categoryKey.replace(/^\//, '').toLowerCase();
 
-      runInAction(() => {
-        this.products = data;
-      });
-    } catch (error) {
-      console.error('Ошибка при загрузке продуктов', error);
-      throw error;
-    }
+      let data: ProductItem[];
+
+      if (key === 'all') {
+        data = [];
+        const keysToMerge = ['catalogueproducts', 'products', 'kitchen', 'drawingroom', 'bedroom'];
+        for (const k of keysToMerge) {
+          if (Array.isArray(json[k])) {
+            data = data.concat(json[k]);
+          }
+        }
+      } else {
+        if (!(key in json)) {
+          throw new Error(`Категория ${categoryKey} не найдена в данных`);
+        }
+        data = json[key];
+        if (!Array.isArray(data)) throw new Error(`Данные для категории ${categoryKey} не являются массивом`);
+        console.log("Загружаем категорию:", key, "Данные:", data);
+      }
+      // Добавляем уникальный uid к каждому продукту
+    const dataWithUid = data.map(item => ({
+      ...item,
+      uid: nanoid(),
+    }));
+
+    runInAction(() => {
+      this.products = dataWithUid;
+    });
+  } catch (error) {
+    console.error('Ошибка при загрузке продуктов', error);
+    throw error;
+  }
+
+    //   runInAction(() => {
+    //     this.products = data;
+    //   });
+    // } catch (error) {
+    //   console.error('Ошибка при загрузке продуктов', error);
+    //   throw error;
+    // }
   }
 
   async getWorkItems(url: string): Promise<void> {
     try {
       const response = await fetch(`${this.baseUrl}${url}`);
-      if(!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
+      if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
 
       const data: WorkItem[] = await response.json();
       runInAction(() => {
         this.workItems = data;
       });
-    } catch(error) {
+    } catch (error) {
       console.error("Ошибка при загрузке работ:", error);
     }
   }
@@ -94,6 +154,15 @@ class CatalogueStore extends BaseStore {
       existingProduct.quantity = (existingProduct.quantity ?? 0) + 1;
     } else {
       this.basket.push({ ...product, quantity: 1 });
+    }
+  }
+
+  addProductToBasketById(productId: string): void {
+    const product = this.products.find(p => String(p.id) === String(productId));
+    if (product) {
+      this.addProductToBasket(product);
+    } else {
+      console.warn(`Product with id ${productId} not found in catalogue`);
     }
   }
 
@@ -119,51 +188,55 @@ class CatalogueStore extends BaseStore {
     this.basket = this.basket.filter(item => String(item.id) !== String(itemId));
   }
 
-  clearProduct(id: string) {
+  clearProduct(id: string): void {
     this.basket = this.basket.filter(item => String(item.id) !== String(id));
   }
 
-  addProductToBasketById(productId: string): void {
-    const product = this.products.find(p => String(p.id) === String(productId));
-    if (product) {
-      this.addProductToBasket(product);
-    } else {
-      console.warn(`Product with id ${productId} not found in catalogue`);
+  initializeBasket(): void {
+    if (typeof window === 'undefined') return;
+
+    const savedBasketJson = localStorage.getItem("basket");
+    if (savedBasketJson) {
+      try {
+        const savedBasket: { id: string; quantity: number }[] = JSON.parse(savedBasketJson);
+        runInAction(() => {
+          this.basket = savedBasket.map(({ id, quantity }) => {
+            const product = this.products.find(p => String(p.id) === String(id));
+            if (!product) {
+              console.warn(`Product with id ${id} not found in catalogue during basket initialization`);
+              return null;
+            }
+            return { ...product, quantity };
+          }).filter(Boolean) as ProductItem[];
+        });
+      } catch (error) {
+        console.error("Ошибка при парсинге корзины из localStorage:", error);
+      }
     }
   }
 
- // Инициализация корзины (вызывать после загрузки products)
-initializeBasket(): void {
-  if (typeof window === 'undefined') return;
+ async loadInitialData(categoryKey?: string): Promise<void> {
+  if (categoryKey) {
+    await this.getProducts(categoryKey);  // сначала загрузка продуктов
+  }
+  this.initializeBasket();                // потом инициализация корзины
+}
 
-  const savedBasketJson = localStorage.getItem("basket");
-  if (savedBasketJson) {
+  async loadDbJson(): Promise<void> {
+    if (typeof window !== "undefined")
     try {
-      const savedBasket: {id: string; quantity: number}[] = JSON.parse(savedBasketJson);
+      const response = await fetch(`${this.baseUrl}/db.json`);
+      if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
+
+      const json: DbJson = await response.json();
       runInAction(() => {
-        this.basket = savedBasket.map(({ id, quantity }) => {
-          const product = this.products.find(p => String(p.id) === String(id));
-          if (!product) {
-            console.warn(`Product with id ${id} not found in catalogue during basket initialization`);
-            return null;
-          }
-          return { ...product, quantity };
-        }).filter(Boolean) as ProductItem[];
+        this.dbData = json;
       });
     } catch (error) {
-      console.error("Ошибка при парсинге корзины из localStorage:", error);
+      console.error("Ошибка загрузки db.json", error);
     }
   }
-}
-//  метод для загрузки продуктов и инициализации корзины вместе
-async loadInitialData(categoryKey?: string) {
-  if (categoryKey) {
-    await this.getProducts(categoryKey);
-  }
-  this.initializeBasket();
-}
 }
 
 const catalogueStore = new CatalogueStore();
-catalogueStore.initializeBasket();
 export default catalogueStore;
