@@ -8,7 +8,7 @@ import { LoadingProvider } from '@/context/LoadingContext';
 import MenuBar from "@/components/ui/MenuBar/MenuBar";
 import { Provider } from "@/components/ui/provider"
 import catalogueStore from '@/store/CatalogueStore';
-
+import { useRouter } from "next/router"
 
 /**
  * Корневой элемент страницы.
@@ -23,26 +23,16 @@ import catalogueStore from '@/store/CatalogueStore';
  * <App Component={MyPage} pageProps={myPageProps} />
  */
 const App = ({ Component, pageProps }: AppProps) => {
-   
+   const router = useRouter();
+ 
   useEffect(() => {
-    // Замените 'defaultCategoryKey' на нужный вам ключ категории
-    const defaultCategoryKey = 'all';
+    // Получаем ключ категории из пути
+    // Например, если URL /kitchen или /drawingroom, берем первый сегмент пути
+    const pathSegments = router.asPath.split("/").filter(Boolean);
+    const categoryKey = pathSegments[0] || "all"; // если пусто — all
 
-    catalogueStore.loadInitialData(defaultCategoryKey)
-      .catch(error => {
-        console.error('Ошибка при загрузке данных каталога:', error);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Замените 'defaultCategoryKey' на нужный вам ключ категории
-    const defaultCategoryKey = 'all';
-
-    catalogueStore.loadInitialData(defaultCategoryKey)
-      .catch(error => {
-        console.error('Ошибка при загрузке данных каталога:', error);
-      });
-  }, []);
+    catalogueStore.loadInitialData(categoryKey).catch(console.error);
+  }, [router.asPath]);
   return (
     <LoadingProvider>
       <ThemeProvider>
