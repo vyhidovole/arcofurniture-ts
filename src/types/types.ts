@@ -1,5 +1,6 @@
 // types.ts
 export interface ProductItem {
+  uid:string
   id: string ;
   name: string;
   category: string;
