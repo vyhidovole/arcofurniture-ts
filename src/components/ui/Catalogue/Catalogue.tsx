@@ -7,6 +7,7 @@ import { useLoading } from "@/context/LoadingContext";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css"
 import styles from "./Catalogue.module.css"
+import { useRouter } from "next/router";
 
 /**
  * Компонент Catalogue отображает список продуктов.
@@ -22,18 +23,32 @@ import styles from "./Catalogue.module.css"
  * <Catalogue />
  */
 const Catalogue = observer(() => {
+  const router = useRouter();
   const { loading, setLoading } = useLoading();
 
   useEffect(() => {
-  setLoading(true);
-  catalogueStore.getProducts('CatalogueProducts').finally(() => {
-    setLoading(false);
-  });
-}, [setLoading]);
+  if (!router.isReady) return;
 
+  const segments = router.asPath.split("/").filter(Boolean);
+  let categoryKey = segments[0] || "catalogueproducts";
+
+  // Если пользователь зашёл на /catalogue, заменяем на catalogueproducts
+  if (categoryKey === "catalogueproducts") {
+    categoryKey = "catalogueproducts";
+  }
+
+  // Если категория catalogueproducts — загружаем все товары (all)
+  if (categoryKey === "catalogueproducts") {
+    categoryKey = "all";
+  }
+
+  setLoading(true);
+  catalogueStore.getProducts(categoryKey).finally(() => setLoading(false));
+}, [router.isReady, router.asPath, setLoading]);
 
 
   const productLinks: Record<
+    | "каталог"
     | "кухни"
     | "гостиные"
     | "детские"
@@ -44,6 +59,7 @@ const Catalogue = observer(() => {
     | "столы и стулья",
     string
   > = {
+    каталог: "/catalogueproducts",
     кухни: "/kitchen",
     гостиные: "/drawingroom",
     детские: "/nursery",
@@ -66,7 +82,7 @@ const Catalogue = observer(() => {
 
       return (
         <div
-          key={item.id}
+          key={item.uid}
           className={styles["catalogue-container"]}
         >
           <Image
@@ -77,9 +93,9 @@ const Catalogue = observer(() => {
             className={styles["catalogue-img"]}
           />
           <Link href={href} className={styles["catalogue-button"]} >
-            
-              {item.name}
-            
+
+            {item.name}
+
           </Link>
         </div>
       );
