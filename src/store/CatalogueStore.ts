@@ -43,6 +43,7 @@ class CatalogueStore extends BaseStore {
       selectedCategory: observable,
       totalQuantity: computed,
       quantity: computed,
+      getCategories:action.bound,
       getProducts: action.bound,
       getWorkItems: action.bound,
       addProductToBasket: action.bound,
@@ -79,7 +80,27 @@ class CatalogueStore extends BaseStore {
   get quantity() {
     return this.totalQuantity;
   }
+async getCategories(): Promise<void> {
+    try {
+      const response = await fetch(`${this.baseUrl}/db.json`);
+      if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
 
+      const json = await response.json();
+
+      const categories = Array.isArray(json.catalogueproducts) ? json.catalogueproducts : [];
+
+      const categoriesWithUid = categories.map((item: ProductItem) => ({
+        ...item,
+        uid: nanoid(),
+      }));
+
+      runInAction(() => {
+        this.products = categoriesWithUid;
+      });
+    } catch (error) {
+      console.error("Ошибка при загрузке категорий", error);
+    }
+  }
   async getProducts(categoryKey: string): Promise<void> {
     if (!categoryKey || typeof categoryKey !== 'string') {
       console.warn('getProducts вызван с некорректным ключом категории:', categoryKey);
@@ -103,7 +124,10 @@ class CatalogueStore extends BaseStore {
             data = data.concat(json[k]);
           }
         }
-      } else {
+      } else if (key === 'catalogueproducts') {
+  // только массив catalogueproducts
+  data = Array.isArray(json.catalogueproducts) ? json.catalogueproducts : [];
+}else {
         if (!(key in json)) {
           throw new Error(`Категория ${categoryKey} не найдена в данных`);
         }
