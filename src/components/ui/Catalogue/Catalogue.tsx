@@ -30,20 +30,23 @@ const Catalogue = observer(() => {
   if (!router.isReady) return;
 
   const segments = router.asPath.split("/").filter(Boolean);
-  let categoryKey = segments[0] || "catalogueproducts";
+  let categoryKey = segments[0] || "all";
 
-  // Если пользователь зашёл на /catalogue, заменяем на catalogueproducts
-  if (categoryKey === "catalogueproducts") {
-    categoryKey = "catalogueproducts";
-  }
+if (categoryKey === "catalogueproducts") {
+  // оставляем как есть, чтобы загрузить именно catalogueproducts
+} else if (categoryKey === "catalogue") {
+  // если у вас есть путь /catalogue, можно его тоже обработать
+  categoryKey = "catalogueproducts";
+}
 
+ 
   // Если категория catalogueproducts — загружаем все товары (all)
   if (categoryKey === "catalogueproducts") {
     categoryKey = "all";
   }
 
   setLoading(true);
-  catalogueStore.getProducts(categoryKey).finally(() => setLoading(false));
+  catalogueStore.getCategories().finally(() => setLoading(false));
 }, [router.isReady, router.asPath, setLoading]);
 
 
