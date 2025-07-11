@@ -70,7 +70,7 @@ if (categoryKey === "catalogueproducts") {
     диваны: "/couch",
     прихожие: "/hallway",
     "шкафы-купе": "/cupboard",
-    "столы и стулья": "/tables-and-chairs",
+    "столы и стулья": "/tables_and_chairs",
   };
 
   function isProductKey(key: string): key is keyof typeof productLinks {
@@ -95,7 +95,7 @@ if (categoryKey === "catalogueproducts") {
             height={185}
             className={styles["catalogue-img"]}
           />
-          <Link href={href} className={styles["catalogue-button"]} >
+          <Link href={encodeURI(href)} className={styles["catalogue-button"]} >
 
             {item.name}
 
