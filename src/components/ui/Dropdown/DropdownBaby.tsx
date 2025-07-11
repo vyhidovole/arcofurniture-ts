@@ -1,32 +1,46 @@
-import { Button, Menu, Portal } from "@chakra-ui/react"
+
+import { Button, Menu, Portal } from "@chakra-ui/react";
+import Link from "next/link";
+
+const links = [
+  { title: "Угловые кухни", category: "nursery" },
+  { title: "Модульные кухни", category: "nursery" },
+  { title: "Готовые комплекты", category: "nursery" },
+  { title: "Маленькие кухни", category: "nursery" },
+  { title: "Кухонные уголки", category: "nursery" },
+];
 
 const DropdownBaby = () => {
   return (
     <Menu.Root>
       <Menu.Trigger asChild>
-        <Button size="sm"
-          variant="ghost"
+        <Button
+          size="sm"
+          variant="outline"
+          color="black"
+          borderColor="#14b8a6"
           fontSize="lg"
           _focus={{
-            boxShadow:"none",
-            bg:"transparent",
-            color:"black"
+            outline: "none",
+            boxShadow: "none",
+            bg: "transparent",
+            color: "black",
           }}
           _focusVisible={{
-            boxShadow:"none",
-            bg:"transparent",
-            color:"black"
+            outline: "none",
+            boxShadow: "none",
+            bg: "transparent",
+            color: "black",
           }}
           _active={{
-            bg:"transparent",
-            color:"black"
+            bg: "transparent",
+            color: "black",
           }}
           _hover={{
             bg: "#14b8a6",
             color: "white",
           }}
           css={{
-            // Когда меню открыто — перекрываем стили фокуса и ховера
             '&[aria-expanded="true"]': {
               background: 'transparent !important',
               color: 'black !important',
@@ -43,42 +57,19 @@ const DropdownBaby = () => {
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content p='16px'>
-            {links.map((link) => (
-              <Menu.Item key={link.href} asChild value={link.title}>
-                <a href={link.href}  rel="noreferrer">
-                  {link.title}
-                </a>
+          <Menu.Content p="16px"display="flex" flexDirection="column">
+            {links.map(({ title, category }) => (
+              <Menu.Item key={category} asChild value={title}>
+                <Link href={`/${category}`} >
+                  {title}
+                </Link>
               </Menu.Item>
             ))}
           </Menu.Content>
         </Menu.Positioner>
       </Portal>
     </Menu.Root>
-  )
-}
+  );
+};
 
-const links = [
-  {
-    title: "Кровати",
-    href: "/nursery",
-  },
-  {
-    title: "Полки",
-    href: "/nursery",
-  },
-  {
-    title: "Столы",
-    href: "/nursery",
-  },
-  {
-    title: "Шкафы",
-    href: "/nursery",
-  },
-  {
-    title: "Комоды",
-    href: "/nursery",
-  },
-
-]
-export default DropdownBaby
+export default DropdownBaby;

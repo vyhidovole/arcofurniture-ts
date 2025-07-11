@@ -1,32 +1,44 @@
-import { Button, Menu, Portal } from "@chakra-ui/react"
+import { Button, Menu, Portal } from "@chakra-ui/react";
+import Link from "next/link";
 
-const DropdownLobby = () => {
- return (
+const links = [
+  { title: "Модульные", category: "hallway" },
+  { title: "Обувницы", category: "hallway" },
+  
+];
+
+const DropdownLobby
+ = () => {
+  return (
     <Menu.Root>
       <Menu.Trigger asChild>
-        <Button size="sm"
-          variant="ghost"
+        <Button
+          size="sm"
+          variant="outline"
+          color="black"
+          borderColor="#14b8a6"
           fontSize="lg"
           _focus={{
-            boxShadow:"none",
-            bg:"transparent",
-            color:"black"
+            outline: "none",
+            boxShadow: "none",
+            bg: "transparent",
+            color: "black",
           }}
           _focusVisible={{
-            boxShadow:"none",
-            bg:"transparent",
-            color:"black"
+            outline: "none",
+            boxShadow: "none",
+            bg: "transparent",
+            color: "black",
           }}
           _active={{
-            bg:"transparent",
-            color:"black"
+            bg: "transparent",
+            color: "black",
           }}
           _hover={{
             bg: "#14b8a6",
             color: "white",
           }}
           css={{
-            // Когда меню открыто — перекрываем стили фокуса и ховера
             '&[aria-expanded="true"]': {
               background: 'transparent !important',
               color: 'black !important',
@@ -43,31 +55,20 @@ const DropdownLobby = () => {
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content p="16px">
-            {links.map((link) => (
-              <Menu.Item key={link.href} asChild value={link.title}>
-                <a href={link.href}  rel="noreferrer">
-                  {link.title}
-                </a>
+          <Menu.Content p="16px" display="flex" flexDirection="column">
+            {links.map(({ title, category }) => (
+              <Menu.Item key={category} asChild value={title}>
+                <Link href={`/${category}`} >
+                  {title}
+                </Link>
               </Menu.Item>
             ))}
           </Menu.Content>
         </Menu.Positioner>
       </Portal>
     </Menu.Root>
-  )
-}
-
-const links = [
-  {
-    title: " Модульные",
-    href: "/hallway",
-  },
-  {
-    title: "Обувницы",
-    href: "/hallway",
-  },
- 
-]
+  );
+};
 
 export default DropdownLobby
+;

@@ -1,11 +1,13 @@
+
 import { Button, Menu, Portal } from "@chakra-ui/react";
+import Link from "next/link";
 
 const links = [
-  { title: "Угловые кухни", href: "/kitchen" },
-  { title: "Модульные кухни", href: "/kitchen" },
-  { title: "Готовые комплекты", href: "/kitchen" },
-  { title: "Маленькие кухни", href: "/kitchen" },
-  { title: "Кухонные уголки", href: "/kitchen" },
+  { title: "Угловые кухни", category: "kitchen" },
+  { title: "Модульные кухни", category: "kitchen" },
+  { title: "Готовые комплекты", category: "kitchen" },
+  { title: "Маленькие кухни", category: "kitchen" },
+  { title: "Кухонные уголки", category: "kitchen" },
 ];
 
 const Dropdown = () => {
@@ -39,7 +41,6 @@ const Dropdown = () => {
             color: "white",
           }}
           css={{
-            // Когда меню открыто — перекрываем стили фокуса и ховера
             '&[aria-expanded="true"]': {
               background: 'transparent !important',
               color: 'black !important',
@@ -56,12 +57,12 @@ const Dropdown = () => {
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content p='16px'>
-            {links.map((link) => (
-              <Menu.Item key={link.href} asChild value={link.title}>
-                <a href={link.href}  rel="noreferrer">
-                  {link.title}
-                </a>
+          <Menu.Content p="16px"display="flex" flexDirection="column">
+            {links.map(({ title, category }) => (
+              <Menu.Item key={category} asChild value={title}>
+                <Link href={`/${category}`} >
+                  {title}
+                </Link>
               </Menu.Item>
             ))}
           </Menu.Content>
