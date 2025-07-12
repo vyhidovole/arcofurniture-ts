@@ -21,17 +21,23 @@ type DbJson = {
   hallway: ProductItem[];
   cupboard: ProductItem[];
   tables_and_chairs: ProductItem[];
-  products: ProductItem[];
+  products?: Record<string, ProductItem[]>;
+  // products: ProductItem[];
   catalogueproducts: ProductItem[];
   work: WorkItem[];
 };
 
 class CatalogueStore extends BaseStore {
+  // Храним текущий список продуктов для выбранной категории
   products: ProductItem[] = [];
   workItems: WorkItem[] = [];
   basket: ProductItem[] = [];
+  // Выбранная категория (например, 'kitchen', 'all' и т.п.)
   selectedCategory: string = "all";
+  // Храним все данные из db.json после загрузки
   dbData: DbJson | null = null;
+  
+
 
   constructor() {
     super();
@@ -43,7 +49,7 @@ class CatalogueStore extends BaseStore {
       selectedCategory: observable,
       totalQuantity: computed,
       quantity: computed,
-      getCategories:action.bound,
+      getCategories: action.bound,
       getProducts: action.bound,
       getWorkItems: action.bound,
       addProductToBasket: action.bound,
@@ -56,6 +62,8 @@ class CatalogueStore extends BaseStore {
       loadInitialData: action.bound,
       loadDbJson: action.bound,
       setSelectedCategory: action.bound,
+      setProducts: action,
+      setDbData: action,
     });
 
     reaction(
@@ -67,10 +75,28 @@ class CatalogueStore extends BaseStore {
       }
     );
   }
-
+  /**
+     * Устанавливает текущую категорию и загружает продукты для неё
+     * @param categoryKey - ключ категории, например 'kitchen' или 'all'
+     */
   async setSelectedCategory(categoryKey: string) {
     this.selectedCategory = categoryKey;
+    // Загружаем продукты для выбранной категории
     await this.getProducts(categoryKey);
+  }
+  /**
+    * Устанавливает список продуктов в observable поле
+    * @param products - массив продуктов
+    */
+  setProducts(products: ProductItem[]) {
+    this.products = products;
+  }
+  /**
+  * Устанавливает загруженные данные db.json
+  * @param data - объект с данными из db.json
+  */
+  setDbData(data: DbJson) {
+    this.dbData = data;
   }
 
   get totalQuantity() {
@@ -80,7 +106,8 @@ class CatalogueStore extends BaseStore {
   get quantity() {
     return this.totalQuantity;
   }
-async getCategories(): Promise<void> {
+
+  async getCategories(): Promise<void> {
     try {
       const response = await fetch(`${this.baseUrl}/db.json`);
       if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
@@ -101,62 +128,98 @@ async getCategories(): Promise<void> {
       console.error("Ошибка при загрузке категорий", error);
     }
   }
+  /**
+   * Получает продукты для заданной категории из загруженного dbData.
+   * Если dbData ещё не загружен, сначала вызывает loadDbJson.
+   * Обновляет observable products.
+   * @param categoryKey - категория, например 'kitchen'
+   */
+ 
   async getProducts(categoryKey: string): Promise<void> {
-    if (!categoryKey || typeof categoryKey !== 'string') {
-      console.warn('getProducts вызван с некорректным ключом категории:', categoryKey);
-      return;
+    runInAction(() => {
+    this.setProducts([]);
+  });
+  if (!this.dbData) {
+    await this.loadDbJson();
+    if (!this.dbData) {
+      throw new Error("Данные db.json не загружены");
     }
-    try {
-      const response = await fetch(`${this.baseUrl}/db.json`);
-      if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
+  }
 
-      const json = await response.json();
+  const keyRaw = categoryKey.replace(/^\//, "").toLowerCase();
 
-      const key = categoryKey.replace(/^\//, '').toLowerCase();
+  // Ключи DbJson
+  type DbJsonKey = keyof DbJson;
 
-      let data: ProductItem[];
+  if (keyRaw === "all") {
+    // Объединяем все категории с ProductItem[], кроме work
+    const keysToMerge: DbJsonKey[] = [
+      "catalogueproducts",
+      "products",
+      "kitchen",
+      "drawingroom",
+      "nursery",
+      "couch",
+      "bedroom",
+      "hallway",
+      "cupboard",
+      "tables_and_chairs",
+    ];
 
-      if (key === 'all') {
-        data = [];
-        const keysToMerge = ['catalogueproducts', 'products', 'kitchen', 'drawingroom', 'bedroom'];
-        for (const k of keysToMerge) {
-          if (Array.isArray(json[k])) {
-            data = data.concat(json[k]);
-          }
+    let data: ProductItem[] = [];
+
+    for (const k of keysToMerge) {
+      if (!(k in this.dbData)) continue;
+
+      if (k === "products" && this.dbData.products) {
+        // products — объект с динамическими ключами
+        const productsObj = this.dbData.products;
+        data = data.concat(Object.values(productsObj).flat());
+      } else {
+        const arr = this.dbData[k];
+        if (Array.isArray(arr)) {
+          data = data.concat(arr as ProductItem[]);
         }
-      } else if (key === 'catalogueproducts') {
-  // только массив catalogueproducts
-  data = Array.isArray(json.catalogueproducts) ? json.catalogueproducts : [];
-}else {
-        if (!(key in json)) {
-          throw new Error(`Категория ${categoryKey} не найдена в данных`);
-        }
-        data = json[key];
-        if (!Array.isArray(data)) throw new Error(`Данные для категории ${categoryKey} не являются массивом`);
-        console.log("Загружаем категорию:", key, "Данные:", data);
       }
-      // Добавляем уникальный uid к каждому продукту
-    const dataWithUid = data.map(item => ({
-      ...item,
-      uid: nanoid(),
-    }));
+    }
 
     runInAction(() => {
-      this.products = dataWithUid;
+      this.setProducts(data.map(item => ({ ...item, uid: nanoid() })));
     });
-  } catch (error) {
-    console.error('Ошибка при загрузке продуктов', error);
-    throw error;
-  }
 
-    //   runInAction(() => {
-    //     this.products = data;
-    //   });
-    // } catch (error) {
-    //   console.error('Ошибка при загрузке продуктов', error);
-    //   throw error;
-    // }
+  } else if (keyRaw in this.dbData) {
+    const key = keyRaw as DbJsonKey;
+
+    if (key === "products" && this.dbData.products) {
+      // Если категория "products", можно вернуть все вложенные массивы
+      const data = Object.values(this.dbData.products).flat();
+      runInAction(() => {
+        this.setProducts(data.map(item => ({ ...item, uid: nanoid() })));
+      });
+    } else if (key === "work") {
+      // work — другой тип, обработайте отдельно, если нужно
+      console.warn("Категория work содержит WorkItem[], не ProductItem[]");
+      runInAction(() => {
+        this.setProducts([]); // или обработать по-другому
+      });
+    } else {
+      const arr = this.dbData[key];
+      if (Array.isArray(arr)) {
+        runInAction(() => {
+          this.setProducts(arr.map(item => ({ ...item, uid: nanoid() })));
+        });
+      } else {
+        runInAction(() => {
+          this.setProducts([]);
+        });
+      }
+    }
+
+  } else {
+    console.warn(`Категория ${keyRaw} не найдена в db.json`);
+    runInAction(() => this.setProducts([]));
   }
+}
 
   async getWorkItems(url: string): Promise<void> {
     try {
@@ -239,18 +302,18 @@ async getCategories(): Promise<void> {
     }
   }
 
- async loadInitialData(categoryKey?: string): Promise<void> {
-  if (categoryKey) {
-    await this.getProducts(categoryKey);  // сначала загрузка продуктов
+  async loadInitialData(categoryKey?: string): Promise<void> {
+    if (categoryKey) {
+      await this.getProducts(categoryKey);  // сначала загрузка продуктов
+    }
+    this.initializeBasket();                // потом инициализация корзины
   }
-  this.initializeBasket();                // потом инициализация корзины
-}
 
   async loadDbJson(): Promise<void> {
-    if (typeof window !== "undefined")
+    
     try {
       const response = await fetch(`${this.baseUrl}/db.json`);
-      if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
+      if (!response.ok) throw new Error(`Ошибка загрузки db.json: ${response.status}`);
 
       const json: DbJson = await response.json();
       runInAction(() => {
