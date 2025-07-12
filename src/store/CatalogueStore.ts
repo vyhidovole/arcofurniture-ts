@@ -22,7 +22,6 @@ type DbJson = {
   cupboard: ProductItem[];
   tables_and_chairs: ProductItem[];
   products?: Record<string, ProductItem[]>;
-  // products: ProductItem[];
   catalogueproducts: ProductItem[];
   work: WorkItem[];
 };
@@ -37,7 +36,8 @@ class CatalogueStore extends BaseStore {
   // Храним все данные из db.json после загрузки
   dbData: DbJson | null = null;
   
-
+// Флаг загрузки db.json
+  private isLoadingDbData = false;
 
   constructor() {
     super();
@@ -142,7 +142,8 @@ class CatalogueStore extends BaseStore {
   if (!this.dbData) {
     await this.loadDbJson();
     if (!this.dbData) {
-      throw new Error("Данные db.json не загружены");
+      console.warn("getProducts: dbData не загружен, прерываем");
+        return;
     }
   }
 
@@ -301,16 +302,45 @@ class CatalogueStore extends BaseStore {
       }
     }
   }
-
-  async loadInitialData(categoryKey?: string): Promise<void> {
-    if (categoryKey) {
-      await this.getProducts(categoryKey);  // сначала загрузка продуктов
-    }
-    this.initializeBasket();                // потом инициализация корзины
+async loadCategories() {
+  if (!this.dbData) {
+    await this.loadDbJson();
   }
+  if (!this.dbData) return;
 
+  const categories = Array.isArray(this.dbData.catalogueproducts) ? this.dbData.catalogueproducts : [];
+  runInAction(() => {
+    this.products = categories.map(item => ({ ...item, uid: nanoid() }));
+  });
+}
+  // async loadInitialData(categoryKey?: string): Promise<void> {
+  //   if (categoryKey) {
+  //     await this.getProducts(categoryKey);  // сначала загрузка продуктов
+  //   }
+  //   this.initializeBasket();                // потом инициализация корзины
+  // }
+async loadInitialData(categoryKey?: string): Promise<void> {
+  if (!categoryKey || categoryKey === "all") {
+    await this.loadCategories();
+  } else {
+    await this.getProducts(categoryKey);
+  }
+  this.initializeBasket();
+}
   async loadDbJson(): Promise<void> {
-    
+    if (this.dbData) {
+      console.log("loadDbJson: dbData уже загружен, повторная загрузка не нужна");
+      return;
+    }
+    if (this.isLoadingDbData) {
+      console.log("loadDbJson: загрузка уже выполняется, ждём завершения");
+      // Можно реализовать ожидание завершения, если нужно
+      return;
+    }
+
+    this.isLoadingDbData = true;
+    console.log("loadDbJson: начинаем загрузку db.json");
+
     try {
       const response = await fetch(`${this.baseUrl}/db.json`);
       if (!response.ok) throw new Error(`Ошибка загрузки db.json: ${response.status}`);
@@ -318,11 +348,17 @@ class CatalogueStore extends BaseStore {
       const json: DbJson = await response.json();
       runInAction(() => {
         this.dbData = json;
+        console.log("loadDbJson: dbData успешно установлен");
       });
     } catch (error) {
       console.error("Ошибка загрузки db.json", error);
+    } finally {
+      runInAction(() => {
+        this.isLoadingDbData = false;
+      });
     }
   }
+
 }
 
 const catalogueStore = new CatalogueStore();
