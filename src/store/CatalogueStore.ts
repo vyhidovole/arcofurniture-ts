@@ -1,16 +1,11 @@
 
 import { makeObservable, observable, action, reaction, runInAction, computed } from "mobx";
 import BaseStore from "./BaseStore";
-import { ProductItem } from '@/types/types';
+import { ProductItem, CatalogueItem, WorkItem, isProductItem, isCatalogueItem/* isWorkItem */ } from '@/types/types';
 import { nanoid } from 'nanoid';
 
 
-interface WorkItem {
-  id: string;
-  title: string;
-  description?: string;
-  // другие поля по необходимости
-}
+
 
 type DbJson = {
   kitchen: ProductItem[];
@@ -22,21 +17,24 @@ type DbJson = {
   cupboard: ProductItem[];
   tables_and_chairs: ProductItem[];
   products?: Record<string, ProductItem[]>;
-  catalogueproducts: ProductItem[];
-  work: WorkItem[];
+  catalogueproducts: CatalogueItem[];
+  // work: WorkItem[];
+  [key: string]: ProductItem[] | Record<string, ProductItem[]> | undefined;
 };
-
+type DbJsonKey = keyof DbJson;
 class CatalogueStore extends BaseStore {
   // Храним текущий список продуктов для выбранной категории
   products: ProductItem[] = [];
   workItems: WorkItem[] = [];
   basket: ProductItem[] = [];
+  catalogueproducts: CatalogueItem[] = [];
+
   // Выбранная категория (например, 'kitchen', 'all' и т.п.)
   selectedCategory: string = "all";
   // Храним все данные из db.json после загрузки
   dbData: DbJson | null = null;
-  
-// Флаг загрузки db.json
+
+  // Флаг загрузки db.json
   private isLoadingDbData = false;
 
   constructor() {
@@ -44,6 +42,7 @@ class CatalogueStore extends BaseStore {
 
     makeObservable(this, {
       products: observable,
+      catalogueproducts: observable,
       workItems: observable,
       basket: observable,
       selectedCategory: observable,
@@ -88,15 +87,23 @@ class CatalogueStore extends BaseStore {
     * Устанавливает список продуктов в observable поле
     * @param products - массив продуктов
     */
-  setProducts(products: ProductItem[]) {
-    this.products = products;
+  setProducts(items: ProductItem[]) {
+    console.log("setProducts: получено продуктов", items.length);
+    console.log("UIDs:", items.map(i => i.uid));
+    this.products = items;
   }
+
+  setCatalogueItems(items: CatalogueItem[]) {
+    this.catalogueproducts = items;
+  }
+
   /**
   * Устанавливает загруженные данные db.json
   * @param data - объект с данными из db.json
   */
   setDbData(data: DbJson) {
     this.dbData = data;
+    console.log("dbData загружен:", Object.keys(data));
   }
 
   get totalQuantity() {
@@ -122,7 +129,9 @@ class CatalogueStore extends BaseStore {
       }));
 
       runInAction(() => {
-        this.products = categoriesWithUid;
+        // this.products = categoriesWithUid;
+        this.catalogueproducts = categoriesWithUid;
+
       });
     } catch (error) {
       console.error("Ошибка при загрузке категорий", error);
@@ -134,93 +143,148 @@ class CatalogueStore extends BaseStore {
    * Обновляет observable products.
    * @param categoryKey - категория, например 'kitchen'
    */
- 
-  async getProducts(categoryKey: string): Promise<void> {
-    runInAction(() => {
-    this.setProducts([]);
-  });
-  if (!this.dbData) {
-    await this.loadDbJson();
+
+  getProducts(keyRaw: string) {
     if (!this.dbData) {
-      console.warn("getProducts: dbData не загружен, прерываем");
-        return;
+      console.warn("dbData отсутствует");
+      return;
     }
-  }
 
-  const keyRaw = categoryKey.replace(/^\//, "").toLowerCase();
+    console.log("getProducts вызван с keyRaw:", keyRaw);
+    console.log("Доступные ключи в dbData:", Object.keys(this.dbData));
 
-  // Ключи DbJson
-  type DbJsonKey = keyof DbJson;
+    if (!(keyRaw in this.dbData) && keyRaw !== "all") {
+      console.warn(`Ключ ${keyRaw} отсутствует в dbData`);
+      this.setProducts([]);
+      return;
+    }
 
-  if (keyRaw === "all") {
-    // Объединяем все категории с ProductItem[], кроме work
-    const keysToMerge: DbJsonKey[] = [
-      "catalogueproducts",
-      "products",
-      "kitchen",
-      "drawingroom",
-      "nursery",
-      "couch",
-      "bedroom",
-      "hallway",
-      "cupboard",
-      "tables_and_chairs",
-    ];
+    if (keyRaw === "all") {
+      const keysToMerge: DbJsonKey[] = [
+        "Products",
+        "kitchen",
+        "drawingroom",
+        "nursery",
+        "couch",
+        "bedroom",
+        "hallway",
+        "cupboard",
+        "tables_and_chairs",
+      ];
 
-    let data: ProductItem[] = [];
+      let data: ProductItem[] = [];
 
-    for (const k of keysToMerge) {
-      if (!(k in this.dbData)) continue;
+      for (const k of keysToMerge) {
+        if (!(k in this.dbData)) {
+          console.warn(`Категория ${k} отсутствует в dbData, пропускаем`);
+          continue;
+        }
 
-      if (k === "products" && this.dbData.products) {
-        // products — объект с динамическими ключами
-        const productsObj = this.dbData.products;
-        data = data.concat(Object.values(productsObj).flat());
-      } else {
-        const arr = this.dbData[k];
-        if (Array.isArray(arr)) {
-          data = data.concat(arr as ProductItem[]);
+        if (String(k).toLowerCase() === "products" && this.dbData.products) {
+          console.log(`Обрабатываем категорию "products" как объект с вложенными массивами`);
+          const productsObj = this.dbData.products;
+          const flatProducts = Object.values(productsObj).flat();
+          console.log(`Найдено ${flatProducts.length} товаров в products`);
+
+          const filtered = flatProducts.filter(isProductItem);
+          console.log(`После фильтрации isProductItem осталось ${filtered.length} товаров`);
+
+          data = data.concat(
+            filtered.map(item => ({
+              ...item,
+              uid: nanoid(),
+              quantity: item.quantity ?? 1,
+            }))
+          );
+        } else {
+          const arr = this.dbData[k];
+          if (Array.isArray(arr)) {
+            console.log(`Обрабатываем категорию ${k} как массив с ${arr.length} элементами`);
+            const filtered = arr.filter(isProductItem);
+            console.log(`После фильтрации isProductItem осталось ${filtered.length} товаров`);
+
+            data = data.concat(
+              filtered.map(item => ({
+                ...item,
+                uid: nanoid(),
+                quantity: item.quantity ?? 1,
+              }))
+            );
+          } else {
+            console.warn(`Категория ${k} не является массивом, а имеет тип ${typeof arr}`);
+          }
         }
       }
-    }
 
-    runInAction(() => {
-      this.setProducts(data.map(item => ({ ...item, uid: nanoid() })));
-    });
 
-  } else if (keyRaw in this.dbData) {
-    const key = keyRaw as DbJsonKey;
-
-    if (key === "products" && this.dbData.products) {
-      // Если категория "products", можно вернуть все вложенные массивы
-      const data = Object.values(this.dbData.products).flat();
-      runInAction(() => {
-        this.setProducts(data.map(item => ({ ...item, uid: nanoid() })));
+      // Фильтрация дубликатов uid (на всякий случай)
+      const seen = new Set<string>();
+      const uniqueData = data.filter(item => {
+        if (seen.has(item.uid)) {
+          console.warn("Дубликат uid пропущен:", item.uid, item.name);
+          return false;
+        }
+        seen.add(item.uid);
+        return true;
       });
-    } else if (key === "work") {
-      // work — другой тип, обработайте отдельно, если нужно
-      console.warn("Категория work содержит WorkItem[], не ProductItem[]");
+
+      console.log(`Всего уникальных товаров после объединения: ${uniqueData.length}`);
+
       runInAction(() => {
-        this.setProducts([]); // или обработать по-другому
+        this.setProducts(uniqueData);
+        this.setCatalogueItems([]);
+        this.workItems = [];
       });
-    } else {
+    } else if (keyRaw in this.dbData) {
+      const key = keyRaw as DbJsonKey;
       const arr = this.dbData[key];
+
       if (Array.isArray(arr)) {
+        console.log(`Обрабатываем категорию ${key} как массив с ${arr.length} элементами`);
+        const filtered = arr.filter(isProductItem);
+        console.log(`После фильтрации isProductItem осталось ${filtered.length} товаров`);
+
+        const products = filtered.map(item => ({
+          ...item,
+          uid: nanoid(),
+          quantity: item.quantity ?? 1,
+        }));
+
+        console.log(`Готово к установке ${products.length} товаров в стор`);
+
         runInAction(() => {
-          this.setProducts(arr.map(item => ({ ...item, uid: nanoid() })));
+          this.setProducts(products);
+          this.setCatalogueItems([]);
+          this.workItems = [];
+        });
+      } else if (typeof arr === "object" && arr !== null) {
+        console.log(`Обрабатываем категорию ${key} как объект с вложенными массивами`);
+        const flatProducts = Object.values(arr).flat();
+        console.log(`Найдено ${flatProducts.length} товаров в объекте категории`);
+
+        const filtered = flatProducts.filter(isProductItem);
+        console.log(`После фильтрации isProductItem осталось ${filtered.length} товаров`);
+
+        const products = filtered.map(item => ({
+          ...item,
+          uid: nanoid(),
+          quantity: item.quantity ?? 1,
+        }));
+
+        console.log(`Готово к установке ${products.length} товаров в стор`);
+
+        runInAction(() => {
+          this.setProducts(products);
+          this.setCatalogueItems([]);
+          this.workItems = [];
         });
       } else {
-        runInAction(() => {
-          this.setProducts([]);
-        });
+        console.warn(`Категория ${key} имеет неожиданный тип: ${typeof arr}`);
+        this.setProducts([]);
       }
     }
-
-  } else {
-    console.warn(`Категория ${keyRaw} не найдена в db.json`);
-    runInAction(() => this.setProducts([]));
   }
-}
+
 
   async getWorkItems(url: string): Promise<void> {
     try {
@@ -302,60 +366,64 @@ class CatalogueStore extends BaseStore {
       }
     }
   }
-async loadCategories() {
-  if (!this.dbData) {
-    await this.loadDbJson();
-  }
-  if (!this.dbData) return;
-
-  const categories = Array.isArray(this.dbData.catalogueproducts) ? this.dbData.catalogueproducts : [];
-  runInAction(() => {
-    this.products = categories.map(item => ({ ...item, uid: nanoid() }));
-  });
-}
-  // async loadInitialData(categoryKey?: string): Promise<void> {
-  //   if (categoryKey) {
-  //     await this.getProducts(categoryKey);  // сначала загрузка продуктов
-  //   }
-  //   this.initializeBasket();                // потом инициализация корзины
-  // }
-async loadInitialData(categoryKey?: string): Promise<void> {
-  if (!categoryKey || categoryKey === "all") {
-    await this.loadCategories();
-  } else {
-    await this.getProducts(categoryKey);
-  }
-  this.initializeBasket();
-}
-  async loadDbJson(): Promise<void> {
-    if (this.dbData) {
-      console.log("loadDbJson: dbData уже загружен, повторная загрузка не нужна");
-      return;
+  async loadCategories() {
+    if (!this.dbData) {
+      await this.loadDbJson();
     }
-    if (this.isLoadingDbData) {
-      console.log("loadDbJson: загрузка уже выполняется, ждём завершения");
-      // Можно реализовать ожидание завершения, если нужно
-      return;
+    if (!this.dbData) return;
+
+    const categories = Array.isArray(this.dbData.catalogueproducts) ? this.dbData.catalogueproducts : [];
+    runInAction(() => {
+      this.catalogueproducts = categories.map(item => ({ ...item, uid: nanoid() }));
+    });
+  }
+
+  async loadInitialData(categoryKey?: string): Promise<void> {
+    if (!this.dbData) {
+      console.log("dbData не загружен, загружаем...");
+      await this.loadDbJson();
+      console.log("dbData загружен");
     }
 
-    this.isLoadingDbData = true;
-    console.log("loadDbJson: начинаем загрузку db.json");
+    let products: unknown[] = [];
 
+    if (!categoryKey || categoryKey === "all") {
+      // Главная страница — категории
+      products = this.dbData.catalogueproducts ?? [];
+    } else {
+      // Товары категории
+      products = this.dbData[categoryKey] ?? [];
+    }
+
+    // Пример фильтрации или проверки типа элементов
+    if (products.length > 0) {
+      if (isCatalogueItem(products[0])) {
+        console.log("Загружены категории (CatalogueItem)");
+        // Можно тут делать дополнительные действия для категорий
+      } else if (isProductItem(products[0])) {
+        console.log("Загружены товары (ProductItem)");
+        // Логика для товаров
+      } else {
+        console.warn("Неизвестный тип элементов в products");
+      }
+    }
+
+    this.setProducts(products);
+    this.initializeBasket();
+  }
+
+
+
+  async loadDbJson() {
     try {
-      const response = await fetch(`${this.baseUrl}/db.json`);
-      if (!response.ok) throw new Error(`Ошибка загрузки db.json: ${response.status}`);
-
-      const json: DbJson = await response.json();
+      const response = await fetch("/db.json");
+      const data = await response.json();
+      console.log("db.json загружен:", data);
       runInAction(() => {
-        this.dbData = json;
-        console.log("loadDbJson: dbData успешно установлен");
+        this.dbData = data;
       });
     } catch (error) {
       console.error("Ошибка загрузки db.json", error);
-    } finally {
-      runInAction(() => {
-        this.isLoadingDbData = false;
-      });
     }
   }
 

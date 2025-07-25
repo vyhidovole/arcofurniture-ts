@@ -26,27 +26,19 @@ const Catalogue = observer(() => {
   const router = useRouter();
   const { loading, setLoading } = useLoading();
 
-  useEffect(() => {
+ useEffect(() => {
   if (!router.isReady) return;
 
   const segments = router.asPath.split("/").filter(Boolean);
   let categoryKey = segments[0] || "all";
 
-if (categoryKey === "catalogueproducts") {
-  // оставляем как есть, чтобы загрузить именно catalogueproducts
-} else if (categoryKey === "catalogue") {
-  // если у вас есть путь /catalogue, можно его тоже обработать
-  categoryKey = "catalogueproducts";
-}
-
- 
-  // Если категория catalogueproducts — загружаем все товары (all)
   if (categoryKey === "catalogueproducts") {
     categoryKey = "all";
+    
   }
 
   setLoading(true);
-  catalogueStore.getCategories().finally(() => setLoading(false));
+  catalogueStore.loadInitialData(categoryKey).finally(() => setLoading(false));
 }, [router.isReady, router.asPath, setLoading]);
 
 
@@ -76,12 +68,15 @@ if (categoryKey === "catalogueproducts") {
   function isProductKey(key: string): key is keyof typeof productLinks {
     return key in productLinks;
   }
-
+if (catalogueStore.products.length === 0 && !loading) {
+  return <div>Товары не найдены</div>;
+}
   const renderData =
     catalogueStore.products.length > 0 &&
     catalogueStore.products.map((item) => {
       const key = item.name.toLowerCase();
       const href = isProductKey(key) ? productLinks[key] : "/default";
+
 
       return (
         <div

@@ -3,21 +3,25 @@ import React, { useState, useEffect } from "react";
 import { useTheme } from '@/context/ThemeContext';
 import Image from "next/image";
 import Link from "next/link";
-import { useLoading } from '@/context/LoadingContext'; 
-import Skeleton from 'react-loading-skeleton'; 
-import 'react-loading-skeleton/dist/skeleton.css'; 
-import Modal from "@/components/ui/Modal/Modal"; 
-import ModalCall from "@/components/ui/ModalCall/ModalCall"; 
+import { useLoading } from '@/context/LoadingContext';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import Modal from "@/components/ui/Modal/Modal";
+import ModalCall from "@/components/ui/ModalCall/ModalCall";
 import ModalEntry from "../../components/ui/ModalEntry/ModalEntry";
 import { useRouter } from 'next/router';
 import { Drawer } from "@/components/Drawer/Drawer";
 import styles from './Header.module.css';
 import BurgerButton from "@/components/ui/BurgerButton/BurgerButton";
-import  BurgerMenu  from "@/components/ui/BurgerMenu/BurgerMenu";
+import BurgerMenu from "@/components/ui/BurgerMenu/BurgerMenu";
 import SearchInput from "@/components/ui/SearchInput/SearchInput";
 import ButtonBasket from "@/components/ui/ButtomBasket/ButtonBasket";
 
-
+interface HeaderProps {
+  isDrowerOpen: boolean;
+  onOpenDrower: () => void;
+  onCloseDrower: () => void;
+}
 /**
  * Компонент Header отображает верхнюю часть страницы с логотипом,
  * кнопками для открытия модальных окон и информацией о корзине.
@@ -32,23 +36,22 @@ import ButtonBasket from "@/components/ui/ButtomBasket/ButtonBasket";
  * @example
  * <Header />
  */
-const Header = () => {
+const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrower }) => {
   const { isDarkMode } = useTheme(); // Получаем доступ к теме
   // const {quantity} = useCart(); // Используем контекст
   const router = useRouter();
   const { loading, setLoading } = useLoading(); // Получаем состояние загрузки
- 
+
 
   const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модального окна
   const [isCallModalOpen, setCallModalOpen] = useState(false); // Состояние для ModalCall
   const [isEntryModalOpen, setEntryModalOpen] = useState(false); // Состояние для ModalEntry
   const [, setNewFormState] = useState(false);
-  const [isDrowerOpen, setIsDrowerOpen] = useState(false)
   const [isBurgerOpen, setIsBurgerOpen] = useState(false)
 
   const handleSetNewForm = (value: boolean) => {
-  setNewFormState(value);
-};
+    setNewFormState(value);
+  };
 
   const handleOpenModal = () => {
     setIsModalOpen(true); // Открываем модальное окно
@@ -75,12 +78,12 @@ const Header = () => {
   };
 
 
-  const handleOpenDrower = () => {
-    setIsDrowerOpen(true)
-  }
-  const handleCloseDrower = () => {
-    setIsDrowerOpen(false)
-  }
+  // const handleOpenDrower = () => {
+  //   setIsDrowerOpen(true)
+  // }
+  // const handleCloseDrower = () => {
+  //   setIsDrowerOpen(false)
+  // }
 
 
 
@@ -102,7 +105,7 @@ const Header = () => {
 
     fetchData();
   }, [setLoading]);
- // Проверка, что router определён
+  // Проверка, что router определён
   if (!router) {
     return null; // или можно вернуть загрузочный индикатор
   }
@@ -179,7 +182,7 @@ const Header = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className={styles.svg }
+            className={styles.svg}
             aria-hidden="true"
           >
             <path
@@ -205,7 +208,7 @@ const Header = () => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className={styles.svg} 
+            className={styles.svg}
             aria-hidden="true"
           >
             <path
@@ -218,15 +221,15 @@ const Header = () => {
         <p className={styles["underline-animation"]}>{loading ? <Skeleton width={50} /> : "Избранное"}</p>
       </Link>
       <div>
-        
-         <ButtonBasket loading={loading} onClick={handleOpenDrower} />
+
+        <ButtonBasket loading={loading} onClick={onOpenDrower} />
       </div>
     </div>
 
     <Modal isOpen={isModalOpen} onClose={handleCloseModal} /> {/* Добавляем модальное окно */}
-    <ModalCall isOpen={isCallModalOpen} onClose={closeCallDialog}setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
-    <ModalEntry show={isEntryModalOpen} onClose={closeEntryDialog}setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
-    <Drawer isOpen={isDrowerOpen} onClose={handleCloseDrower} isDarkMode={isDarkMode} titleDrawer="корзина">
+    <ModalCall isOpen={isCallModalOpen} onClose={closeCallDialog} setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
+    <ModalEntry show={isEntryModalOpen} onClose={closeEntryDialog} setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
+    <Drawer isOpen={isDrowerOpen} onClose={onCloseDrower} isDarkMode={isDarkMode} titleDrawer="корзина">
       <p>Добвленные товары</p>
     </Drawer>{/* Добавляем корзину товаров */}
   </div>);

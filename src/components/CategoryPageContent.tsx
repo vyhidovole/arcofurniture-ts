@@ -1,13 +1,14 @@
 
 import React, { useEffect, useState } from "react";
+import { reaction } from "mobx";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
-import { useLoading } from '@/context/LoadingContext'; // Хук для управления состоянием загрузки
-import Skeleton from 'react-loading-skeleton'; // Скеле́тон для отображения загрузочного состояния
+import { useLoading } from '@/context/LoadingContext';
+import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import catalogueStore from "@/store/CatalogueStore"; // MobX store с данными каталога
-import Alert from "@/components/ui/Alert/Alert"; // Компонент для уведомлений
-import { ProductItem } from '@/types/types'; // Типизация товара
+import catalogueStore from "@/store/CatalogueStore";
+import Alert from "@/components/ui/Alert/Alert";
+import { ProductItem } from '@/types/types';
 import styles from './CategoryPageContent.module.css';
 
 interface CategoryPageContentProps {
@@ -18,28 +19,35 @@ const CategoryPageContent: React.FC<CategoryPageContentProps> = observer(({ cate
   const { loading, setLoading } = useLoading();
   const [isShowAlert, setShowAlert] = useState(false);
 
-  // useEffect(() => {
-  //   if (!category) return;
-
-  //   setLoading(true);
-
-  //   catalogueStore.getProducts(category)
-  //     .catch(err => {
-  //       console.error("Ошибка загрузки товаров:", err);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }, [category, setLoading]);
   useEffect(() => {
     if (!category) return;
 
-  setLoading(true);
-  catalogueStore.loadInitialData(category)
-    .catch(console.error)
-    .finally(() => setLoading(false));
-}, [category,setLoading]);
+    const formattedCategory = category
+      .trim()
+      .replace(/^\/|\/$/g, '')
+      .toLowerCase()
+      .replace(/\s+/g, '_');
 
+    setLoading(true);
+    catalogueStore.loadInitialData(formattedCategory)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [category, setLoading]);
+
+  useEffect(() => {
+    const disposer = reaction(
+      () => catalogueStore.products.map(p => p.uid),
+      (uids) => {
+        const uniqueUids = new Set(uids);
+        if (uids.length !== uniqueUids.size) {
+          console.warn("Дублирующиеся uid в products:", uids);
+        }
+      },
+      { fireImmediately: true }
+    );
+
+    return () => disposer();
+  }, []);
 
   const handleAddToBasket = (item: ProductItem) => {
     catalogueStore.addProductToBasket(item);
@@ -48,52 +56,55 @@ const CategoryPageContent: React.FC<CategoryPageContentProps> = observer(({ cate
   };
 
   const renderData = catalogueStore.products.length > 0 ? (
-    catalogueStore.products.map((item: ProductItem) => (
-      <div key={item.uid} className={styles['main-container']}>
-        <Image
-          src={item.imgSrc || '/path/to/default-image.jpg'}
-          alt={item.name}
-          width={250}
-          height={300}
-          layout="responsive"
-          className={styles["kitchen-img"]}
-        />
-        <h2>{item.name || 'Нет имени'}</h2>
-        <p>{item.category || 'Нет категории'}</p>
-        <div className={styles['color-container']}>
-          {Array.isArray(item.color) ? (
-            item.color.map((color, index) => (
+    catalogueStore.products.map((item: ProductItem) => {
+      console.log("Рендеринг продукта с uid:", item.uid, "name:", item.name);
+      return (
+        <div key={item.uid} className={styles['main-container']}>
+          <Image
+            src={item.imgSrc || '/path/to/default-image.jpg'}
+            alt={item.name}
+            width={250}
+            height={300}
+            layout="responsive"
+            className={styles["kitchen-img"]}
+          />
+          <h2>{item.name || 'Нет имени'}</h2>
+          <p>{item.category || 'Нет категории'}</p>
+          <div className={styles['color-container']}>
+            {Array.isArray(item.color) ? (
+              item.color.map((color, index) => (
+                <div
+                  key={index}
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    backgroundColor: color,
+                    borderRadius: '10%',
+                    marginRight: '4px',
+                  }}
+                />
+              ))
+            ) : (
               <div
-                key={index}
                 style={{
                   width: '20px',
                   height: '20px',
-                  backgroundColor: color,
-                  borderRadius: '10%',
-                  marginRight: '4px',
+                  backgroundColor: item.color || 'gray',
+                  borderRadius: '50%',
                 }}
               />
-            ))
-          ) : (
-            <div
-              style={{
-                width: '20px',
-                height: '20px',
-                backgroundColor: item.color || 'gray',
-                borderRadius: '50%',
-              }}
-            />
-          )}
+            )}
+          </div>
+          <p>{item.price || 'Нет цены'}</p>
+          <button
+            className={styles["kitchen-button"]}
+            onClick={() => handleAddToBasket(item)}
+          >
+            купить
+          </button>
         </div>
-        <p>{item.price || 'Нет цены'}</p>
-        <button
-          className={styles["kitchen-button"]}
-          onClick={() => handleAddToBasket(item)}
-        >
-          купить
-        </button>
-      </div>
-    ))
+      );
+    })
   ) : (
     <p>Товары не найдены</p>
   );
