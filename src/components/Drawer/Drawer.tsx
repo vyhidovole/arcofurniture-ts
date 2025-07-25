@@ -30,6 +30,7 @@ export const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, titleDrawer }) 
      * @type {Function}
      */
     const closeDrawer = useCallback(() => {
+        console.log("Закрываем дровер");
         onClose();
     }, [onClose]);
 
