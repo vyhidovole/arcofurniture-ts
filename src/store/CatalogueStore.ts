@@ -1,13 +1,33 @@
 
 import { makeObservable, observable, action, reaction, runInAction, computed } from "mobx";
 import BaseStore from "./BaseStore";
-import { ProductItem, CatalogueItem, WorkItem, isProductItem, isCatalogueItem/* isWorkItem */ } from '@/types/types';
+import { ProductItem, CatalogueItem, WorkItem, isProductItem /* isWorkItem */ } from '@/types/types';
 import { nanoid } from 'nanoid';
 
 
+function addUidToCatalogueItem(item: CatalogueItem): CatalogueItem & { uid: string } {
+  return {
+    ...item,
+    uid: nanoid(),
+  };
+}
 
+function addUidToProductItem(
+  item: Omit<ProductItem, "uid" | "quantity"> & Partial<Pick<ProductItem, "quantity">>
+): ProductItem {
+  return {
+    ...item,
+    uid: nanoid(),
+    quantity: item.quantity ?? 1,
+  };
+}
+
+function isProductItemArray(arr: unknown[]): arr is ProductItem[] {
+  return arr.every(isProductItem);
+}
 
 type DbJson = {
+  catalogueproducts: CatalogueItem[];  // категории
   kitchen: ProductItem[];
   drawingroom: ProductItem[];
   nursery: ProductItem[];
@@ -17,9 +37,8 @@ type DbJson = {
   cupboard: ProductItem[];
   tables_and_chairs: ProductItem[];
   products?: Record<string, ProductItem[]>;
-  catalogueproducts: CatalogueItem[];
-  // work: WorkItem[];
-  [key: string]: ProductItem[] | Record<string, ProductItem[]> | undefined;
+  // work?: WorkItem[];
+  [key: string]: ProductItem[] | Record<string, ProductItem[]> | CatalogueItem[] | undefined;
 };
 type DbJsonKey = keyof DbJson;
 class CatalogueStore extends BaseStore {
@@ -60,6 +79,7 @@ class CatalogueStore extends BaseStore {
       initializeBasket: action.bound,
       loadInitialData: action.bound,
       loadDbJson: action.bound,
+      setCatalogueItems: action.bound,
       setSelectedCategory: action.bound,
       setProducts: action,
       setDbData: action,
@@ -123,20 +143,19 @@ class CatalogueStore extends BaseStore {
 
       const categories = Array.isArray(json.catalogueproducts) ? json.catalogueproducts : [];
 
-      const categoriesWithUid = categories.map((item: ProductItem) => ({
+      const categoriesWithUid = categories.map((item: CatalogueItem) => ({
         ...item,
         uid: nanoid(),
       }));
 
       runInAction(() => {
-        // this.products = categoriesWithUid;
         this.catalogueproducts = categoriesWithUid;
-
       });
     } catch (error) {
       console.error("Ошибка при загрузке категорий", error);
     }
   }
+
   /**
    * Получает продукты для заданной категории из загруженного dbData.
    * Если dbData ещё не загружен, сначала вызывает loadDbJson.
@@ -150,137 +169,73 @@ class CatalogueStore extends BaseStore {
       return;
     }
 
-    console.log("getProducts вызван с keyRaw:", keyRaw);
-    console.log("Доступные ключи в dbData:", Object.keys(this.dbData));
-
     if (!(keyRaw in this.dbData) && keyRaw !== "all") {
       console.warn(`Ключ ${keyRaw} отсутствует в dbData`);
-      this.setProducts([]);
+      runInAction(() => {
+        this.products = [];
+        this.catalogueproducts = [];
+        this.workItems = [];
+      });
       return;
     }
 
     if (keyRaw === "all") {
-      const keysToMerge: DbJsonKey[] = [
-        "Products",
-        "kitchen",
-        "drawingroom",
-        "nursery",
-        "couch",
-        "bedroom",
-        "hallway",
-        "cupboard",
-        "tables_and_chairs",
-      ];
-
-      let data: ProductItem[] = [];
-
-      for (const k of keysToMerge) {
-        if (!(k in this.dbData)) {
-          console.warn(`Категория ${k} отсутствует в dbData, пропускаем`);
-          continue;
-        }
-
-        if (String(k).toLowerCase() === "products" && this.dbData.products) {
-          console.log(`Обрабатываем категорию "products" как объект с вложенными массивами`);
-          const productsObj = this.dbData.products;
-          const flatProducts = Object.values(productsObj).flat();
-          console.log(`Найдено ${flatProducts.length} товаров в products`);
-
-          const filtered = flatProducts.filter(isProductItem);
-          console.log(`После фильтрации isProductItem осталось ${filtered.length} товаров`);
-
-          data = data.concat(
-            filtered.map(item => ({
-              ...item,
-              uid: nanoid(),
-              quantity: item.quantity ?? 1,
-            }))
-          );
-        } else {
-          const arr = this.dbData[k];
-          if (Array.isArray(arr)) {
-            console.log(`Обрабатываем категорию ${k} как массив с ${arr.length} элементами`);
-            const filtered = arr.filter(isProductItem);
-            console.log(`После фильтрации isProductItem осталось ${filtered.length} товаров`);
-
-            data = data.concat(
-              filtered.map(item => ({
-                ...item,
-                uid: nanoid(),
-                quantity: item.quantity ?? 1,
-              }))
-            );
-          } else {
-            console.warn(`Категория ${k} не является массивом, а имеет тип ${typeof arr}`);
-          }
-        }
-      }
-
-
-      // Фильтрация дубликатов uid (на всякий случай)
-      const seen = new Set<string>();
-      const uniqueData = data.filter(item => {
-        if (seen.has(item.uid)) {
-          console.warn("Дубликат uid пропущен:", item.uid, item.name);
-          return false;
-        }
-        seen.add(item.uid);
-        return true;
-      });
-
-      console.log(`Всего уникальных товаров после объединения: ${uniqueData.length}`);
-
-      runInAction(() => {
-        this.setProducts(uniqueData);
-        this.setCatalogueItems([]);
-        this.workItems = [];
-      });
-    } else if (keyRaw in this.dbData) {
-      const key = keyRaw as DbJsonKey;
-      const arr = this.dbData[key];
-
-      if (Array.isArray(arr)) {
-        console.log(`Обрабатываем категорию ${key} как массив с ${arr.length} элементами`);
-        const filtered = arr.filter(isProductItem);
-        console.log(`После фильтрации isProductItem осталось ${filtered.length} товаров`);
-
-        const products = filtered.map(item => ({
-          ...item,
-          uid: nanoid(),
-          quantity: item.quantity ?? 1,
-        }));
-
-        console.log(`Готово к установке ${products.length} товаров в стор`);
-
+      // Загружаем категории
+      const categories = this.dbData.catalogueproducts;
+      if (Array.isArray(categories)) {
+        const categoriesWithUid = categories.map(addUidToCatalogueItem);
         runInAction(() => {
-          this.setProducts(products);
-          this.setCatalogueItems([]);
-          this.workItems = [];
-        });
-      } else if (typeof arr === "object" && arr !== null) {
-        console.log(`Обрабатываем категорию ${key} как объект с вложенными массивами`);
-        const flatProducts = Object.values(arr).flat();
-        console.log(`Найдено ${flatProducts.length} товаров в объекте категории`);
-
-        const filtered = flatProducts.filter(isProductItem);
-        console.log(`После фильтрации isProductItem осталось ${filtered.length} товаров`);
-
-        const products = filtered.map(item => ({
-          ...item,
-          uid: nanoid(),
-          quantity: item.quantity ?? 1,
-        }));
-
-        console.log(`Готово к установке ${products.length} товаров в стор`);
-
-        runInAction(() => {
-          this.setProducts(products);
-          this.setCatalogueItems([]);
+          this.catalogueproducts = categoriesWithUid;
+          this.products = [];
           this.workItems = [];
         });
       } else {
-        console.warn(`Категория ${key} имеет неожиданный тип: ${typeof arr}`);
-        this.setProducts([]);
+        console.warn("catalogueproducts отсутствует или не массив");
+        runInAction(() => {
+          this.catalogueproducts = [];
+          this.products = [];
+          this.workItems = [];
+        });
+      }
+    } else {
+      // Загружаем продукты
+      const data = this.dbData[keyRaw as DbJsonKey];
+
+      if (Array.isArray(data) && isProductItemArray(data)) {
+        const products = (data as ProductItem[]).map(addUidToProductItem);
+        runInAction(() => {
+          this.products = products;
+          this.catalogueproducts = [];
+          this.workItems = [];
+        });
+      } else if (typeof data === "object" && data !== null) {
+        // обработка вложенных массивов
+        const flatProducts = Object.values(data).flat();
+        const filtered = flatProducts.filter(isProductItem);
+        const products = filtered.map(addUidToProductItem);
+        runInAction(() => {
+          this.products = products;
+          this.catalogueproducts = [];
+          this.workItems = [];
+        });
+      } else if (typeof data === "object" && data !== null) {
+        // Объект с вложенными массивами продуктов
+        const flatProducts = Object.values(data).flat();
+        const filtered = flatProducts.filter(isProductItem);
+        const products = filtered.map(addUidToProductItem);
+
+        runInAction(() => {
+          this.products = products;
+          this.catalogueproducts = [];
+          this.workItems = [];
+        });
+      } else {
+        console.warn(`Категория ${keyRaw} имеет неожиданный тип`);
+        runInAction(() => {
+          this.products = [];
+          this.catalogueproducts = [];
+          this.workItems = [];
+        });
       }
     }
   }
@@ -380,38 +335,57 @@ class CatalogueStore extends BaseStore {
 
   async loadInitialData(categoryKey?: string): Promise<void> {
     if (!this.dbData) {
-      console.log("dbData не загружен, загружаем...");
       await this.loadDbJson();
-      console.log("dbData загружен");
     }
-
-    let products: unknown[] = [];
+    if (!this.dbData) return;
 
     if (!categoryKey || categoryKey === "all") {
-      // Главная страница — категории
-      products = this.dbData.catalogueproducts ?? [];
-    } else {
-      // Товары категории
-      products = this.dbData[categoryKey] ?? [];
-    }
+      // Загружаем категории
+      const categories = this.dbData.catalogueproducts ?? [];
+      const categoriesWithUid = categories.map(addUidToCatalogueItem);
 
-    // Пример фильтрации или проверки типа элементов
-    if (products.length > 0) {
-      if (isCatalogueItem(products[0])) {
-        console.log("Загружены категории (CatalogueItem)");
-        // Можно тут делать дополнительные действия для категорий
-      } else if (isProductItem(products[0])) {
-        console.log("Загружены товары (ProductItem)");
-        // Логика для товаров
+      runInAction(() => {
+        this.setCatalogueItems(categoriesWithUid);
+        this.setProducts([]); // очищаем продукты
+        this.workItems = [];
+      });
+    } else {
+      // Загружаем продукты
+      const data = this.dbData[categoryKey];
+
+      if (Array.isArray(data)) {
+        // Проверяем, что элементы — продукты
+        const filtered = data.filter(isProductItem) as ProductItem[];
+        const products = filtered.map(addUidToProductItem);
+
+        runInAction(() => {
+          this.setProducts(products);
+          this.setCatalogueItems([]);
+          this.workItems = [];
+        });
+      } else if (typeof data === "object" && data !== null) {
+        // Обрабатываем вложенный объект с массивами продуктов
+        const flatProducts = Object.values(data).flat();
+        const filtered = flatProducts.filter(isProductItem);
+        const products = filtered.map(addUidToProductItem);
+
+        runInAction(() => {
+          this.setProducts(products);
+          this.setCatalogueItems([]);
+          this.workItems = [];
+        });
       } else {
-        console.warn("Неизвестный тип элементов в products");
+        // Нет данных или неизвестный формат
+        runInAction(() => {
+          this.setProducts([]);
+          this.setCatalogueItems([]);
+          this.workItems = [];
+        });
       }
     }
 
-    this.setProducts(products);
     this.initializeBasket();
   }
-
 
 
   async loadDbJson() {

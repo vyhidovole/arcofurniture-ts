@@ -22,7 +22,7 @@ export interface WorkItem {
   description?: string;
   
 }
-export function isProductItem(item: unknown): item is ProductItem {
+export function isProductItem(item: unknown): item is Omit<ProductItem, "uid" | "quantity"> & Partial<Pick<ProductItem, "quantity">> {
   if (typeof item !== "object" || item === null) return false;
   const obj = item as Record<string, unknown>;
   return (
@@ -31,10 +31,10 @@ export function isProductItem(item: unknown): item is ProductItem {
     typeof obj.category === "string" &&
     (typeof obj.color === "string" || Array.isArray(obj.color)) &&
     typeof obj.price === "string" &&
-    typeof obj.imgSrc === "string" &&
-     (typeof obj.quantity === "number" || obj.quantity === undefined)
+    typeof obj.imgSrc === "string"
   );
 }
+
 
 
 export function isCatalogueItem(item: unknown): item is CatalogueItem {
