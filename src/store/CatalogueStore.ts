@@ -3,8 +3,11 @@ import { makeObservable, observable, action, reaction, runInAction, computed } f
 import BaseStore from "./BaseStore";
 import { ProductItem, CatalogueItem, WorkItem, isProductItem /* isWorkItem */ } from '@/types/types';
 import { nanoid } from 'nanoid';
+import { normalizeCategory } from '@/utils/utils';
 
-
+function findDuplicates(arr: string[]): string[] {
+  return arr.filter((item, index) => arr.indexOf(item) !== index);
+}
 function addUidToCatalogueItem(item: CatalogueItem): CatalogueItem & { uid: string } {
   return {
     ...item,
@@ -333,60 +336,69 @@ class CatalogueStore extends BaseStore {
     });
   }
 
-  async loadInitialData(categoryKey?: string): Promise<void> {
-    if (!this.dbData) {
-      await this.loadDbJson();
-    }
-    if (!this.dbData) return;
+  async loadInitialData(category: string) {
+    try {
+      const res = await fetch('/db.json');
+      const data = await res.json();
 
-    if (!categoryKey || categoryKey === "all") {
-      // Загружаем категории
-      const categories = this.dbData.catalogueproducts ?? [];
-      const categoriesWithUid = categories.map(addUidToCatalogueItem);
+      // Ключи, где лежат товары
+      const productKeys = Object.keys(data).filter(
+        key => key !== "Products" && key !== "catalogueproducts"
+      );
+
+      // Собираем все товары в один массив
+      const allProducts = productKeys.reduce<ProductItem[]>((acc, key) => {
+        const items = Array.isArray(data[key]) ? (data[key] as ProductItem[]) : [];
+        return acc.concat(items);
+      }, []);
+
+      // Добавляем uid ко всем товарам
+      const allProductsWithUid = allProducts.map(addUidToProductItem);
+
+      const normalizedCategory = normalizeCategory(category);
 
       runInAction(() => {
-        this.setCatalogueItems(categoriesWithUid);
-        this.setProducts([]); // очищаем продукты
-        this.workItems = [];
+        if (category === "all") {
+          // При all загружаем только категории
+          this.catalogueproducts = Array.isArray(data.catalogueproducts)
+            ? data.catalogueproducts.map(addUidToProductItem)
+            : [];
+            // Проверяем дубли uid
+          const uids = this.catalogueproducts.map(item => item.uid);
+          const duplicates = findDuplicates(uids);
+
+          if (duplicates.length > 0) {
+            console.warn('Найдены дублирующиеся uid:', duplicates);
+          } else {
+            console.log('Все uid уникальны');
+          }
+
+console.log('catalogueproducts после загрузки:', this.catalogueproducts.map(item => ({
+    uid: item.uid,
+    id: item.id,
+    name: item.name,
+  })));
+  
+          this.products = []; // очищаем товары
+        } else {
+          // При конкретной категории загружаем только товары
+          this.catalogueproducts = [];
+          this.products = allProductsWithUid.filter(
+            p => p.category && normalizeCategory(p.category) === normalizedCategory
+          );
+        }
+
+        this.initializeBasket();
       });
-    } else {
-      // Загружаем продукты
-      const data = this.dbData[categoryKey];
-
-      if (Array.isArray(data)) {
-        // Проверяем, что элементы — продукты
-        const filtered = data.filter(isProductItem) as ProductItem[];
-        const products = filtered.map(addUidToProductItem);
-
-        runInAction(() => {
-          this.setProducts(products);
-          this.setCatalogueItems([]);
-          this.workItems = [];
-        });
-      } else if (typeof data === "object" && data !== null) {
-        // Обрабатываем вложенный объект с массивами продуктов
-        const flatProducts = Object.values(data).flat();
-        const filtered = flatProducts.filter(isProductItem);
-        const products = filtered.map(addUidToProductItem);
-
-        runInAction(() => {
-          this.setProducts(products);
-          this.setCatalogueItems([]);
-          this.workItems = [];
-        });
-      } else {
-        // Нет данных или неизвестный формат
-        runInAction(() => {
-          this.setProducts([]);
-          this.setCatalogueItems([]);
-          this.workItems = [];
-        });
-      }
+    } catch (error) {
+      console.error("Ошибка загрузки данных:", error);
+      runInAction(() => {
+        this.catalogueproducts = [];
+        this.products = [];
+        this.initializeBasket();
+      });
     }
-
-    this.initializeBasket();
   }
-
 
   async loadDbJson() {
     try {

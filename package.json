@@ -10,6 +10,7 @@
     "server": "json-server --watch db.json"
   },
   "dependencies": {
+    "@chakra-ui/menu": "^2.2.1",
     "@chakra-ui/react": "^3.21.0",
     "@emotion/react": "^11.14.0",
     "a11y": "^0.5.1",
