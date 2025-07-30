@@ -59,7 +59,7 @@ const DropdownBaby = () => {
         <Menu.Positioner>
           <Menu.Content p="16px"display="flex" flexDirection="column">
             {links.map(({ title, category }, index) => (
-              <Menu.Item key={`${category}-${index}`} asChild value={title}>
+              <Menu.Item key={`/category${category}-${index}`} asChild value={title}>
                 <Link href={`/${category}`} >
                   {title}
                 </Link>

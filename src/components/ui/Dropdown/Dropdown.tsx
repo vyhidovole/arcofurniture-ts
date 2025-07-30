@@ -1,5 +1,12 @@
 
-import { Button, Menu, Portal } from "@chakra-ui/react";
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+
+} from "@chakra-ui/menu";
+import { Portal, Button } from "@chakra-ui/react";
 import Link from "next/link";
 
 const links = [
@@ -12,63 +19,61 @@ const links = [
 
 const Dropdown = () => {
   return (
-    <Menu.Root>
-      <Menu.Trigger asChild>
-        <Button
-          size="sm"
-          variant="outline"
-          color="black"
-          borderColor="#14b8a6"
-          fontSize="lg"
-          _focus={{
-            outline: "none",
-            boxShadow: "none",
-            bg: "transparent",
-            color: "black",
-          }}
-          _focusVisible={{
-            outline: "none",
-            boxShadow: "none",
-            bg: "transparent",
-            color: "black",
-          }}
-          _active={{
-            bg: "transparent",
-            color: "black",
-          }}
-          _hover={{
-            bg: "#14b8a6",
-            color: "white",
-          }}
-          css={{
-            '&[aria-expanded="true"]': {
-              background: 'transparent !important',
-              color: 'black !important',
-              boxShadow: 'none !important',
-            },
-            '&[aria-expanded="true"]:hover': {
-              background: 'transparent !important',
-              color: 'black !important',
-            },
-          }}
-        >
-          кухни
-        </Button>
-      </Menu.Trigger>
+    <Menu>
+      <MenuButton
+        as={Button}
+        size="sm"
+        variant="outline"
+        color="black"
+        borderColor="#14b8a6"
+        fontSize="lg"
+        _focus={{
+          outline: "none",
+          boxShadow: "none",
+          bg: "transparent",
+          color: "black",
+        }}
+        _focusVisible={{
+          outline: "none",
+          boxShadow: "none",
+          bg: "transparent",
+          color: "black",
+        }}
+        _active={{
+          bg: "transparent",
+          color: "black",
+        }}
+        _hover={{
+          bg: "#14b8a6",
+          color: "white",
+        }}
+        sx={{
+          '&[aria-expanded="true"]': {
+            background: 'transparent',
+            color: 'black',
+            boxShadow: 'none',
+          },
+          '&[aria-expanded="true"]:hover': {
+            background: 'transparent',
+            color: 'black',
+          },
+        }}
+      >
+        кухни
+      </MenuButton>
       <Portal>
-        <Menu.Positioner>
-          <Menu.Content p="16px"display="flex" flexDirection="column">
-            {links.map(({ title, category }, index) => (
-              <Menu.Item key={`${category}-${index}`} asChild value={title}>
-                <Link href={`/${category}`} >
-                  {title}
-                </Link>
-              </Menu.Item>
-            ))}
-          </Menu.Content>
-        </Menu.Positioner>
+        <MenuList bg="white" boxShadow="0 10px 25px rgba(0, 0, 0, 0.3)" borderRadius="6px" p={8}>
+          {links.map(({ title, category }, index) => (
+            <MenuItem key={`${category}-${index}`}>
+              <Link href={`/category/${category}`} style={{ width: "100%", display: "block" }}>
+                {title}
+              </Link>
+
+            </MenuItem>
+          ))}
+        </MenuList>
       </Portal>
-    </Menu.Root>
+    </Menu>
   );
 };
 

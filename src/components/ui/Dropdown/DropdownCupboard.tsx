@@ -56,7 +56,7 @@ const DropdownCupboard = () => {
           <Menu.Content p="16px" display="flex" flexDirection="column">
            {links.map(({ title, category }, index) => (
               <Menu.Item key={`${category}-${index}`} asChild value={title}>
-                <Link href={`/${category}`} >
+                <Link href={`/category/${category}`} >
                   {title}
                 </Link>
               </Menu.Item>
