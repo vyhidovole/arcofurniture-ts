@@ -1,3 +1,4 @@
+//index/tsx
 import React from "react";
 import Head from "next/head";
 import Catalogue from "@/components/ui/Catalogue/Catalogue";
