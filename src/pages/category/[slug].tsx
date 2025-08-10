@@ -1,4 +1,4 @@
-
+//[slug].tsx
 import { useRouter } from 'next/router';
 import CategoryPageContent from '@/components/CategoryPageContent';
 
