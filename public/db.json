@@ -59,48 +59,56 @@
     {
         "id": "1",
         "name": "кухни",
+        "slug":"kitchen",
         "imgSrc":"/images/catalog1.jpg"
         
     },
     {
         "id": "2",
         "name": "гостиные",
+        "slug":"drawingroom",
         "imgSrc":"/images/lucido.jpg"
         
     },
     {
         "id": "3",
         "name": "спальни",
+        "slug":"bedroom",
         "imgSrc":"/images/catalog3.jpg"
         
     },
     {
         "id": "4",
         "name": "прихожие",
+        "slug":"hallway",
         "imgSrc":"/images/catalog4.jpg"
         
     },
     {
         "id": "5",
         "name": "шкафы-купе",
+        "slug":"cupboard",
         "imgSrc":"/images/catalog5.jpg"
         
     },
     {
         "id": "6",
         "name": "детские",
+        "slug":"nursery",
         "imgSrc":"/images/catalog6.jpg"
         
     },
     {
         "id": "7",
         "name": "диваны",
+        "slug":"couch",
         "imgSrc":"/images/catalog7.jpg"
         
     },
     {
         "id": "8",
         "name": "столы и стулья",
+        "slug":"tables_and_chairs",
         "imgSrc":"/images/catalog8.jpg"
         
     }
