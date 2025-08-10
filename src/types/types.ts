@@ -1,17 +1,18 @@
 // types.ts
 export interface ProductItem {
-  uid:string
+  uid?:string
   id: string ;
   name: string;
   category: string;
   color: string | string[];
   price: string ;
   imgSrc: string;
-  quantity: number;
+  quantity?: number;
 }
 export interface CatalogueItem {
   uid: string;
   id: string;
+  slug:string
   name: string;
   imgSrc: string;
 }
@@ -60,13 +61,4 @@ export function isWorkItem(item: unknown): item is WorkItem {
   return true;
 }
 
-// function isWorkItem(obj: any): obj is WorkItem {
-//   return (
-//     obj != null &&
-//     typeof obj === "object" &&
-//     typeof obj.id === "string" &&
-//     typeof obj.title === "string" &&
-//     (obj.description === undefined || typeof obj.description === "string") &&
-//     (obj.uid === undefined || typeof obj.uid === "string")
-//   );
-// }
+
