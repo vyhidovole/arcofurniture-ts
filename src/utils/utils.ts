@@ -1,5 +1,9 @@
 // utils.ts
 export function normalizeCategory(cat: string): string {
+  if (typeof cat!=='string'){
+    console.warn('normalizeCategory:ожидается строка, получено',cat);
+    return'';
+  }
   return cat.trim().toLowerCase().replace(/\s+/g, '_');
 }
 
