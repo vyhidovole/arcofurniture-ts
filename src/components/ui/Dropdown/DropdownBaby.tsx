@@ -3,11 +3,11 @@ import { Button, Menu, Portal } from "@chakra-ui/react";
 import Link from "next/link";
 
 const links = [
-  { title: "Угловые кухни", category: "nursery" },
-  { title: "Модульные кухни", category: "nursery" },
-  { title: "Готовые комплекты", category: "nursery" },
-  { title: "Маленькие кухни", category: "nursery" },
-  { title: "Кухонные уголки", category: "nursery" },
+  { title: "Полки", category: "nursery" },
+  { title: "Столы", category: "nursery" },
+  { title: "Шкафы", category: "nursery" },
+  { title: "Комоды", category: "nursery" },
+  
 ];
 
 const DropdownBaby = () => {
@@ -60,7 +60,7 @@ const DropdownBaby = () => {
           <Menu.Content p="16px"display="flex" flexDirection="column">
             {links.map(({ title, category }, index) => (
               <Menu.Item key={`/category${category}-${index}`} asChild value={title}>
-                <Link href={`/${category}`} >
+                <Link href={`/category/${category}`} style={{ width: "100%", display: "block" }}>
                   {title}
                 </Link>
               </Menu.Item>
