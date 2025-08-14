@@ -157,50 +157,67 @@ class CatalogueStore extends BaseStore {
     await this.loadProductsByCategory(categoryKey);
   }
 
-  addProductToBasket(product: ProductItem) {
-    runInAction(() => {
-      const existing = this.basket.find(item => String(item.id) === String(product.id));
-      if (existing) {
-        existing.quantity = (existing.quantity ?? 0) + 1;
+addProductToBasket(product: ProductItem) {
+  runInAction(() => {
+    // Ищем товар в корзине по id и category
+    const existing = this.basket.find(
+      item => item.id === product.id && item.category === product.category
+    );
+
+    if (existing) {
+      // Если товар уже есть в корзине, увеличиваем его количество
+      existing.quantity = (existing.quantity ?? 0) + 1;
+    } else {
+      // Если товара нет, добавляем его в корзину с количеством 1
+      this.basket.push({ ...product, quantity: 1 });
+    }
+  });
+}
+
+
+incrementProductQuantity(productId: string, productCategory: string) {
+  runInAction(() => {
+    // Ищем товар в корзине по id и category
+    const product = this.basket.find(
+      item => String(item.id) === String(productId) && item.category === productCategory
+    );
+
+    if (product) {
+      // Увеличиваем количество товара
+      product.quantity = (product.quantity ?? 0) + 1;
+    }
+  });
+}
+
+decrementProductQuantity(productId: string, productCategory: string) {
+  runInAction(() => {
+    // Ищем товар в корзине по id и category
+    const product = this.basket.find(
+      item => String(item.id) === String(productId) && item.category === productCategory
+    );
+
+    if (product && product.quantity !== undefined) {
+      if (product.quantity > 1) {
+        product.quantity -= 1; // Уменьшаем количество
       } else {
-        this.basket.push({ ...product, quantity: 1 });
+        this.deleteProductFromBasket(productId, productCategory); // Удаляем товар, если количество 1
       }
-    })
-  }
+    }
+  });
+}
 
-  incrementProductQuantity(productId: string) {
-    runInAction(() => {
-      const product = this.basket.find(item => String(item.id) === String(productId));
-      if (product) {
-        product.quantity = (product.quantity ?? 0) + 1;
-      }
-    })
+deleteProductFromBasket(productId: string, productCategory: string) {
+  runInAction(() => {
+    // Удаляем товар из корзины по id и category
+    this.basket = this.basket.filter(
+      item => String(item.id) !== String(productId) || item.category !== productCategory
+    );
+  });
+}
 
-  }
 
-  decrementProductQuantity(productId: string) {
-    runInAction(() => {
-      const product = this.basket.find(item => String(item.id) === String(productId));
-      if (product && product.quantity !== undefined) {
-        if (product.quantity > 1) {
-          product.quantity -= 1;
-        } else {
-          this.deleteProductFromBasket(productId);
-        }
-      }
-    })
-
-  }
-
-  deleteProductFromBasket(productId: string) {
-    runInAction(() => {
-      this.basket = this.basket.filter(item => String(item.id) !== String(productId));
-    })
-
-  }
-
-  clearProduct(productId: string) {
-    this.deleteProductFromBasket(productId);
+  clearProduct(productId: string,productCategory: string) {
+    this.deleteProductFromBasket(productId,productCategory);
   }
 
   initializeBasket() {

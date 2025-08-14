@@ -18,25 +18,25 @@ const Product: React.FC<ProductProps> = observer(({ item }) => {
   
 
   const { name, category, color,  imgSrc, id } = item;
-  const productInBasket = cartStore.basket.find(p => p.id === item.id);
+  const productInBasket = cartStore.basket.find(p => p.id === item.id && item.category === p.category);
 const quantity = productInBasket?.quantity ?? 0;
 
   
   const handleIncrement = () => {
-    cartStore.incrementProductQuantity(item.id); // Увеличиваем количество в store
+    cartStore.incrementProductQuantity(item.id, item.category); // Увеличиваем количество в store
     
   };
 
   const handleDecrement = () => {
     if (quantity > 1) {
-      cartStore.decrementProductQuantity(item.id); // Уменьшаем количество в store
+      cartStore.decrementProductQuantity(item.id, item.category); // Уменьшаем количество в store
       
     }
   };
 
   const handleDeleteProduct = () => {
-    cartStore.deleteProductFromBasket(item.id.toString()); // Вызываем deleteProduct из контекста
-    cartStore.clearProduct(id.toString()); // Также вызываем метод из store для удаления товара
+    cartStore.deleteProductFromBasket(item.id.toString(),item.category); // Вызываем deleteProduct из контекста
+    cartStore.clearProduct(id.toString(),item.category); // Также вызываем метод из store для удаления товара
   };
 
   const numericPrice = parseFloat(item.price); // Преобразуем в число

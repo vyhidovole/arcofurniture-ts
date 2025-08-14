@@ -20,7 +20,7 @@ import { ProductItem } from '@/types/types';
  */
 const Basket: React.FC = observer(() => {
 useEffect(() => {
-  catalogueStore.loadInitialData();
+  catalogueStore.loadInitialData('someCategory');
 }, []);
 
   return (
@@ -31,7 +31,7 @@ useEffect(() => {
         <div>
           <ul>
             {catalogueStore.basket.map((item: ProductItem) => (
-              <Product key={item.id} item={item} />
+              <Product  key={`${item.id}-${item.category}`} item={item} />
             ))}
           </ul>
         </div>
@@ -41,38 +41,3 @@ useEffect(() => {
 });
 
 export default Basket;
-// Загружаем сохраненные товары из localStorage при монтировании компонента
-  // useEffect(() => {
-    
-  //   const savedBasket = localStorage.getItem("basket");
-  //   if (savedBasket) {
-  //     const parsedBasket = JSON.parse(savedBasket);
-  //     console.log("Загруженная корзина:", parsedBasket); // Отладочное сообщение
-  //     catalogueStore.setBasket(parsedBasket);
-  //   } else {
-  //     console.log("Корзина пуста, нет данных в localStorage."); // Сообщение, если корзина пуста
-  //   }
-  // }, []);
-//   useEffect(() => {
-//   if (typeof window !== 'undefined') {
-//     const savedBasket = localStorage.getItem("basket");
-//     if (savedBasket) {
-//       const parsedBasket = JSON.parse(savedBasket);
-//       catalogueStore.setBasket(parsedBasket);
-//     }
-//   }
-// }, []);
-// useEffect(() => {
-//   if (typeof window !== 'undefined') {
-//     const savedBasket = localStorage.getItem("basket");
-//     if (savedBasket) {
-//       catalogueStore.setBasket(JSON.parse(savedBasket));
-//     }
-//   }
-// }, []);
-
-
-  // Сохраняем товары в localStorage при изменении корзины
-  // useEffect(() => {
-  //   localStorage.setItem("basket", JSON.stringify(catalogueStore.basket));
-  // }, [catalogueStore.basket]);
