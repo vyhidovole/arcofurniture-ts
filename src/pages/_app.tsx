@@ -16,13 +16,22 @@ const App = ({ Component, pageProps }: AppProps) => {
   const [isDrowerOpen, setIsDrowerOpen] = useState(false);
 
   useEffect(() => {
-    if (isDrowerOpen) return; // не грузим каталог, если корзина открыта
+    const loadData = async () => {
+        if (isDrowerOpen) return; // не грузим каталог, если корзина открыта
 
-    const pathSegments = router.asPath.split("/").filter(Boolean);
-    const categoryKey = pathSegments[1] ||'kitchen';
+        const pathSegments = router.asPath.split("/").filter(Boolean);
+        const categoryKey = pathSegments[1] || 'kitchen';
 
-    catalogueStore.loadInitialData(categoryKey).catch(console.error);
-  }, [router.asPath, isDrowerOpen]);
+        try {
+            await catalogueStore.initializeBasket(); // Ждем инициализации корзины
+            await catalogueStore.loadInitialData(categoryKey); // Загружаем данные
+        } catch (error) {
+            console.error("Ошибка при загрузке данных:", error);
+        }
+    };
+
+    loadData();
+}, [router.asPath, isDrowerOpen]);
 
   const handleOpenDrower = () => setIsDrowerOpen(true);
   const handleCloseDrower = () => {
