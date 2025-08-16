@@ -3,7 +3,7 @@ import { makeObservable, observable, action, runInAction, computed, reaction } f
 import BaseStore from "./BaseStore";
 import { ProductItem, CatalogueItem } from '@/types/types';
 import { nanoid } from 'nanoid';
-import {normalizeCategory} from '@/utils/utils'
+import { normalizeCategory } from '@/utils/utils'
 
 function addUidToCatalogueItem(item: CatalogueItem): CatalogueItem & { uid: string } {
   return {
@@ -55,13 +55,23 @@ class CatalogueStore extends BaseStore {
 
     // Автоматическое сохранение корзины в localStorage при изменениях
     reaction(
-      () => this.basket.map(item => ({ id: item.id, quantity: item.quantity })),
-      basketItems => {
-        if (typeof window !== "undefined") {
-          localStorage.setItem("basket", JSON.stringify(basketItems));
-        }
-      }
-    );
+  () => this.basket.map(item => ({
+    id: item.id,
+    quantity: item.quantity,
+    name: item.name,
+    category: item.category,
+    color: item.color,
+    price: item.price,
+    imgSrc: item.imgSrc
+  })),
+  basketItems => {
+    console.log("Сохраняем в localStorage:", basketItems); // Логируем перед сохранением
+    if (typeof window !== "undefined") {
+      localStorage.setItem("basket", JSON.stringify(basketItems));
+    }
+  }
+);
+
 
     this.initializeBasket();
   }
@@ -106,21 +116,21 @@ class CatalogueStore extends BaseStore {
       if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
       const data = await response.json();
       console.log("Данные из db.json:", data); // Отладка
-     
-      
- // Нормализуем ключ
-    const normalizedKey = normalizeCategory(categorySlug);
-    let productsRaw;
-     // Проверяем наличие ключа
-    if (data[normalizedKey]) {
-      productsRaw = data[normalizedKey]; // Если ключ найден в нормализованном виде
-    } else if (normalizedKey === 'product') {
-      productsRaw = data['Product']; // Если ключ "Product"
-    } else {
-      console.warn(`Категория '${normalizedKey}' не найдена.`);
-      productsRaw = []; // Устанавливаем пустой массив, если категория не найдена
-    }
-     console.log("Продукты по категории:", productsRaw); // Отладка
+
+
+      // Нормализуем ключ
+      const normalizedKey = normalizeCategory(categorySlug);
+      let productsRaw;
+      // Проверяем наличие ключа
+      if (data[normalizedKey]) {
+        productsRaw = data[normalizedKey]; // Если ключ найден в нормализованном виде
+      } else if (normalizedKey === 'product') {
+        productsRaw = data['Product']; // Если ключ "Product"
+      } else {
+        console.warn(`Категория '${normalizedKey}' не найдена.`);
+        productsRaw = []; // Устанавливаем пустой массив, если категория не найдена
+      }
+      console.log("Продукты по категории:", productsRaw); // Отладка
       // Проверяем, есть ли продукты по данному slug
       if (!Array.isArray(productsRaw)) {
         console.warn(`Категория '${categorySlug}' не найдена или не содержит продуктов.`);
@@ -155,93 +165,131 @@ class CatalogueStore extends BaseStore {
   async loadInitialData(categoryKey: string) {
     await this.loadCategories();
     await this.loadProductsByCategory(categoryKey);
+
   }
 
-addProductToBasket(product: ProductItem) {
-  runInAction(() => {
-    // Ищем товар в корзине по id и category
-    const existing = this.basket.find(
-      item => item.id === product.id && item.category === product.category
-    );
+  addProductToBasket(product: ProductItem) {
+    runInAction(() => {
+      // Ищем товар в корзине по id и category
+      const existing = this.basket.find(
+        item => item.id === product.id && item.category === product.category
+      );
 
-    if (existing) {
-      // Если товар уже есть в корзине, увеличиваем его количество
-      existing.quantity = (existing.quantity ?? 0) + 1;
-    } else {
-      // Если товара нет, добавляем его в корзину с количеством 1
-      this.basket.push({ ...product, quantity: 1 });
-    }
-  });
-}
-
-
-incrementProductQuantity(productId: string, productCategory: string) {
-  runInAction(() => {
-    // Ищем товар в корзине по id и category
-    const product = this.basket.find(
-      item => String(item.id) === String(productId) && item.category === productCategory
-    );
-
-    if (product) {
-      // Увеличиваем количество товара
-      product.quantity = (product.quantity ?? 0) + 1;
-    }
-  });
-}
-
-decrementProductQuantity(productId: string, productCategory: string) {
-  runInAction(() => {
-    // Ищем товар в корзине по id и category
-    const product = this.basket.find(
-      item => String(item.id) === String(productId) && item.category === productCategory
-    );
-
-    if (product && product.quantity !== undefined) {
-      if (product.quantity > 1) {
-        product.quantity -= 1; // Уменьшаем количество
+      if (existing) {
+        // Если товар уже есть в корзине, увеличиваем его количество
+        existing.quantity = (existing.quantity ?? 0) + 1;
       } else {
-        this.deleteProductFromBasket(productId, productCategory); // Удаляем товар, если количество 1
+        // Если товара нет, добавляем его в корзину с количеством 1
+        this.basket.push({ ...product, quantity: 1 });
       }
-    }
-  });
-}
-
-deleteProductFromBasket(productId: string, productCategory: string) {
-  runInAction(() => {
-    // Удаляем товар из корзины по id и category
-    this.basket = this.basket.filter(
-      item => String(item.id) !== String(productId) || item.category !== productCategory
-    );
-  });
-}
-
-
-  clearProduct(productId: string,productCategory: string) {
-    this.deleteProductFromBasket(productId,productCategory);
+      // this.saveBasketToLocalStorage();
+    });
   }
 
-  initializeBasket() {
-    if (typeof window === "undefined") return;
 
-    const basketJson = localStorage.getItem("basket");
-    if (!basketJson) return;
+  incrementProductQuantity(productId: string, productCategory: string) {
+    runInAction(() => {
+      // Ищем товар в корзине по id и category
+      const product = this.basket.find(
+        item => String(item.id) === String(productId) && item.category === productCategory
+      );
 
-    try {
-      const savedItems: { id: string; quantity: number }[] = JSON.parse(basketJson);
-      runInAction(() => {
-        this.basket = savedItems
-          .map(({ id, quantity }) => {
-            const product = this.products.find(p => String(p.id) === String(id));
-            if (!product) return null;
-            return { ...product, quantity };
-          })
-          .filter(Boolean) as ProductItem[];
-      });
-    } catch (e) {
-      console.error("Ошибка парсинга корзины из localStorage:", e);
-    }
+      if (product) {
+        // Увеличиваем количество товара
+        product.quantity = (product.quantity ?? 0) + 1;
+      }
+      //  this.saveBasketToLocalStorage();
+    });
   }
 
+  decrementProductQuantity(productId: string, productCategory: string) {
+    runInAction(() => {
+      // Ищем товар в корзине по id и category
+      const product = this.basket.find(
+        item => String(item.id) === String(productId) && item.category === productCategory
+      );
+
+      if (product && product.quantity !== undefined) {
+        if (product.quantity > 1) {
+          product.quantity -= 1; // Уменьшаем количество
+        } else {
+          this.deleteProductFromBasket(productId, productCategory); // Удаляем товар, если количество 1
+        }
+      }
+      //  this.saveBasketToLocalStorage();
+    });
+  }
+
+  deleteProductFromBasket(productId: string, productCategory: string) {
+    runInAction(() => {
+      // Удаляем товар из корзины по id и category
+      this.basket = this.basket.filter(
+        item => String(item.id) !== String(productId) || item.category !== productCategory
+      );
+      //  this.saveBasketToLocalStorage();
+    });
+  }
+
+
+  clearProduct(productId: string, productCategory: string) {
+    this.deleteProductFromBasket(productId, productCategory);
+    //  this.saveBasketToLocalStorage();
+  }
+
+  initializeBasket(): Promise<void> {
+    return new Promise((resolve, reject) => {
+        if (typeof window === "undefined" || !window.localStorage) {
+            return resolve(); // Если localStorage недоступен, просто завершаем
+        }
+
+        const basketJson = localStorage.getItem("basket");
+         console.log("Загруженные товары из localStorage:", basketJson); // Логируем загруженные данные
+        if (!basketJson) return resolve();
+
+        try {
+            const savedItems = JSON.parse(basketJson);
+            if (!Array.isArray(savedItems)) throw new Error("Сохраненные данные не являются массивом.");
+
+             // Обновляем корзину, добавляя недостающие параметры из products
+            const updatedBasket = savedItems.map(savedItem => {
+                const product = this.products.find(p => p.id === savedItem.id && p.category === savedItem.category);
+                if (product) {
+                    return {
+                        ...product, // добавляем все параметры продукта
+                        quantity: savedItem.quantity // сохраняем количество
+                    };
+                }
+                return savedItem; // Если продукта нет, возвращаем сохраненный элемент
+            });
+
+            runInAction(() => {
+                this.basket = updatedBasket; // Обновляем состояние корзины
+            });
+            resolve(); // Успешно завершено
+        } catch (e) {
+            console.error("Ошибка при загрузке корзины:", e);
+            reject(e); // Завершение с ошибкой
+        }
+    });
+}
+
+
+
+ // Метод для сохранения корзины в localStorage
+    saveBasketToLocalStorage() {
+        const basketToSave = this.basket.map(item => ({
+            id: item.id,
+            quantity: item.quantity,
+            name: item.name,
+            category: item.category,
+            color: item.color,
+            price: item.price,
+            imgSrc: item.imgSrc
+        }));
+
+        localStorage.setItem("basket", JSON.stringify(basketToSave));
+        console.log("Сохраняем корзину в localStorage:", basketToSave);
+    }
   setSelectedCategory(categoryKey: string) {
     runInAction(() => {
       this.selectedCategory = categoryKey;
