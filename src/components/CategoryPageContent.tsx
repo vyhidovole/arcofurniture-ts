@@ -53,7 +53,7 @@ const CategoryPageContent: React.FC<CategoryPageContentProps> = observer(({ cate
       <div className={styles["grid-container"]}>
         {loading ? renderLoadingSkeletons() : products.length > 0 ? (
           products.map(item => (
-            <div key={item.id} className={styles["catalogue-container"]}>
+            <div  key={`${item.id}-${item.category}`} className={styles["catalogue-container"]}>
               <Image
                 src={item.imgSrc || "/default.jpg"}
                 alt={item.name}
