@@ -67,6 +67,15 @@
 .button-openEntryDialog {
     display: none;
 }
+.button-openEntryDialog.dark {
+  background-color:  #333;
+  color: white;
+   
+}
+.button-openEntryDialog.light {
+  background-color: white;
+  color: black;
+}
 
 @media (min-width:1024) {
     .button-openEntryDialog {
@@ -127,10 +136,18 @@
     display: flex;
     flex-direction: column;
     margin-top: 0.25rem;
-    background-color: #ffffff;
+    background-color: var(--button-bg-light);
     border: transparent;
 }
+.button-basket.dark {
+   background-color: #333;
+  color: white;
+}
 
+.button-basket.light {
+   background-color: white;
+  color: black;
+}
 .header-count {
     position: absolute;
     top: 0;
@@ -145,4 +162,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.headerDark {
+  background-color: #333; /* Пример темного фона */
+  color: white; /* Пример текста для темного режима */
+}
+
+.headerLight {
+  background-color: #fff; /* Пример светлого фона */
+  color: black; /* Пример текста для светлого режима */
 }

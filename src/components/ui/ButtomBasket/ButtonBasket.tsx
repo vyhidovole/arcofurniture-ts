@@ -3,13 +3,15 @@ import React, { useEffect, useState } from "react";
 import Skeleton from 'react-loading-skeleton'; 
 import catalogueStore from "@/store/CatalogueStore";
 import styles from "./ButtonBasket.module.css"; 
-
+import { useTheme } from '@/context/ThemeContext';
 interface ButtonBasketProps {
   loading: boolean;
   onClick: () => void;
+  
 }
 
 const ButtonBasket: React.FC<ButtonBasketProps> = observer(({ loading, onClick }) => {
+  const { isDarkMode } = useTheme(); // Получаем текущее состояние темы
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -19,7 +21,10 @@ const ButtonBasket: React.FC<ButtonBasketProps> = observer(({ loading, onClick }
   const quantity = catalogueStore.totalQuantity;
 
   return (
-    <button type="button" className={styles["button-basket"]} onClick={onClick}>
+    <button type="button"
+     className={`${styles["button-basket"]} ${isDarkMode ? styles["dark"] : styles["light"]}`} // Применяем классы в зависимости от темы
+     onClick={onClick}
+     style={{ backgroundColor: isDarkMode ? '#333333' : '#ffffff' }}>
       {loading ? (
         <div className={styles["round-skeleton"]}></div>
       ) : (

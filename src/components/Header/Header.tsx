@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import { useCart } from '@/context/CartContext';
+import classNames from 'classnames';
 import { useTheme } from '@/context/ThemeContext';
 import Image from "next/image";
 import Link from "next/link";
@@ -37,7 +38,12 @@ interface HeaderProps {
  * <Header />
  */
 const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrower }) => {
-  const { isDarkMode } = useTheme(); // Получаем доступ к теме
+  const themeContext = useTheme(); // Получаем доступ к теме
+  if (!themeContext) {
+    throw new Error('Header must be used within a ThemeProvider');
+  }
+  const { isDarkMode } = themeContext; // Получаем доступ к свойствам контекста
+
   // const {quantity} = useCart(); // Используем контекст
   const router = useRouter();
   const { loading, setLoading } = useLoading(); // Получаем состояние загрузки
@@ -105,11 +111,18 @@ const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrow
 
     fetchData();
   }, [setLoading]);
+  // Определяем классы для кнопки в зависимости от состояния темы
+  const buttonClass = isDarkMode ? styles.dark : styles.light;
+ 
+
   // Проверка, что router определён
   if (!router) {
     return null; // или можно вернуть загрузочный индикатор
   }
-  return (<div className={styles["headerContainer"]}>
+  return (<div className={classNames(styles.headerContainer, {
+    [styles.headerDark]: isDarkMode,
+    [styles.headerLight]: !isDarkMode,
+  })}>
     <BurgerButton onClick={handleOpenBurger} />
     <BurgerMenu isOpen={isBurgerOpen} onClose={handleCloseBurger} titleBurger="меню" />
     {loading ? (
@@ -170,7 +183,9 @@ const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrow
     </div>
     <div className={styles["container-entryDialog"]}>
 
-      <button type="button" className={styles["button-openEntryDialog"]} onClick={openEntryDialog}>
+      <button type="button"
+       className={`${styles["button-openEntryDialog"]} ${buttonClass}`} 
+       onClick={openEntryDialog}>
         {loading ? (
           <div className={styles["round-skeleton"]}></div>
 
@@ -220,10 +235,9 @@ const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrow
         )}
         <p className={styles["underline-animation"]}>{loading ? <Skeleton width={50} /> : "Избранное"}</p>
       </Link>
-      <div>
-
-        <ButtonBasket loading={loading} onClick={onOpenDrower} />
-      </div>
+      
+        <ButtonBasket loading={loading} onClick={onOpenDrower}/>
+      
     </div>
 
     <Modal isOpen={isModalOpen} onClose={handleCloseModal} /> {/* Добавляем модальное окно */}
