@@ -59,3 +59,21 @@
     padding: 0.5rem;
     /* 8px */
 }
+.darkContainer {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.lightContainer {
+    background-color: #ffffff;
+    color: #000000;
+}
+.darkInput {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+.lightInput {
+  background-color: #ffffff;
+  color: #000000;
+}

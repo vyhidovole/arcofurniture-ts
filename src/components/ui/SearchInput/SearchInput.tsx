@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import Link from "next/link";
 import Skeleton from 'react-loading-skeleton'; 
-import 'react-loading-skeleton/dist/skeleton.css'; 
-import { useLoading } from '@/context/LoadingContext'; 
+import 'react-loading-skeleton/dist/skeleton.css';import { useLoading } from '@/context/LoadingContext'; 
 import styles from "./SearchInput.module.css"
 
+// Определяем типы для пропсов
+interface SearchInputProps {
+   isDarkMode: boolean;
+}
+
+/**
 /**
  * Компонент поля поиска для каталога товаров.
  *
@@ -19,10 +24,13 @@ import styles from "./SearchInput.module.css"
  *   <SearchInput />
  * );
  */
-const SearchInput = () => {
+const SearchInput:React.FC<SearchInputProps> = ({ isDarkMode }) => {
+    console.log('isDarkMode:', isDarkMode);
+
     // Инициализируем состояние для хранения введённого текста в поле поиска
     const [searchTerm, setSearchTerm] = useState('');
     const { loading } = useLoading(); // Получаем состояние загрузки из useLoading
+    
 
     // Массив объектов, содержащих названия и пути к страницам
     const items = [
@@ -48,7 +56,7 @@ const SearchInput = () => {
     );
 
     return (
-        <div className={styles["searchInput-container"]}> {/* Обёртка для позиционирования */}
+        <div className={`${styles["searchInput-container"]} ${isDarkMode ? styles.darkContainer : styles.lightContainer}`}> {/* Обёртка для позиционирования */}
             {loading ? (
                 <Skeleton count={1} height={40} width="100%" /> 
             ) : (
@@ -58,10 +66,10 @@ const SearchInput = () => {
                         value={searchTerm} // Значение поля ввода связано с состоянием
                         onChange={handleChange} // Устанавливаем обработчик изменения
                         placeholder="Поиск по каталогу"
-                        className={styles["searchInput"]}
+                        className={`${styles["searchInput"]} ${isDarkMode? styles.darkInput : styles.lightInput}`}
                     />
                     {searchTerm && ( // Показываем список только если есть текст в поле поиска
-                        <ul className={styles["searchInput-ul"]}>
+                        <ul className={`${styles["searchInput-ul"]} ${isDarkMode? styles.darkInput : styles.lightInput}`}>
                             {filteredItems.length > 0 ? ( // Проверяем, есть ли отфильтрованные элементы
                                 filteredItems.map((item, index) => ( // Проходим по отфильтрованным элементам
                                     <li key={index} className={styles["searchInput-result"]}>

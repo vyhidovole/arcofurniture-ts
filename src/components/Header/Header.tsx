@@ -148,7 +148,7 @@ const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrow
         {loading ? <Skeleton width={100} height={20} /> : 'Схема проезда'}
       </button>
     </div>
-    <SearchInput />
+    <SearchInput  isDarkMode={isDarkMode} />
     <div className={styles["call-container"]}>
       {loading ? (
         <Skeleton height={20} width={100} />
