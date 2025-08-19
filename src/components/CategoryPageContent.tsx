@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
 import { useLoading } from '@/context/LoadingContext';
+import {useTheme} from '@/context/ThemeContext';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import catalogueStore from "@/store/CatalogueStore";
@@ -17,8 +18,10 @@ interface CategoryPageContentProps {
 
 const CategoryPageContent: React.FC<CategoryPageContentProps> = observer(({ category }) => {
   const { loading, setLoading } = useLoading();
+  const {isDarkMode} = useTheme()
   const [isShowAlert, setShowAlert] = useState(false);
   const normalizedCategory = normalizeCategory(category);
+
 
   useEffect(() => {
     if (!category) return;
@@ -50,7 +53,7 @@ const CategoryPageContent: React.FC<CategoryPageContentProps> = observer(({ cate
 
   return (
     <>
-      <div className={styles["grid-container"]}>
+      <div className={`${styles["grid-container"]} ${isDarkMode ? 'bg-dark' : 'bg-light'}`}>
         {loading ? renderLoadingSkeletons() : products.length > 0 ? (
           products.map(item => (
             <div  key={`${item.id}-${item.category}`} className={styles["catalogue-container"]}>
