@@ -11,7 +11,7 @@ const CategoryPage = () => {
 
   return (
     <div>
-      <h1>Категория: {categoryStr}</h1>
+      {/* <h1>Категория: {categoryStr}</h1> */}
       <CategoryPageContent category={categoryStr} />
     </div>
   );
