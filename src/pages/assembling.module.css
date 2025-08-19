@@ -1,0 +1,36 @@
+.header1 {
+    font-size: 1.5rem; /* Это соответствует text-2xl */
+    font-weight: bold; /* Это соответствует font-bold */
+    margin-bottom: 1rem; /* Это соответствует mb-4 */
+}
+
+.header2 {
+    font-size: 1.25rem; /* Это соответствует text-xl */
+    font-weight: 600; /* Это соответствует font-semibold */
+    margin-bottom: 0.5rem; /* Это соответствует mb-2 */
+}
+
+.servicesList {
+    list-style-type: disc; /* Это соответствует list-disc */
+    list-style-position: inside; /* Это соответствует list-inside */
+    padding-left: 1.25rem; /* Устанавливает отступ слева, чтобы маркеры были внутри */
+    margin-left: 0; /* Убирает внешний отступ, чтобы маркеры не выходили за границы */
+}
+
+.serviceItem {
+    margin-bottom: 0.5rem;
+}
+
+.serviceName {
+    font-weight: 500; /* Это соответствует font-medium */
+}
+
+.ml2 {
+    margin-left: 0.5rem;
+}
+
+.container {
+    margin-left: auto; /* Это соответствует mx-auto */
+    margin-right: auto; /* Это соответствует mx-auto */
+    padding: 1.25rem; /* Это соответствует p-5 (1.25rem = 20px) */
+}
