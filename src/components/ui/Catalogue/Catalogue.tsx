@@ -4,6 +4,7 @@ import Image from "next/image";
 import { observer } from "mobx-react-lite";
 import catalogueStore from "@/store/CatalogueStore";
 import { useLoading } from "@/context/LoadingContext";
+import { useTheme } from "@/context/ThemeContext";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import styles from "./Catalogue.module.css";
@@ -11,6 +12,7 @@ import styles from "./Catalogue.module.css";
 
 const Catalogue = observer(() => {
   const { loading, setLoading } = useLoading();
+  const {isDarkMode}= useTheme()
   
 
   useEffect(() => {
@@ -31,7 +33,7 @@ const Catalogue = observer(() => {
   );
 
   return (
-    <div className={styles["catalogue-firstcontainer"]}>
+    <div className={`${styles["catalogue-firstcontainer"]} ${isDarkMode ? 'bg-dark' : 'bg-light'}`}>
       {loading ? (
         renderLoadingSkeletons()
       ) : categories.length > 0 ? (
