@@ -26,6 +26,7 @@ interface SearchInputProps {
  */
 const SearchInput:React.FC<SearchInputProps> = ({ isDarkMode }) => {
     console.log('isDarkMode:', isDarkMode);
+    
 
     // Инициализируем состояние для хранения введённого текста в поле поиска
     const [searchTerm, setSearchTerm] = useState('');
@@ -34,14 +35,14 @@ const SearchInput:React.FC<SearchInputProps> = ({ isDarkMode }) => {
 
     // Массив объектов, содержащих названия и пути к страницам
     const items = [
-        { name: 'кухни', path: '/kitchen' },
-        { name: 'гостиные', path: '/drawing-room' },
-        { name: 'спальни', path: '/bedroom' },
-        { name: 'прихожие', path: '/hallway' },
-        { name: 'шкафы-купе', path: '/cupboard' },
-        { name: 'детские', path: '/nursery' },
-        { name: 'диваны', path: '/couch' },
-        { name: 'столы и стулья', path: '/tables-and-chairs' },
+        { name: 'кухни', path: 'kitchen' },
+        { name: 'гостиные', path: 'drawing-room' },
+        { name: 'спальни', path: 'bedroom' },
+        { name: 'прихожие', path: 'hallway' },
+        { name: 'шкафы-купе', path: 'cupboard' },
+        { name: 'детские', path: 'nursery' },
+        { name: 'диваны', path: 'couch' },
+        { name: 'столы и стулья', path: 'tables-and-chairs' },
     ];
 
     // Обработчик изменения поля ввода
@@ -54,6 +55,7 @@ const SearchInput:React.FC<SearchInputProps> = ({ isDarkMode }) => {
     const filteredItems = items.filter(item =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) // Сравниваем с учетом регистра
     );
+
 
     return (
         <div className={`${styles["searchInput-container"]} ${isDarkMode ? styles.darkContainer : styles.lightContainer}`}> {/* Обёртка для позиционирования */}
@@ -73,7 +75,7 @@ const SearchInput:React.FC<SearchInputProps> = ({ isDarkMode }) => {
                             {filteredItems.length > 0 ? ( // Проверяем, есть ли отфильтрованные элементы
                                 filteredItems.map((item, index) => ( // Проходим по отфильтрованным элементам
                                     <li key={index} className={styles["searchInput-result"]}>
-                                        <Link href={item.path} className={styles["searchInput-resultLink"]}> {/* Ссылка на страницу по пути */}
+                                        <Link href={`/category/${item.path}`} className={styles["searchInput-resultLink"]}> {/* Ссылка на страницу по пути */}
                                             {item.name} {/* Название элемента */}
                                         </Link>
                                     </li>
