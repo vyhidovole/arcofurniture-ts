@@ -3,6 +3,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, A11y } from 'swiper/modules';
 import Image from 'next/image';
+import { useTheme } from '@/context/ThemeContext';
 
 import 'swiper/swiper-bundle.css';
 import 'swiper/css/navigation';
@@ -36,6 +37,7 @@ interface CustomSlider2Props {
  * в виде слайдера. При загрузке отображается скелетон.
  */
 const CustomSlider2: React.FC<CustomSlider2Props> = ({ data, loading }) => {
+  const{isDarkMode}= useTheme()
   if (loading) {
     return (
       <div className={styles["skeleton-wrapper"]}>
@@ -45,7 +47,7 @@ const CustomSlider2: React.FC<CustomSlider2Props> = ({ data, loading }) => {
   }
 
   return (
-    <div className={styles["custom-slider-wrapper"]}>
+    <div className={`${styles["custom-slider-wrapper"]} ${isDarkMode? 'bg-dark': 'bg-light'}`}>
       <Swiper
         modules={[Navigation, Pagination, A11y]}
         slidesPerView={1}
