@@ -50,6 +50,8 @@ const SearchInput:React.FC<SearchInputProps> = ({ isDarkMode }) => {
         // Обновляем состояние searchTerm с новым значением из поля ввода
         setSearchTerm(event.target.value);
     };
+// Функция для очистки поля поиска
+    const reSetSearch = () => setSearchTerm("")
 
     // Фильтруем элементы на основе введённого текста
     const filteredItems = items.filter(item =>
@@ -75,7 +77,7 @@ const SearchInput:React.FC<SearchInputProps> = ({ isDarkMode }) => {
                             {filteredItems.length > 0 ? ( // Проверяем, есть ли отфильтрованные элементы
                                 filteredItems.map((item, index) => ( // Проходим по отфильтрованным элементам
                                     <li key={index} className={styles["searchInput-result"]}>
-                                        <Link href={`/category/${item.path}`} className={styles["searchInput-resultLink"]}> {/* Ссылка на страницу по пути */}
+                                        <Link href={`/category/${item.path}`} className={styles["searchInput-resultLink"]} onClick={reSetSearch}> {/* Ссылка на страницу по пути */}
                                             {item.name} {/* Название элемента */}
                                         </Link>
                                     </li>
