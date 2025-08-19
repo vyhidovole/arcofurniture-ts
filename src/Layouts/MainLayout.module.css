@@ -1,8 +1,6 @@
 /* MainLayout.module.css */
 
 .container {
-  max-width: 1280px; /* примерно соответствует классу container в Tailwind */
-  padding: 1rem; /* p-4 в Tailwind это 1rem */
   background-color: #94a3b8; /* bg-slate-400 в Tailwind (примерный цвет) */
   margin-left: auto;
   margin-right: auto;
