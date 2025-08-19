@@ -3,7 +3,7 @@
 }
 
 .searchInput {
-    display: none;
+    /* display: none; */
     border-radius: 0.25rem;
     padding: 0.25rem;
     width: 100%;

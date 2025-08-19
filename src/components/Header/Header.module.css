@@ -1,12 +1,15 @@
 .headerContainer {
     display: flex;
     justify-content: space-between;
-    margin-top: 1rem;
-   
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
 }
-.img-header{
-   object-fit: contain; 
+
+.img-header {
+    object-fit: contain;
 }
+
 .address {
     display: none;
 }
@@ -14,7 +17,7 @@
 @media(min-width:1024) {
     .address {
         display: block;
-        
+
     }
 
 }
@@ -44,7 +47,7 @@
 }
 
 .button-call {
-   white-space: nowrap;
+    white-space: nowrap;
     border-color: #ef4444;
     border-width: 2px;
     border-style: solid;
@@ -54,7 +57,7 @@
     padding-right: 0.65rem;
     cursor: pointer;
     transition: background-color 0.2s;
-    
+
 }
 
 
@@ -67,14 +70,16 @@
 .button-openEntryDialog {
     display: none;
 }
+
 .button-openEntryDialog.dark {
-  background-color:  #333;
-  color: white;
-   
+    background-color: #333;
+    color: white;
+
 }
+
 .button-openEntryDialog.light {
-  background-color: white;
-  color: black;
+    background-color: white;
+    color: black;
 }
 
 @media (min-width:1024) {
@@ -139,15 +144,17 @@
     background-color: var(--button-bg-light);
     border: transparent;
 }
+
 .button-basket.dark {
-   background-color: #333;
-  color: white;
+    background-color: #333;
+    color: white;
 }
 
 .button-basket.light {
-   background-color: white;
-  color: black;
+    background-color: white;
+    color: black;
 }
+
 .header-count {
     position: absolute;
     top: 0;
@@ -165,11 +172,15 @@
 }
 
 .headerDark {
-  background-color: #333; /* Пример темного фона */
-  color: white; /* Пример текста для темного режима */
+    background-color: #333;
+    /* Пример темного фона */
+    color: white;
+    /* Пример текста для темного режима */
 }
 
 .headerLight {
-  background-color: #fff; /* Пример светлого фона */
-  color: black; /* Пример текста для светлого режима */
+    background-color: #fff;
+    /* Пример светлого фона */
+    color: black;
+    /* Пример текста для светлого режима */
 }

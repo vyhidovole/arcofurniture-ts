@@ -119,7 +119,7 @@ const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrow
   if (!router) {
     return null; // или можно вернуть загрузочный индикатор
   }
-  return (<div className={classNames(styles.headerContainer, {
+  return  (<div className={classNames(styles.headerContainer, {
     [styles.headerDark]: isDarkMode,
     [styles.headerLight]: !isDarkMode,
   })}>
