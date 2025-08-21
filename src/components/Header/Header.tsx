@@ -240,7 +240,7 @@ const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrow
       
     </div>
 
-    <Modal isOpen={isModalOpen} onClose={handleCloseModal} /> {/* Добавляем модальное окно */}
+    <Modal isOpen={isModalOpen} onClose={handleCloseModal}isDarkMode={isDarkMode} /> {/* Добавляем модальное окно */}
     <ModalCall isOpen={isCallModalOpen} onClose={closeCallDialog} setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
     <ModalEntry show={isEntryModalOpen} onClose={closeEntryDialog} setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
     <Drawer isOpen={isDrowerOpen} onClose={onCloseDrower} isDarkMode={isDarkMode} titleDrawer="корзина">
