@@ -33,7 +33,7 @@ const Actions: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/Products');
+        const response = await fetch('http://localhost:3002/Products');
         const result = await response.json();
         setData(result);
       } catch (error) {
