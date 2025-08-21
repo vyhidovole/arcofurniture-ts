@@ -1,0 +1,67 @@
+/* Work.module.css */
+
+.title {
+    font-size: 2.25rem; /* Это соответствует text-4xl в Tailwind */
+    margin-bottom: 1rem; /* Добавьте отступ, если это необходимо */
+}
+
+.image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Это соответствует object-cover в Tailwind */
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem; /* Это соответствует gap-6 в Tailwind */
+    padding: 2rem;
+    
+}
+
+@media (min-width: 640px) {
+    .container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    }
+}
+/* Медиазапрос для увеличения изображения на большом экране */
+@media (min-width: 1024px) {
+    .card {
+        aspect-ratio: 21 / 9; /* Изменяем соотношение сторон */
+    }
+
+    .image {
+        height: 100%; /* Высота 100% для больших экранов */
+    }
+}
+.card {
+    position: relative;
+    border: 2px solid #3b82f6; /* Цвет border-blue-500 */
+    border-radius: 0.5rem; /* rounded-lg */
+    width: 100%;          /* растягиваем на ячейку грида */
+    aspect-ratio: 16 / 9; /* сохраняем пропорции */
+    overflow: hidden;
+    display: block;
+    min-height: 200px;
+}
+
+.skeleton {
+    border: 2px solid #3b82f6; /* Цвет border-blue-500 */
+    border-radius: 0.5rem; /* rounded-lg */
+    width: 100%;
+    aspect-ratio: 550 / 285;
+}
