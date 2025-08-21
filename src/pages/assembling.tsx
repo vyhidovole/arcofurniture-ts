@@ -2,6 +2,7 @@ import React from 'react';
 import Skeleton from 'react-loading-skeleton'; // Импортируем Skeleton для индикации загрузки
 import 'react-loading-skeleton/dist/skeleton.css'; // Импортируем стили для Skeleton
 import { useLoading } from '@/context/LoadingContext'; // Импорт вашего кастомного хука
+import { useTheme } from '@/context/ThemeContext';
 import styles from "./assembling.module.css"
 
 /**
@@ -18,6 +19,7 @@ import styles from "./assembling.module.css"
  */
 const Assembling = () => {
     const { loading } = useLoading(); // Получаем состояние загрузки из useLoading
+    const {isDarkMode} = useTheme()
 
     const services = [
         { name: "Шкаф нижний – (без сборки выдвижных ящиков)", price: "400 руб" },
@@ -74,7 +76,7 @@ const Assembling = () => {
     ];
 
    return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${isDarkMode ? 'bg-dark':'bg-light'}`}>
         {loading ? (
             <Skeleton count={10} height={30} />
         ) : (
