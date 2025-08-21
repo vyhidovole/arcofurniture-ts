@@ -17,10 +17,11 @@ export interface CatalogueItem {
   imgSrc: string;
 }
 export interface WorkItem {
-  uid?:string
+  
   id: string;
-  title: string;
-  description?: string;
+  
+  imgSrc: string;
+
   
 }
 export function isProductItem(item: unknown): item is Omit<ProductItem, "uid" | "quantity"> & Partial<Pick<ProductItem, "quantity">> {
