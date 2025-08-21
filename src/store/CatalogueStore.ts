@@ -1,7 +1,7 @@
 
 import { makeObservable, observable, action, runInAction, computed, reaction } from "mobx";
 import BaseStore from "./BaseStore";
-import { ProductItem, CatalogueItem } from '@/types/types';
+import { ProductItem, CatalogueItem, WorkItem } from '@/types/types';
 import { nanoid } from 'nanoid';
 import { normalizeCategory } from '@/utils/utils'
 
@@ -25,7 +25,7 @@ class CatalogueStore extends BaseStore {
   catalogueproducts: CatalogueItem[] = [];
   products: ProductItem[] = [];
   basket: ProductItem[] = [];
-
+  workItems: WorkItem[] = []; // Инициализируем массив работ
 
   error: string | null = null;
 
@@ -37,6 +37,7 @@ class CatalogueStore extends BaseStore {
     makeObservable(this, {
       catalogueproducts: observable,
       products: observable,
+       workItems: observable,
       basket: observable,
       selectedCategory: observable,
       error: observable,
@@ -51,26 +52,27 @@ class CatalogueStore extends BaseStore {
       clearProduct: action.bound,
       initializeBasket: action.bound,
       setSelectedCategory: action.bound,
+       getWorkItems:action.bound,
     });
 
     // Автоматическое сохранение корзины в localStorage при изменениях
     reaction(
-  () => this.basket.map(item => ({
-    id: item.id,
-    quantity: item.quantity,
-    name: item.name,
-    category: item.category,
-    color: item.color,
-    price: item.price,
-    imgSrc: item.imgSrc
-  })),
-  basketItems => {
-    console.log("Сохраняем в localStorage:", basketItems); // Логируем перед сохранением
-    if (typeof window !== "undefined") {
-      localStorage.setItem("basket", JSON.stringify(basketItems));
-    }
-  }
-);
+      () => this.basket.map(item => ({
+        id: item.id,
+        quantity: item.quantity,
+        name: item.name,
+        category: item.category,
+        color: item.color,
+        price: item.price,
+        imgSrc: item.imgSrc
+      })),
+      basketItems => {
+        console.log("Сохраняем в localStorage:", basketItems); // Логируем перед сохранением
+        if (typeof window !== "undefined") {
+          localStorage.setItem("basket", JSON.stringify(basketItems));
+        }
+      }
+    );
 
 
     this.initializeBasket();
@@ -238,64 +240,96 @@ class CatalogueStore extends BaseStore {
 
   initializeBasket(): Promise<void> {
     return new Promise((resolve, reject) => {
-        if (typeof window === "undefined" || !window.localStorage) {
-            return resolve(); // Если localStorage недоступен, просто завершаем
-        }
+      if (typeof window === "undefined" || !window.localStorage) {
+        return resolve(); // Если localStorage недоступен, просто завершаем
+      }
 
-        const basketJson = localStorage.getItem("basket");
-         console.log("Загруженные товары из localStorage:", basketJson); // Логируем загруженные данные
-        if (!basketJson) return resolve();
+      const basketJson = localStorage.getItem("basket");
+      console.log("Загруженные товары из localStorage:", basketJson); // Логируем загруженные данные
+      if (!basketJson) return resolve();
 
-        try {
-            const savedItems = JSON.parse(basketJson);
-            if (!Array.isArray(savedItems)) throw new Error("Сохраненные данные не являются массивом.");
+      try {
+        const savedItems = JSON.parse(basketJson);
+        if (!Array.isArray(savedItems)) throw new Error("Сохраненные данные не являются массивом.");
 
-             // Обновляем корзину, добавляя недостающие параметры из products
-            const updatedBasket = savedItems.map(savedItem => {
-                const product = this.products.find(p => p.id === savedItem.id && p.category === savedItem.category);
-                if (product) {
-                    return {
-                        ...product, // добавляем все параметры продукта
-                        quantity: savedItem.quantity // сохраняем количество
-                    };
-                }
-                return savedItem; // Если продукта нет, возвращаем сохраненный элемент
-            });
+        // Обновляем корзину, добавляя недостающие параметры из products
+        const updatedBasket = savedItems.map(savedItem => {
+          const product = this.products.find(p => p.id === savedItem.id && p.category === savedItem.category);
+          if (product) {
+            return {
+              ...product, // добавляем все параметры продукта
+              quantity: savedItem.quantity // сохраняем количество
+            };
+          }
+          return savedItem; // Если продукта нет, возвращаем сохраненный элемент
+        });
 
-            runInAction(() => {
-                this.basket = updatedBasket; // Обновляем состояние корзины
-            });
-            resolve(); // Успешно завершено
-        } catch (e) {
-            console.error("Ошибка при загрузке корзины:", e);
-            reject(e); // Завершение с ошибкой
-        }
+        runInAction(() => {
+          this.basket = updatedBasket; // Обновляем состояние корзины
+        });
+        resolve(); // Успешно завершено
+      } catch (e) {
+        console.error("Ошибка при загрузке корзины:", e);
+        reject(e); // Завершение с ошибкой
+      }
     });
-}
+  }
 
 
 
- // Метод для сохранения корзины в localStorage
-    saveBasketToLocalStorage() {
-        const basketToSave = this.basket.map(item => ({
-            id: item.id,
-            quantity: item.quantity,
-            name: item.name,
-            category: item.category,
-            color: item.color,
-            price: item.price,
-            imgSrc: item.imgSrc
-        }));
+  // Метод для сохранения корзины в localStorage
+  saveBasketToLocalStorage() {
+    const basketToSave = this.basket.map(item => ({
+      id: item.id,
+      quantity: item.quantity,
+      name: item.name,
+      category: item.category,
+      color: item.color,
+      price: item.price,
+      imgSrc: item.imgSrc
+    }));
 
-        localStorage.setItem("basket", JSON.stringify(basketToSave));
-        console.log("Сохраняем корзину в localStorage:", basketToSave);
-    }
+    localStorage.setItem("basket", JSON.stringify(basketToSave));
+    console.log("Сохраняем корзину в localStorage:", basketToSave);
+  }
   setSelectedCategory(categoryKey: string) {
     runInAction(() => {
       this.selectedCategory = categoryKey;
     })
 
   }
+   async getWorkItems(url: string) {
+    console.log(`Вызван getWorkItems с URL: ${url}`);
+    try {
+        const response = await fetch('http://localhost:3002/work');
+        console.log('Запрос выполнен, проверяем статус...');
+        console.log('Статус ответа:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP: ${response.status}`);
+        }
+
+        // Получаем ответ как текст
+        const text = await response.text(); 
+        console.log('Ответ от сервера:', text); // Логируем текст ответа
+
+        // Проверяем, начинается ли ответ с { или [
+        if (text.trim().startsWith('{') || text.trim().startsWith('[')) {
+            const data = JSON.parse(text); 
+            console.log('Данные после парсинга:', data);
+            runInAction(() => {
+                this.workItems = Array.isArray(data) ? data : [];
+            });
+        } else {
+            console.error('Ответ не является JSON:', text);
+        }
+    } catch (error) {
+        console.error("Ошибка при загрузке работ:", error);
+    }
+}
+
+
+
 }
 
 const catalogueStore = new CatalogueStore();
