@@ -31,6 +31,15 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose, titleBurger,is
     const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
     const [, setNewForm] = useState(false);
 
+    const categories = [
+        { slug: 'kitchen', label: 'Кухни' },
+        { slug: 'bedroom', label: 'Спальни' },
+        { slug: 'nursery', label: 'Детские' },
+        { slug: 'drawing-room', label: 'Гостиные' },
+        { slug: 'couch', label: 'Диваны' },
+        { slug: 'hallway', label: 'Прихожие' },
+        { slug: 'cupboard', label: 'Шкафы-купе' },
+    ];
 
     /**
      * Функция для закрытия панели.
@@ -104,14 +113,14 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose, titleBurger,is
                                 </button>
                             </header>
                             <main className={styles["burger-container"]} >
-                                <ul>
-                                    <Link href="/kitchen" passHref> <li>Кухни</li></Link>
-                                    <Link href="/bedroom" passHref> <li>Спальни</li></Link>
-                                    <Link href="/nursery" passHref><li>Детские</li></Link>
-                                    <Link href="/drawing-room" passHref><li>Гостиные</li></Link>
-                                    <Link href="/couch" passHref><li>Диваны</li></Link>
-                                    <Link href="/hallway" passHref><li>Прихожие</li></Link>
-                                    <Link href="/cupboard" passHref><li>Шкафы-купе</li></Link>
+                                 <ul>
+                                    {categories.map(category => (
+                                        <li key={category.slug}>
+                                            <Link href={`/category/${category.slug}`} passHref>
+                                                {category.label}
+                                            </Link>
+                                        </li>
+                                    ))}
                                 </ul>
                             </main>
                             <footer className={styles["burger-footer"]}>
