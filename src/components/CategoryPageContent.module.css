@@ -10,11 +10,25 @@
 
 
 }
+.catalogue-container {
+  position: relative;
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  width: 250px;
+  height: 320px;
+  padding: 8px;
+  box-sizing: border-box; /* Чтобы padding не увеличивал размер */
+  overflow: hidden; 
+  background-color:  inherit;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+}
 
 .kitchen-img {
-    border-radius: 0.5rem;
-    /* 8px */
-
+  border-radius: 0.5rem;
+  display: block; 
+  object-fit: cover; /* ✅ Сохраняет пропорции */
+  object-position: center; /* ✅ Центрирует */
+  background-color: #f3f4f6; /* ✅ Фон на случай отсутствия изображения */
 }
 
 .color-container {
