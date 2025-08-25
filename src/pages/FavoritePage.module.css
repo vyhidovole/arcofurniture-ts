@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    margin-top: 24px; /* mt-6 */
+    margin-left: 2rem;
+    padding-bottom: 2rem;
+}
+
+.title {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 600; /* font-semibold */
+    margin-left: 2rem;
+}
+
+.link {
+    font-size: 1rem; /* text-base */
+    cursor: pointer;
+}
+
+.link:hover {
+    text-decoration: underline; /* hover:underline */
+}
+
+.separator {
+    margin: 0 8px; /* Для отступов между ссылками */
+}
+
+.notesText {
+    font-size: 1rem; /* text-base */
+    margin-left: 8px; /* ml-1 */
+    
+}

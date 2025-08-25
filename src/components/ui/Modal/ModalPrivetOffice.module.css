@@ -1,0 +1,68 @@
+.modal-container {
+    box-sizing: border-box; /* Важно! */
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 388px;
+    max-width: 100%;
+    flex-shrink: 0;
+    flex-grow: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.modal-header {
+    position: relative;
+    bottom: 16px; /* bottom-4 */
+    font-size: 2rem; /* text-4xl */
+    margin-left: 64px; /* ml-16 */
+}
+
+.title {
+    font-weight: bold; /* Устанавливаем жирный шрифт */
+    font-size: 2rem; /* Пример размера шрифта */
+    margin-left: 1rem;
+    padding-top: 1rem;
+}
+
+.link {
+    margin: 24px; /* m-6 */
+    cursor: pointer;
+}
+
+.button {
+    margin-top: 24px; /* mt-6 */
+    padding: 8px;
+    border-radius: 10;
+}
+.button:hover{
+    color: #333;
+    cursor: pointer;
+}
+.forgot-password{
+    margin-left: 1rem;
+}
+.forgot-password:hover{
+    color: #60d56a;
+}
+.footer {
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 26px;
+}
+
+.footer-text {
+    font-size: 1rem; /* text-base */
+    text-align: center;
+    padding: 40px; /* mt-10 */
+}
+
+.createAccount {
+    margin-top: 40px; /* mt-10 */
+    cursor: pointer;
+}
+.createAccount:hover{
+    color: #60d56a;
+}
