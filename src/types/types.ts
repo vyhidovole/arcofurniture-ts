@@ -63,3 +63,16 @@ export function isWorkItem(item: unknown): item is WorkItem {
 }
 
 
+export interface InitialState {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+}
+
+export interface UserData {
+  id?: string;
+  name: string;
+  email: string;
+  // добавьте другие поля по необходимости
+}
