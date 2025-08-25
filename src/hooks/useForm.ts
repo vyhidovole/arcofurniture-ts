@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { validateForm } from "../utils/validators";
 
+// export interface InitialState {
+//     [key: string]: string
+
+// }
 export interface InitialState {
     [key: string]: string
-
+    name: string;
+    email: string;
+    password: string;
+   
 }
 
 interface Errors {
