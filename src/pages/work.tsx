@@ -35,7 +35,7 @@ const Work = observer(() => {
 
         const fetchData = async () => {
             try {
-                const url = '/db.json'; // Убедитесь, что путь правильный
+                // const url = '/db.json'; 
                 const response = await fetch('http://localhost:3002/work');
 
                 if (!response.ok) {
