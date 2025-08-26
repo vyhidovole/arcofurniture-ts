@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import Alert from "../Alert/Alert";
 import useForm, { InitialState } from "@/hooks/useForm";
+import { useTheme } from "@/context/ThemeContext";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import styles from "./ModalCall.module.css"
@@ -36,6 +37,7 @@ interface ModalCallProps {
 }
 type Variant = 'positive' | 'negative'; // пример типа Variant
 const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) => {
+  const{isDarkMode}=useTheme()
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isShowAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -48,9 +50,10 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
 
   const { formData, errors, handleChange, handleSubmit, resetForm } = useForm(
     {
-      name: "",
-      phone: "",
-    },
+            name: "",
+            email: "",
+            password: "",
+        },
     onFormSubmit
   );
 
@@ -132,7 +135,7 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
         }}
       >
         <form onSubmit={handleFormSubmit} method="dialog">
-          <div className={styles['modalCall-frame']}>
+          <div className={`${styles['modalCall-frame']} ${isDarkMode?'bg-dark': 'bg-lght'}`}>
             <div className={styles['modalCall-header']}>
               <h3 className={styles['modalCall-title']}>Заказать звонок</h3>
               <button
@@ -197,7 +200,7 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
                 error={errors.phone}
               />
 
-              <Button type="submit" variant="secondary">
+              <Button type="submit" variant="secondary" className={styles.button}>
                 Отправить
               </Button>
 

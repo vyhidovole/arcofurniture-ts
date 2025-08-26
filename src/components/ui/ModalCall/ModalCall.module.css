@@ -14,15 +14,22 @@
 }
 
 .modalCall-frame {
-    background-color: rgba(251, 244, 244, 0.967);
+    
     padding: 1rem;
     border-radius: 4px;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
     width: 288px;
-    height: 384px;
+    height: 400px;
     flex-direction: column;
 }
-
+.button{
+    background-color: transparent;
+    border-radius: 8;
+    padding: 0.5rem;
+}
+.button:hover{
+color: black;
+}
 .modalCall-header {
     display: flex;
     justify-content: space-between;
