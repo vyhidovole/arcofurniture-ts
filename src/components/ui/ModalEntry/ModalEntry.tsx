@@ -201,6 +201,7 @@ if (!show) return null;
                             variant="secondary"
                             disabled={!isFormValid} // Делаем кнопку недоступной, если форма не валидна
                             isLoading={isLoading} // Передаём состояние загрузки
+                            className={styles.button}
                         >
                             Отправить
                         </Button>

@@ -20,13 +20,13 @@
   flex-direction: column;
   border-radius: 12px;
 }
+.modalEntry-frame.dark{
+  background-color: black;
+  color: beige;
 
-.modalEntry-frame.dark {
-  background-color: #1F2937; /* bg-gray-800 */
 }
-
-.modalEntry-frame.light {
-  background-color: #ffffff; /* bg-white */
+.modalEntry-frame.light{
+  background-color: bisque;
 }
 
 /* Медиа-запросы */
