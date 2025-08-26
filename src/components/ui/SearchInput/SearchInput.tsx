@@ -42,7 +42,7 @@ const SearchInput:React.FC<SearchInputProps> = ({ isDarkMode }) => {
         { name: 'шкафы-купе', path: 'cupboard' },
         { name: 'детские', path: 'nursery' },
         { name: 'диваны', path: 'couch' },
-        { name: 'столы и стулья', path: 'tables-and-chairs' },
+        { name: 'столы и стулья', path: 'tables_and_chairs' },
     ];
 
     // Обработчик изменения поля ввода
