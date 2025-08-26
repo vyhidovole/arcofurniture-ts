@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { validateForm } from "../utils/validators";
 
-// export interface InitialState {
-//     [key: string]: string
 
-// }
 export interface InitialState {
     [key: string]: string
     name: string;
@@ -33,7 +30,10 @@ interface UseFormReturn {
  * @param {(data: InitialState) => void} setNewState - Функция для обновления состояния формы.
  * @returns {UseFormReturn} - Объект с состоянием формы, ошибками и функциями.
  */
-function useForm(initialState: InitialState, setNewState: (data: InitialState) => void
+function useForm(
+    initialState: InitialState, 
+    setNewState: (data: InitialState) => void,
+    options = { passwordRequired: true }
 ): UseFormReturn {
     // Состояние формы (значения полей)
     const [formData, setFormData] = useState<InitialState>(initialState);
@@ -87,10 +87,11 @@ function useForm(initialState: InitialState, setNewState: (data: InitialState) =
                 }
                 break;
             case 'password':
-                if (value.length < 8) {
+                // Проверяем пароль только если он требуется
+                if (options.passwordRequired && value.length < 8) {
                     newErrors.password = 'Пароль должен содержать минимум 8 символов';
                 } else {
-                    delete newErrors.password; // Удаляем ошибку, если поле корректно заполнено
+                    delete newErrors.password;
                 }
                 break;
             case 'phone':
@@ -120,7 +121,7 @@ function useForm(initialState: InitialState, setNewState: (data: InitialState) =
         console.log('Ошибки перед отправкой:', errors);
 
         // Проверка наличия ошибок
-        const validationErrors = validateForm(formData);
+        const validationErrors = validateForm(formData, options);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors); // Устанавливаем ошибки
             console.log("Форма содержит ошибки:", validationErrors);

@@ -4,6 +4,7 @@ import useForm from "@/hooks/useForm";
 import Alert from "@/components/ui/Alert/Alert";
 import Input from "@/components/ui/Input/Input";
 import Button from "@/components/ui/Button/Button";
+import { useTheme } from "@/context/ThemeContext";
 import styles from './forgot-password.module.css'
 /**
  * Компонент для восстановления пароля.
@@ -18,77 +19,66 @@ import styles from './forgot-password.module.css'
  */
 // Определите тип InitialState, если он еще не определен
 interface InitialState {
-  name: string;
-  email: string;
-  password: string;
+    name: string;
+    email: string;
+    password: string;
+
 }
 interface PasswordProps {
-    variant: 'default'|'positive' | 'negative'; // пример типа Variant
+    variant: 'default' | 'positive' | 'negative'; // пример типа Variant
     setNewState: (data: InitialState) => void
 }
 
-const Password:React.FC<PasswordProps> = ({ variant, setNewState }) => {
-
+const Password: React.FC<PasswordProps> = ({ variant, setNewState }) => {
+    const { isDarkMode } = useTheme()
     const { formData, errors, handleChange, handleSubmit, resetForm } = useForm(
-        {name: "", email: "", password: ""}, setNewState);
-
-
-
+        { name: "", phone: '', email: "", password: "" }, setNewState, { passwordRequired: false });
 
     const [isShowAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
-    const [alertVariant, setAlertVariant] = useState<'positive' | 'negative'| 'info'>('info'); // Установите начальное значение
-    const [isLoading, setIsLoading] = useState(false); // Состояние загрузки
-    /**
-     * Обработчик отправки формы.
-     * Предотвращает перезагрузку страницы, отправляет данные формы и управляет состоянием уведомлений.
-     *
-     *  @param {Event} e - Событие отправки формы.
-     */
-    const handleFormSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Предотвращаем перезагрузку страницы
-        setIsLoading(true); // Устанавливаем состояние загрузки
-        // Вызываем handleSubmit из useForm для отправки данных
-        const isSuccess = await handleSubmit(e); // Предполагается, что handleSubmit возвращает true/false
+    const [alertVariant, setAlertVariant] = useState<'positive' | 'negative' | 'info'>('info');
+    const [isLoading, setIsLoading] = useState(false);
 
-        // Если форма успешно отправлена и нет ошибок
-         if(isSuccess) {
-            localStorage.setItem('userData', JSON.stringify(formData));
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsLoading(true);
 
+        try {
+            const isSuccess = await handleSubmit(e);
+            console.log("Результат отправки формы:", isSuccess);
+            if (isSuccess) {
+                // Успешная отправка
+                localStorage.setItem('userData', JSON.stringify(formData));
+                setAlertMessage("Новый пароль был выслан на ваш адрес электронной почты.");
+                setAlertVariant('positive');
+                resetForm();
+            } else {
+                // Ошибка валидации
+                setAlertMessage("Данные введены не корректно.");
+                setAlertVariant('negative');
+            }
+        } catch (error) {
+            // Ошибка при отправке
+            console.error("Ошибка при отправке формы:", error); // Логируем ошибку
+            setAlertMessage("Произошла ошибка при отправке формы.");
+            setAlertVariant('negative');
+        } finally {
+            // Всегда показываем алерт и сбрасываем загрузку
             setShowAlert(true);
-            resetForm(); // Сбрасываем форму
+            setIsLoading(false);
+
+            // Автоматическое скрытие алерта через 3 секунды
             setTimeout(() => {
                 setShowAlert(false);
-            }, 3000); // Закрываем алерт через 3 секунды
-        } else {
-            // Устанавливаем сообщение и показываем Alert
-            setAlertMessage("Данные введены не корректно.");
-            setAlertVariant('negative'); // Установите нужный вариант
-            setShowAlert(true);
-            setTimeout(() => {
-                setShowAlert(false)
-            }, 3000)
-            setIsLoading(false); // Сбрасываем состояние загрузки
-            return
+            }, 3000);
         }
-        // Устанавливаем сообщение и показываем Alert
-        setAlertMessage("Новый пароль был выслан на ваш адрес электронной почты.");
-        setAlertVariant('positive'); // Установите нужный вариант
-        setShowAlert(true);
-        setTimeout(() => {
-            setShowAlert(false)
-        }, 3000)
-        setIsLoading(false); // Сбрасываем состояние загрузки
     }
 
-    /**
-     * Обработчик закрытия уведомления.
-     * Скрывает уведомление при вызове.
-     */
     const handleCloseAlert = () => {
         setShowAlert(false);
     };
-    const isFormValid = Object.keys(errors).length === 0  && formData.email ;
+
+    const isFormValid = Object.keys(errors).length === 0 && formData.email;
 
     return (
         <>
@@ -97,47 +87,62 @@ const Password:React.FC<PasswordProps> = ({ variant, setNewState }) => {
                 <Link href="/" className={styles.link}>Главная</Link>
                 <span className={styles.separator}>-</span>
                 <Link href="/privetofficepage" className={styles.link}>Личный кабинет</Link>
-                <span className={styles.separator}>-</span>
-                <p className={styles.link}>Забыли пароль?</p>
+                <span className={styles.separator}>- Забыли пароль?</span>
             </div>
 
             <Alert
                 isOpen={isShowAlert}
                 onClose={handleCloseAlert}
-               variant={alertVariant || variant} // Используем variant
+                variant={alertVariant || variant}//используете variant из пропсов, если alertVariant не установлен.
             >
                 {alertMessage}
             </Alert>
 
-            <form onSubmit={handleFormSubmit} method="dialog">
-                <div className={styles.emailInput}>
-                    <Input
-                        className={errors.email ? "border-red-500" : ""}
-                        label="Email"
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        error={errors.email}
-                    />
-                </div>
-                <div className="mt-6">
-                    <Link href="/privetofficepage" className={styles.backButton}>назад</Link>
-
-                    <Button
-                        type="submit"
-                        variant="secondary"
-                        disabled={!isFormValid}
-                        isLoading={isLoading} // Передаём состояние загрузки
-                        className={styles.submitButton} // Добавляем класс для кнопки отправки
-                    >
-                        Отправить
-                    </Button>
-                </div>
-            </form>
+            <div className={`${styles.passwordContainer} ${isDarkMode ? 'bg-dark' : 'bg-lght'}`}>
+                <form onSubmit={handleFormSubmit} method="dialog">
+                    <div className={styles.emailInput}>
+                        <Input
+                            label="Имя"
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            error={errors.name}
+                        />
+                        <Input
+                            className={errors.email ? "border-red-500" : ""}
+                            label="Email"
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            error={errors.email}
+                        />
+                        <Input
+                            label="Телефон"
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            error={errors.phone}
+                        />
+                    </div>
+                    <div className="mt-6">
+                        <Link href="/privetofficepage" className={styles.backButton}>Назад</Link>
+                        <Button
+                            type="submit"
+                            variant="secondary"
+                            disabled={!isFormValid}
+                            isLoading={isLoading}
+                            className={styles.submitButton}
+                        >
+                            Отправить
+                        </Button>
+                    </div>
+                </form>
+            </div>
         </>
     );
 }
 
 export default Password;
-

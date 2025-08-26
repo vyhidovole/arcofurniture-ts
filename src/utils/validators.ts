@@ -95,7 +95,7 @@ const validators: ValidatorProps = {
     [field:string]: string
   }
   
-  export function validateForm(formData:Record<string,string>): ValidationResult {
+  export function validateForm(formData:Record<string,string>, options: { passwordRequired: boolean }): ValidationResult {
     // Объект для хранения сообщений об ошибках
     const validationErrors: ValidationResult= {};
   
@@ -108,7 +108,10 @@ const validators: ValidatorProps = {
       if (validator) {
         // Вызов валидатора для текущего значения поля
         const errorMessage = validator(value);
-  
+   // Если поле пароля не обязательно и не заполнено, пропускаем валидацию
+            if (fieldName === 'password' && !options.passwordRequired && value.trim() === '') {
+                return; // Пропускаем валидацию
+            }
         // Если есть сообщение об ошибке, добавляем его в объект ошибок
         if (errorMessage) {
           validationErrors[fieldName] = errorMessage;
