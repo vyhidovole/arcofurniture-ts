@@ -75,13 +75,14 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) =>
     };
 
       return (
-        <form onSubmit={handleFormSubmit} method="dialog">
+        <form onSubmit={handleFormSubmit} method="dialog"className={styles.formContainer}>
             <div className={`${styles.modalContainer} ${isDarkMode ? 'bg-dark': 'bg-light'}`}>
                 <div className={styles.modalHeader}>
                      <h1 className={`${styles.title} ${isDarkMode ? 'bg-dark': 'bg-light'}`}>Войти</h1>
                 </div>
+                <div className={styles.inputGroup}>
                 <Input
-                    className={errors.name ? styles.inputError : ""}
+                    className={`${errors.name ? styles.inputError : ""} ${styles.input}`}
                     label="Name"
                     type="text"
                     name="name"
@@ -89,8 +90,10 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) =>
                     onChange={handleChange}
                     error={errors.name}
                 />
+                </div>
+                <div className={styles.inputGroup}>
                 <Input
-                    className={errors.email ? styles.inputError : ""}
+                    className={`${errors.email ? styles.inputError : ""} ${styles.input}`}
                     label="Email"
                     type="email"
                     name="email"
@@ -98,8 +101,10 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) =>
                     onChange={handleChange}
                     error={errors.email}
                 />
+                </div>
+                <div className={styles.inputGroup}>
                 <Input
-                    className={errors.password ? styles.inputError : ""}
+                    className={`${errors.password ? styles.inputError : ""} ${styles.input}`}
                     label="Password"
                     type="password"
                     name="password"
@@ -107,6 +112,7 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) =>
                     onChange={handleChange}
                     error={errors.password}
                 />
+                </div>
                 <Link href="/forgot-password" className={styles.link}>
                     <p className={`${`${styles['forgot-password']}`} ${isDarkMode ? 'bg-dark':'bg-lght'}`}>Забыли пароль?</p>
                 </Link>
