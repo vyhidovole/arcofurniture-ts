@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from "next/image";
-import { useTheme } from '@/context/ThemeContext';
+
 import styles from './Modal.module.css';
 
 export interface ModalProps {
@@ -11,13 +11,13 @@ export interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  const { isDarkMode } = useTheme();
+
 
   if (!isOpen) return null;
 
   return (
     <div
-      className={`${styles['modal-bg']} ${isDarkMode ? styles['dark-mode'] : styles['light-mode']}`}
+      className={`${styles['modal-bg']} }`}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -25,7 +25,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       }}
     >
       <div
-        className={styles['modal-frame']}
+        className={`${styles['modal-frame']} `}
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles['modal-header']}>

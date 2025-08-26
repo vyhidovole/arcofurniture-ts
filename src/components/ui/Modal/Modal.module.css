@@ -33,6 +33,7 @@
 .modal-title {
   font-size: 1.125rem;
   font-weight: 700;
+  color: black;
 }
 
 .modal-button {
@@ -66,17 +67,12 @@
   gap: 1rem;
 }
 
-.dark-mode {
-  color: aqua;
-}
 
-.light-mode {
- color: black;
-}
 
 .modal-address {
   font-size: medium;
   flex-shrink: 0;
+  color: black;
 }
 
 .modal-img {
