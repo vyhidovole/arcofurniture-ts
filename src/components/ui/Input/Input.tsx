@@ -44,16 +44,17 @@ const Input: React.FC<InputProps> = ({
   onFocus,
   className,
 }) => {
-//   const inputClasses = `input-field ${className || ""}`;
-const inputClasses = clsx(
-  styles["input-field"],
-  { [styles["input-disabled"]]: disabled },
-  className
-);
-
+  const inputClasses = clsx(
+    styles.inputField,
+    { 
+      [styles.inputDisabled]: disabled,
+      [styles.inputError]: error 
+    },
+    className
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-     if (onChange) {
+    if (onChange) {
       onChange(event);
     }
   };
@@ -77,8 +78,8 @@ const inputClasses = clsx(
   };
 
   return (
-    <div className={styles["input-container"]}>
-      <label className={styles["input-label"]} htmlFor={name}>
+    <div className={styles.inputContainer}>
+      <label className={styles.inputLabel} htmlFor={name}>
         {label}
       </label>
       <input
@@ -97,7 +98,11 @@ const inputClasses = clsx(
         onFocus={handleFocus}
         className={inputClasses}
       />
-      {error && <span className={styles["error-message"]}>{error}</span>}
+      {error && (
+        <span className={styles.errorMessage} title={error}>
+          {error}
+        </span>
+      )}
     </div>
   );
 };
