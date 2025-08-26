@@ -1,63 +1,64 @@
-/* styles.module.css */
-
+/* styles.module.css для Account */
 .title {
-    font-size: 1.875rem; /* text-3xl */
-    font-weight: 600; /* font-semibold */
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 600; /* font-semibold */
 }
 
 .linkContainer {
-    display: flex; /* flex */
-    margin-top: 1.5rem; /* mt-6 */
+  display: flex;
+  margin-top: 1.5rem; /* mt-6 */
 }
 
 .link {
-    font-size: 1rem; /* text-base */
-    margin-right: 0.25rem; /* mr-1 */
+  font-size: 1rem; /* text-base */
+  color: inherit; /* Убедитесь, что цвет текста наследуется */
 }
 
 .link:hover {
-    text-decoration: underline; /* hover:underline */
+  text-decoration: underline; /* hover:underline */
 }
 
 .text {
-    font-size: 1rem; /* text-base */
-    margin-left: 0.25rem; /* ml-1 */
+  font-size: 1rem; /* text-base */
+  margin-left: 0.25rem; /* ml-1 */
+}
+.inputContainer {
+  display: inline-flex;
+  flex-direction: column;
+  margin: 1.5rem;
+ /* Фиксированная минимальная ширина */
+max-width: 350px; 
+
+  flex: 1; /* Равномерное распределение пространства */
 }
 
 .form {
-    display: flex; /* flex */
-    flex-direction: column; /* flex-col */
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1rem; /* Используем gap вместо margin для равномерных отступов */
 }
 
 @media (min-width: 640px) {
-    .form {
-        flex-direction: row; /* sm:flex-row */
-    }
+  .form {
+    flex-direction: row;
+  }
 }
 
-@media (min-width: 1024px) {
-    .form {
-        flex-wrap: wrap; /* lg:flex-wrap */
-    }
-}
+/* .inputError {
+  
+  border: 1px solid red;
+  border-radius: 0.375rem;
+  padding: 0.25rem;
+} */
 
-.inputContainer {
-    display: inline-flex; /* inline-flex */
-    flex-direction: column; /* flex-col */
-    margin: 1.5rem; /* m-6 */
+.button{
+    width: 100px;
+    height: 50px;
+    margin-right: 40px;
+    margin-top: 53px;
+    border-radius: 10;
 }
-
-.inputError {
-    border-color: red; /* border-red-500 */
+.button:hover{
+    color: rgb(44, 43, 43);
 }
-
-.button {
-    width: 16.6667%; /* w-1/6 */
-    height: 16.6667%; /* h-1/6 */
-    margin-top: 3rem; /* mt-12 */
-    background-color: #3b82f6; /* bg-blue-400 */
-    color: white; /* text-white */
-    padding: 0.75rem; /* p-3 */
-    border-radius: 0.375rem; /* rounded-md */
-}
-
