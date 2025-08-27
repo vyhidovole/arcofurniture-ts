@@ -89,4 +89,8 @@
 .my-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  
+}
+.my-button:disabled:hover{
+  color: #0f172a;
 }
