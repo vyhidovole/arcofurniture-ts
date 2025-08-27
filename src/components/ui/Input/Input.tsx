@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from 'clsx';
+import { useTheme } from "@/context/ThemeContext";
 import styles from  "./Input.module.css";
 
 interface InputProps {
@@ -52,7 +53,7 @@ const Input: React.FC<InputProps> = ({
     },
     className
   );
-
+const {isDarkMode} = useTheme()
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(event);
@@ -96,7 +97,11 @@ const Input: React.FC<InputProps> = ({
         onInput={handleInput}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        className={inputClasses}
+          className={inputClasses}
+        style={{
+          backgroundColor: isDarkMode ? 'rgb(54, 53, 53)' : '#ffffff',
+          color: isDarkMode ? 'beige' : '#111827'
+        }}
       />
       {error && (
         <span className={styles.errorMessage} title={error}>

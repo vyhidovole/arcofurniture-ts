@@ -19,7 +19,7 @@
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   font-size: 1rem;
-  color: black;
+  /* color: black; */
   transition: border-color 0.2s;
   box-sizing: border-box; /* Важно для правильного расчета ширины */
 }
@@ -38,7 +38,7 @@
 }
 
 .inputField.inputDisabled {
-  background-color: #f3f4f6;
+  /* background-color: #f3f4f6; */
   cursor: not-allowed;
   opacity: 0.7;
 }
@@ -54,4 +54,14 @@
   overflow: hidden;
   text-overflow: ellipsis; /* Добавляем многоточие если текст длинный */
   max-width: 100%; /* Ограничиваем ширину сообщения ошибки */
+}
+
+.inputDark {
+  background-color: rgb(54, 53, 53);
+  color: beige;
+}
+
+.inputLight{
+  background-color: #f3f4f6;
+  color: black;
 }
