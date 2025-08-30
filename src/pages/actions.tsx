@@ -5,7 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 
-import styles from'./actions.module.css'; // Импорт CSS стилей
+import styles from './actions.module.css'; // Импорт CSS стилей
 
 
 // Типизация одного продукта
@@ -33,7 +33,10 @@ const Actions: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3002/Products');
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const result = await response.json();
         setData(result);
       } catch (error) {
@@ -60,7 +63,7 @@ const Actions: React.FC = () => {
             <h2 className={styles["actions-title"]}>Акции</h2>
           </div>
           <CustomSlider2 data={data} loading={loading} />
-          
+
         </>
       )}
     </>

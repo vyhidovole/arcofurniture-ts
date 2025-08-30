@@ -301,7 +301,7 @@ class CatalogueStore extends BaseStore {
    async getWorkItems(url: string) {
     console.log(`Вызван getWorkItems с URL: ${url}`);
     try {
-        const response = await fetch('http://localhost:3002/work');
+        const response = await fetch('/api/works');
         console.log('Запрос выполнен, проверяем статус...');
         console.log('Статус ответа:', response.status);
         
