@@ -11,7 +11,7 @@
 }
 
 .address {
-    display: none;
+    display: block;
 }
 
 @media(min-width:1024) {
@@ -30,7 +30,7 @@
 }
 
 .call-container {
-    display: none;
+    display: block;
 }
 
 @media (min-width:1024) {
@@ -68,7 +68,7 @@
 }
 
 .button-openEntryDialog {
-    display: none;
+    display: block;
 }
 
 .button-openEntryDialog.dark {
