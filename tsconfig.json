@@ -24,6 +24,7 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"
@@ -36,7 +37,8 @@
     "**/*.ts",
     "**/*.tsx",
     "declarations.d.ts", // добавьте ваш файл определений типов
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/types/*.d.ts"
 , "src/pages/privetofficepage.tsx"  ],
   "exclude": [
     "node_modules"
