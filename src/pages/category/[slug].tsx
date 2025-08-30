@@ -1,4 +1,5 @@
 //[slug].tsx
+import React from "react";
 import { useRouter } from 'next/router';
 import CategoryPageContent from '@/components/CategoryPageContent';
 
