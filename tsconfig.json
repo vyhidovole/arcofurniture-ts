@@ -31,6 +31,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "global-types.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "declarations.d.ts", // добавьте ваш файл определений типов
