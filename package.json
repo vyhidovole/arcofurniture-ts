@@ -11,7 +11,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
-    },
+  },
   "dependencies": {
     "@chakra-ui/menu": "^2.2.1",
     "@chakra-ui/react": "^3.21.0",
@@ -40,12 +40,13 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "babel-jest": "^30.1.1",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.1.1",
     "jest-environment-jsdom": "^30.1.1",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
