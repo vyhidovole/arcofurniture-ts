@@ -8,6 +8,7 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
+    "types": ["jest", "@testing-library/jest-dom"],
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
