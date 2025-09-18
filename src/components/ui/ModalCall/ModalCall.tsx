@@ -51,10 +51,9 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
   const { formData, errors, handleChange, handleSubmit, resetForm } = useForm(
     {
             name: "",
-            email: "",
-            password: "",
+            phone:"",
         },
-    onFormSubmit
+    onFormSubmit,  { passwordRequired: false } 
   );
 
   // Управление открытием/закрытием диалога
@@ -185,9 +184,9 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
                 label="Name"
                 type="text"
                 name="name"
-                value={formData.name}
+                value={formData.name  ?? ""}
                 onChange={handleChange}
-                error={errors.name}
+                error={errors.name }
               />
 
               <Input
@@ -195,9 +194,9 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
                 label="Телефон"
                 type="tel"
                 name="phone"
-                value={formData.phone}
+                value={formData.phone ?? "" }
                 onChange={handleChange}
-                error={errors.phone}
+                error={errors.phone }
               />
 
               <Button type="submit" variant="secondary" className={styles.button}>
