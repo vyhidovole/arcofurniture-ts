@@ -8,8 +8,8 @@ interface DrawerProps {
     isOpen: boolean
     onClose: () => void
     titleDrawer: string
-    isDarkMode?: boolean; // добавлено
-    children?: React.ReactNode; // добавлено, если нужен children
+    isDarkMode?: boolean; 
+    children?: React.ReactNode; 
 }
 
 /**
@@ -51,6 +51,7 @@ export const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, titleDrawer }) 
 
     /**
      * Добавляет или удаляет обработчик клика вне панели при открытии или закрытии панели.
+     * (mousedown — это событие нажатия кнопки мыши, которое срабатывает раньше, чем click)
      */
 
     useEffect(() => {
