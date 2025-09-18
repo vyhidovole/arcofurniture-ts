@@ -7,22 +7,22 @@ import styles from "./MainLayout.module.css";
 
 interface MainLayoutProps {
   children: ReactNode;
-  isDrowerOpen: boolean;
-  onOpenDrower: () => void;
-  onCloseDrower: () => void;
+  isDrawerOpen: boolean;
+  onOpenDrawer: () => void;
+  onCloseDrawer: () => void;
 }
 
 /**
  * Обертка контента основной страницы.
  */
-const MainLayout: React.FC<MainLayoutProps> = ({ children, isDrowerOpen, onOpenDrower, onCloseDrower }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children, isDrawerOpen, onOpenDrawer, onCloseDrawer }) => {
   return (
     <main>
       <Navigation />
       <Header 
-        isDrowerOpen={isDrowerOpen} 
-        onOpenDrower={onOpenDrower} 
-        onCloseDrower={onCloseDrower} 
+        isDrawerOpen={isDrawerOpen} 
+        onOpenDrawer={onOpenDrawer} 
+        onCloseDrawer={onCloseDrawer} 
       />
       <div className={styles.container}>{children}</div>
       <Footer />
