@@ -19,9 +19,9 @@ import SearchInput from "@/components/ui/SearchInput/SearchInput";
 import ButtonBasket from "@/components/ui/ButtomBasket/ButtonBasket";
 
 interface HeaderProps {
-  isDrowerOpen: boolean;
-  onOpenDrower: () => void;
-  onCloseDrower: () => void;
+  isDrawerOpen: boolean;
+  onOpenDrawer: () => void;
+  onCloseDrawer: () => void;
 }
 /**
  * Компонент Header отображает верхнюю часть страницы с логотипом,
@@ -37,7 +37,7 @@ interface HeaderProps {
  * @example
  * <Header />
  */
-const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrower }) => {
+const Header: React.FC<HeaderProps> = ({ isDrawerOpen, onOpenDrawer, onCloseDrawer }) => {
   const themeContext = useTheme(); // Получаем доступ к теме
   if (!themeContext) {
     throw new Error('Header must be used within a ThemeProvider');
@@ -84,11 +84,11 @@ const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrow
   };
 
 
-  // const handleOpenDrower = () => {
-  //   setIsDrowerOpen(true)
+  // const handleOpenDrawer = () => {
+  //   setisDrawerOpen(true)
   // }
-  // const handleCloseDrower = () => {
-  //   setIsDrowerOpen(false)
+  // const handleCloseDrawer = () => {
+  //   setisDrawerOpen(false)
   // }
 
 
@@ -137,6 +137,9 @@ const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrow
         className={styles["img-header"]}
       />
     )}
+    <div className={styles.headerContent}>
+      
+    </div>
     <div className={styles["address"]}>
       {loading ? (
         <Skeleton height={20} width={200} />
@@ -236,14 +239,14 @@ const Header: React.FC<HeaderProps> = ({ isDrowerOpen, onOpenDrower, onCloseDrow
         <p className={styles["underline-animation"]}>{loading ? <Skeleton width={50} /> : "Избранное"}</p>
       </Link>
       
-        <ButtonBasket loading={loading} onClick={onOpenDrower}/>
+        <ButtonBasket loading={loading} onClick={onOpenDrawer}/>
       
     </div>
 
     <Modal isOpen={isModalOpen} onClose={handleCloseModal}isDarkMode={isDarkMode} /> {/* Добавляем модальное окно */}
     <ModalCall isOpen={isCallModalOpen} onClose={closeCallDialog} setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
     <ModalEntry show={isEntryModalOpen} onClose={closeEntryDialog} setNewForm={handleSetNewForm} />{/* Добавляем модальное окно */}
-    <Drawer isOpen={isDrowerOpen} onClose={onCloseDrower} isDarkMode={isDarkMode} titleDrawer="корзина">
+    <Drawer isOpen={isDrawerOpen} onClose={onCloseDrawer} isDarkMode={isDarkMode} titleDrawer="корзина">
       <p>Добвленные товары</p>
     </Drawer>{/* Добавляем корзину товаров */}
   </div>);
