@@ -27,7 +27,18 @@
   align-items: center;
   gap: 1.25rem;
 }
+.navInternal {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
 
+/* Медиа-запросы */
+@media (max-width: 768px) {
+  .navInternal {
+    display: none;
+  }
+}
 .navLink {
   font-weight: 500;
   font-size: 1rem;
