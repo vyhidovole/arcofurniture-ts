@@ -36,7 +36,7 @@ const SearchInput:React.FC<SearchInputProps> = ({ isDarkMode }) => {
     // Массив объектов, содержащих названия и пути к страницам
     const items = [
         { name: 'кухни', path: 'kitchen' },
-        { name: 'гостиные', path: 'drawing-room' },
+        { name: 'гостиные', path: 'drawingroom' },
         { name: 'спальни', path: 'bedroom' },
         { name: 'прихожие', path: 'hallway' },
         { name: 'шкафы-купе', path: 'cupboard' },
