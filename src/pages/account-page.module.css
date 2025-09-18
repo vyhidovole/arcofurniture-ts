@@ -39,7 +39,7 @@ max-width: 350px;
   gap: 1rem; /* Используем gap вместо margin для равномерных отступов */
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .form {
     flex-direction: row;
   }
