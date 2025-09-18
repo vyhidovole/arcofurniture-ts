@@ -28,9 +28,10 @@ interface InitialState {
     name: string;
     email: string;
     password: string;
+    confirmation:string
 }
 interface AccountProps {
-    setNewState: (data: InitialState) => void
+    setNewState: (data:Partial<InitialState>) => void
 }
 
 const Account: React.FC<AccountProps> = ({ setNewState }) => {
@@ -109,7 +110,7 @@ const {isDarkMode}= useTheme()
                         label="Имя"
                         type="text"
                         name="name"
-                        value={formData.name}
+                        value={formData.name??''}
                         onChange={handleChange}
                         error={errors.name}
                     />
@@ -119,7 +120,7 @@ const {isDarkMode}= useTheme()
                        label="Телефон"
                         type="tel"
                         name="phone"
-                        value={formData.phone}
+                        value={formData.phone??''}
                         onChange={handleChange}
                         error={errors.phone}
                     />
@@ -130,7 +131,7 @@ const {isDarkMode}= useTheme()
                         label="Email"
                         type="email"
                         name="email"
-                        value={formData.email}
+                        value={formData.email??''}
                         onChange={handleChange}
                         error={errors.email}
                     />
@@ -141,7 +142,7 @@ const {isDarkMode}= useTheme()
 label="Пароль"
                         type="password"
                         name="password"
-                        value={formData.password}
+                        value={formData.password??''}
                         onChange={handleChange}
                         error={errors.password}
                     />
@@ -152,7 +153,7 @@ label="Пароль"
                         label="Подтверждение"
                         type="password"
                         name="confirmation"
-                        value={formData.confirmation}
+                        value={formData.confirmation??''}
                         onChange={handleChange}
                         error={errors.confirmation}
                     />
