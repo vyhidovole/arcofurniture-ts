@@ -35,7 +35,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose, titleBurger,is
         { slug: 'kitchen', label: 'Кухни' },
         { slug: 'bedroom', label: 'Спальни' },
         { slug: 'nursery', label: 'Детские' },
-        { slug: 'drawing-room', label: 'Гостиные' },
+        { slug: 'drawingroom', label: 'Гостиные' },
         { slug: 'couch', label: 'Диваны' },
         { slug: 'hallway', label: 'Прихожие' },
         { slug: 'cupboard', label: 'Шкафы-купе' },
@@ -70,24 +70,27 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ isOpen, onClose, titleBurger,is
      */
 
     useEffect(() => {
-        document.addEventListener("mousedown", handleClick);
+        document.addEventListener('pointerdown', handleClick);
         return () => {
-            document.removeEventListener("mousedown", handleClick);
+            document.removeEventListener('pointerdown', handleClick);
         };
     }, [handleClick]);
 
     // Функции для открытия и закрытия модальных окон
-    const handleOpenModal = () => {
-        console.log("address"); // Логируем сообщение для тестирования
-        setIsModalOpen(true);
+     const handleOpenModal = () => {
+        closeBurger()
+        setIsModalOpen(true)
     };
     const handleCloseModal = () => setIsModalOpen(false);
 
-    const openCallDialog = () => setIsCallDialogOpen(true);
+     const openCallDialog = () => {
+        closeBurger()
+        setIsCallDialogOpen(true)
+    };
     const closeCallDialog = () => setIsCallDialogOpen(false);
 
     const openEntryDialog = () => {
-        console.log("entry")
+         closeBurger()
         setIsEntryDialogOpen(true);
     }
     const closeEntryDialog = () => setIsEntryDialogOpen(false);
