@@ -26,13 +26,13 @@ interface InitialState {
 }
 interface PasswordProps {
     variant: 'default' | 'positive' | 'negative'; // пример типа Variant
-    setNewState: (data: InitialState) => void
+    setNewState: (data:Partial <InitialState>) => void
 }
 
 const Password: React.FC<PasswordProps> = ({ variant, setNewState }) => {
     const { isDarkMode } = useTheme()
     const { formData, errors, handleChange, handleSubmit, resetForm } = useForm(
-        { name: "", phone: '', email: "", password: "" }, setNewState, { passwordRequired: false });
+        { name: "", phone: '', email: "" }, setNewState, { passwordRequired: false });
 
     const [isShowAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -105,7 +105,7 @@ const Password: React.FC<PasswordProps> = ({ variant, setNewState }) => {
                             label="Имя"
                             type="text"
                             name="name"
-                            value={formData.name}
+                            value={formData.name??''}
                             onChange={handleChange}
                             error={errors.name}
                         />
@@ -114,7 +114,7 @@ const Password: React.FC<PasswordProps> = ({ variant, setNewState }) => {
                             label="Email"
                             type="email"
                             name="email"
-                            value={formData.email}
+                            value={formData.email??""}
                             onChange={handleChange}
                             error={errors.email}
                         />
@@ -122,7 +122,7 @@ const Password: React.FC<PasswordProps> = ({ variant, setNewState }) => {
                             label="Телефон"
                             type="tel"
                             name="phone"
-                            value={formData.phone}
+                            value={formData.phone??''}
                             onChange={handleChange}
                             error={errors.phone}
                         />
