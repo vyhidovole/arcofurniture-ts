@@ -25,7 +25,7 @@ import styles from './ModalPrivetOffice.module.css';
  */
 interface ModalPrivetOfficeProps {
     variant: 'default'|'positive' | 'negative'; // пример типа Variant
-    setNewState: (data: InitialState) => void
+    setNewState: (data: Partial<InitialState>) => void
 }
 // Определите тип InitialState, если он еще не определен
 interface InitialState {
@@ -86,7 +86,7 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) =>
                     label="Name"
                     type="text"
                     name="name"
-                    value={formData.name}
+                    value={formData.name??''}
                     onChange={handleChange}
                     error={errors.name}
                 />
@@ -97,7 +97,7 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) =>
                     label="Email"
                     type="email"
                     name="email"
-                    value={formData.email}
+                    value={formData.email??''}
                     onChange={handleChange}
                     error={errors.email}
                 />
@@ -108,7 +108,7 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) =>
                     label="Password"
                     type="password"
                     name="password"
-                    value={formData.password}
+                    value={formData.password??''}
                     onChange={handleChange}
                     error={errors.password}
                 />
