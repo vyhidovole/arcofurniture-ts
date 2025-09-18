@@ -1,7 +1,12 @@
 .searchInput-container {
     position: relative;
 }
-
+@media (max-width:768px) {
+    .searchInput-container{
+        display: none;
+    }
+    
+}
 .searchInput {
     /* display: none; */
     border-radius: 0.25rem;
