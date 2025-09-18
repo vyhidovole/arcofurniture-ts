@@ -13,11 +13,11 @@ import { useRouter } from "next/router"
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
-  const [isDrowerOpen, setIsDrowerOpen] = useState(false);
+  const [isDrawerOpen, setisDrawerOpen] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
-        if (isDrowerOpen) return; // не грузим каталог, если корзина открыта
+        if (isDrawerOpen) return; // не грузим каталог, если корзина открыта
 
         const pathSegments = router.asPath.split("/").filter(Boolean);
         const categoryKey = pathSegments[1] || 'kitchen';
@@ -31,12 +31,12 @@ const App = ({ Component, pageProps }: AppProps) => {
     };
 
     loadData();
-}, [router.asPath, isDrowerOpen]);
+}, [router.asPath, isDrawerOpen]);
 
-  const handleOpenDrower = () => setIsDrowerOpen(true);
-  const handleCloseDrower = () => {
-  console.log("handleCloseDrower вызван");
-  setIsDrowerOpen(false);
+  const handleOpenDrawer = () => setisDrawerOpen(true);
+  const handleCloseDrawer = () => {
+  console.log("handleCloseDrawer вызван");
+  setisDrawerOpen(false);
 };
 
 
@@ -46,9 +46,9 @@ const App = ({ Component, pageProps }: AppProps) => {
         <Provider>
           <CartProvider>
             <MainLayout 
-              isDrowerOpen={isDrowerOpen} 
-              onOpenDrower={handleOpenDrower} 
-              onCloseDrower={handleCloseDrower}
+              isDrawerOpen={isDrawerOpen} 
+              onOpenDrawer={handleOpenDrawer} 
+              onCloseDrawer={handleCloseDrawer}
             >
               <MenuBar />
               <Component {...pageProps} />
