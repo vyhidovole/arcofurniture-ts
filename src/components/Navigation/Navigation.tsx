@@ -34,13 +34,16 @@ const Navigation: React.FC = () => {
       setActiveLink(activeItem.name);
     }
   }, [router.pathname]);
-
+//функция для перехода по ссылкам
   const onClickHandler = (link: string, path: string) => {
     if (link !== activeLink) {
       setLoading(true);
       router.push(path).then(() => {
         setLoading(false);
-      });
+      }).catch((error)=> {
+        console.error('Ошибка навигации',error);
+        setLoading(false);
+      })
       setActiveLink(link);
     }
   };
@@ -50,6 +53,7 @@ const Navigation: React.FC = () => {
       <div className={styles.container}>
         {/* Левая часть меню */}
         <nav className={styles.nav}>
+           <div className={styles.navInternal}>
           {loading ? (
             Array(5)
               .fill(null)
@@ -61,7 +65,9 @@ const Navigation: React.FC = () => {
                 <a
                   key={item.path}
                   onClick={() => onClickHandler(item.name, item.path)}
-                  className={`${styles.navLink} ${styles.relative} ${styles.cursorPointer} ${styles.underlineAnimation} ${isActive ? `${styles.textSky500} ${styles.active}` : styles.textGray800
+                  className={`${styles.navLink} ${styles.relative} ${styles.cursorPointer} 
+                  ${styles.underlineAnimation} ${isActive ? `${styles.textSky500}
+                   ${styles.active}` : styles.textGray800
                     }`}
                   tabIndex={0}
                 >
@@ -70,6 +76,7 @@ const Navigation: React.FC = () => {
               );
             })
           )}
+          </div>
         </nav>
 
         {/* Правая часть меню */}
@@ -85,7 +92,9 @@ const Navigation: React.FC = () => {
                 <a
                   key={item.path}
                   onClick={() => onClickHandler(item.name, item.path)}
-                  className={`${styles.navLink} ${styles.relative} ${styles.cursorPointer} ${styles.underlineAnimation} ${isActive ? `${styles.textSky500} ${styles.active}` : styles.textGray800
+                  className={`${styles.navLink} ${styles.relative} ${styles.cursorPointer}
+                   ${styles.underlineAnimation}
+                    ${isActive ? `${styles.textSky500} ${styles.active}` : styles.textGray800
                     }`}
                   tabIndex={0}
                 >
