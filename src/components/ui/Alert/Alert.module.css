@@ -14,7 +14,11 @@
   font-size: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
-
+@media (max-width:768px) {
+  .alert {
+    top: 15rem;
+  }
+}
 .alert-icon-wrapper {
   display: flex;
   align-items: center;
