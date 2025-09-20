@@ -4,10 +4,11 @@ import { InitialState } from '@/hooks/useForm'; // Импорт InitialState и�
 
 /**
  * Валидаторы для полей формы.
- * @property {function(string): string|null} name - Валидатор для текстового поля.
+ * @property {function(string, Partial<InitialState>): string|null} name - Валидатор для текстового поля.
  * @property {function(string): string|null} email - Валидатор для электронной почты.
  * @property {function(string): string|null} phone - Валидатор для телефона.
  * @property {function(string): string|null} password - Валидатор для пароля.
+ * @property {function(string | undefined, Partial<InitialState>): string|null} confirmation - Валидатор для подтверждения пароля.
  * @property {function(string): string|null} number - Валидатор для числовых полей.
  */
 interface ValidatorProps {
@@ -15,6 +16,7 @@ interface ValidatorProps {
   email: (value: string) => string | null;
   phone: (value: string) => string | null;
   password: (value: string) => string | null;
+  confirmation: (value: string | undefined, formData: Partial<InitialState>) => string | null;  // Обновлен тип
   number: (value: string) => string | null;
 }
 
@@ -61,6 +63,19 @@ const validators: ValidatorProps = {
     return null;
   },
   /**
+   * Валидатор для подтверждения пароля.
+   * @param {string | undefined} value - Значение поля (может быть undefined).
+   * @param {Partial<InitialState>} formData - Данные формы для доступа к password.
+   * @returns {string|null} - Сообщение об ошибке или null, если валидация прошла успешно.
+   */
+  confirmation: (value: string | undefined, formData: Partial<InitialState>): string | null => {
+    if (!value || value.trim() === '') return "field is required";  // Обрабатываем undefined как пустое
+    if (formData.password && value !== formData.password) {
+      return "Пароль набран не верно";
+    }
+    return null;
+  },
+  /**
    * Валидатор для числовых полей.
    * @param {string} value - Значение поля.
    * @returns {string|null} - Сообщение об ошибке или null, если валидация прошла успешно.
@@ -78,8 +93,6 @@ const validators: ValidatorProps = {
  * @param {Object} formData - Данные формы, представленные в виде объекта.
  * @returns {Object} - Объект с сообщениями об ошибках для каждого поля формы.
  */
-
-
 export function validateForm(
   data: Partial<InitialState>,
   options: { passwordRequired: boolean }
@@ -89,8 +102,8 @@ export function validateForm(
   // Валидация name с использованием существующего валидатора и дополнительными проверками
   if ('name' in data && data.name !== undefined) {
     const baseError = validators.name(data.name);
-    if (baseError) {
-      errors.name = baseError;
+    if (baseError !== null) {  // Явная проверка на null
+      errors.name = baseError;  // Теперь baseError - string
     } else if (data.name.trim() === '') {
       errors.name = 'Имя обязательно';
     } else if (data.name.trim().length <= 1 || !/^[A-Za-zА-Яа-яЁё]+$/.test(data.name)) {
@@ -101,8 +114,8 @@ export function validateForm(
   // Валидация email с использованием существующего валидатора
   if ('email' in data && data.email !== undefined) {
     const baseError = validators.email(data.email);
-    if (baseError) {
-      errors.email = baseError;
+    if (baseError !== null) {  // Явная проверка на null
+      errors.email = baseError;  // Теперь baseError - string
     } else if (data.email.trim() === '') {
       errors.email = 'Email обязателен';
     }
@@ -111,20 +124,28 @@ export function validateForm(
   // Валидация phone с использованием существующего валидатора
   if ('phone' in data && data.phone !== undefined) {
     const baseError = validators.phone(data.phone);
-    if (baseError) {
-      errors.phone = baseError;
+    if (baseError !== null) {  // Явная проверка на null
+      errors.phone = baseError;  // Теперь baseError - string
     }
   }
 
   // Валидация password с использованием существующего валидатора и опциями
-  if ('password' in data && data.password !== undefined) {  // Исправлена опечатка: data.name -> data.password
+  if ('password' in data && data.password !== undefined) {
     const baseError = validators.password(data.password);
-    if (baseError) {
-      errors.password = baseError;
+    if (baseError !== null) {  // Явная проверка на null
+      errors.password = baseError;  // Теперь baseError - string
     } else if (options.passwordRequired && data.password.trim() === '') {
       errors.password = 'Пароль обязателен';
     } else if (data.password.trim().length < 8) {
       errors.password = 'Пароль должен быть не менее 8 символов';
+    }
+  }
+
+  // Валидация confirmation с использованием нового валидатора
+  if ('confirmation' in data) {
+    const baseError = validators.confirmation(data.confirmation, data);  // Теперь типы совпадают
+    if (baseError !== null) {  // Явная проверка на null
+      errors.confirmation = baseError;  // Теперь baseError - string
     }
   }
 

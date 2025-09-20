@@ -4,12 +4,12 @@ import { validateForm } from "../utils/validators";
 
 
 export interface InitialState {
-    
+
     name?: string;
     email?: string;
     password?: string;
     phone?: string;
-    confirmation?:string
+    confirmation?: string
 
 }
 
@@ -36,7 +36,7 @@ interface UseFormReturn {
 function useForm(
     initialState: Partial<InitialState>,
     setNewState: (data: Partial<InitialState>) => void,
-    options = { passwordRequired: true }
+    options = { passwordRequired: true, confirmationRequired: true }// Добавляем опцию для confirmation
 ): UseFormReturn {
     // Состояние формы (значения полей)
     const [formData, setFormData] = useState<Partial<InitialState>>(initialState);
@@ -114,7 +114,18 @@ function useForm(
                     }
                 }
                 break;
-
+            case 'confirmation':
+                if ('confirmation' in initialState) {
+                    if (options.confirmationRequired && value.trim() === '') {
+                        newErrors.confirmation = 'Подтверждение обязательно';
+                    } else if (formData.password && value !== formData.password) {
+                        newErrors.confirmation = 'Пароль набран не верно';
+                    } else {
+                        delete newErrors.confirmation;
+                    }
+                }
+                break;
+                
             default:
                 break;
         }
@@ -133,7 +144,7 @@ function useForm(
         console.log('Состояние формы перед отправкой:', formData);
         console.log('Ошибки перед отправкой:', errors);
         // Валидация только для полей из initialState
-       const fieldsToValidate = Object.keys(initialState);
+        const fieldsToValidate = Object.keys(initialState);
         const dataToValidate: Partial<InitialState> = {};
         for (const key of fieldsToValidate) {
             const value = formData[key as keyof InitialState];
