@@ -24,17 +24,18 @@ import styles from './ModalPrivetOffice.module.css';
  * );
  */
 interface ModalPrivetOfficeProps {
-    variant: 'default'|'positive' | 'negative'; // пример типа Variant
+    variant: 'default' | 'positive' | 'negative'; // пример типа Variant
     setNewState: (data: Partial<InitialState>) => void
+    isSpecial?: boolean;  // Новый проп для специального места (по умолчанию false)
 }
 // Определите тип InitialState, если он еще не определен
 interface InitialState {
-  name: string;
-  email: string;
-  password: string;
+    name: string;
+    email: string;
+    password: string;
 }
-const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) => {
-    const{isDarkMode} = useTheme()
+const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState, isSpecial = false }) => {
+    const { isDarkMode } = useTheme()
     const { formData, errors, handleChange, handleSubmit, resetForm } = useForm({
         name: "",
         email: "",
@@ -43,13 +44,13 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) =>
 
     const [isShowAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
-    const [alertVariant, setAlertVariant] = useState<'positive' | 'negative'| 'info'>('info'); // Установите начальное значение
+    const [alertVariant, setAlertVariant] = useState<'positive' | 'negative' | 'info'>('info'); // Установите начальное значение
     const [isLoading, setIsLoading] = useState(false);
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
-        
+
         const isSuccess = await handleSubmit(e);
 
         if (isSuccess) {
@@ -74,47 +75,50 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState }) =>
         setShowAlert(false);
     };
 
-      return (
-        <form onSubmit={handleFormSubmit} method="dialog"className={styles.formContainer}>
-            <div className={`${styles.modalContainer} ${isDarkMode ? 'bg-dark': 'bg-light'}`}>
+    return (
+        <form onSubmit={handleFormSubmit} method="dialog" className={styles.formContainer}>
+            <div className={`${styles.modalContainer} ${isDarkMode ? 'bg-dark' : 'bg-light'}`}>
                 <div className={styles.modalHeader}>
-                     <h1 className={`${styles.title} ${isDarkMode ? 'bg-dark': 'bg-light'}`}>Войти</h1>
+                    <h1 className={`${styles.title} ${isDarkMode ? 'bg-dark' : 'bg-light'}`}>Войти</h1>
                 </div>
                 <div className={styles.inputGroup}>
-                <Input
-                    className={`${errors.name ? styles.inputError : ""} ${styles.input}`}
-                    label="Name"
-                    type="text"
-                    name="name"
-                    value={formData.name??''}
-                    onChange={handleChange}
-                    error={errors.name}
-                />
+                    <Input
+                        className={`${errors.name ? styles.inputError : ""} ${styles.input}`}
+                        label="Name"
+                        type="text"
+                        name="name"
+                        value={formData.name ?? ''}
+                        onChange={handleChange}
+                        error={errors.name}
+                        isSpecial={isSpecial}  // Передаём проп в Input
+                    />
                 </div>
                 <div className={styles.inputGroup}>
-                <Input
-                    className={`${errors.email ? styles.inputError : ""} ${styles.input}`}
-                    label="Email"
-                    type="email"
-                    name="email"
-                    value={formData.email??''}
-                    onChange={handleChange}
-                    error={errors.email}
-                />
+                    <Input
+                        className={`${errors.email ? styles.inputError : ""} ${styles.input}`}
+                        label="Email"
+                        type="email"
+                        name="email"
+                        value={formData.email ?? ''}
+                        onChange={handleChange}
+                        error={errors.email}
+                        isSpecial={isSpecial}  // Передаём проп в Input
+                    />
                 </div>
                 <div className={styles.inputGroup}>
-                <Input
-                    className={`${errors.password ? styles.inputError : ""} ${styles.input}`}
-                    label="Password"
-                    type="password"
-                    name="password"
-                    value={formData.password??''}
-                    onChange={handleChange}
-                    error={errors.password}
-                />
+                    <Input
+                        className={`${errors.password ? styles.inputError : ""} ${styles.input}`}
+                        label="Password"
+                        type="password"
+                        name="password"
+                        value={formData.password ?? ''}
+                        onChange={handleChange}
+                        error={errors.password}
+                       isSpecial={isSpecial}  // Передаём проп в Input
+                    />
                 </div>
                 <Link href="/forgot-password" className={styles.link}>
-                    <p className={`${`${styles['forgot-password']}`} ${isDarkMode ? 'bg-dark':'bg-lght'}`}>Забыли пароль?</p>
+                    <p className={`${`${styles['forgot-password']}`} ${isDarkMode ? 'bg-dark' : 'bg-lght'}`}>Забыли пароль?</p>
                 </Link>
                 <Button
                     type="submit"
