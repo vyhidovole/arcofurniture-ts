@@ -24,8 +24,8 @@ const PrivetOffice: React.FC<PrivetOfficeProps> = () => {
     const [, setUserData] = useState<UserData | null>(null); // Типизируем состояние
 
 
-    const handleSetUserData = (data: UserData) => {
-        setUserData(data); // Обновляем состояние с данными пользователя
+    const handleSetUserData = (data: Partial<InitialState>) => {
+        setUserData(data as UserData); // Обновляем состояние с данными пользователя
         console.log("Данные пользователя:", data); // Логируем данные
     };
 
@@ -39,12 +39,14 @@ const PrivetOffice: React.FC<PrivetOfficeProps> = () => {
                 <p className={styles.authorizationText}>Авторизация</p>
             </div>
             <div className={styles.formContainer}>
-<ModalPrivetOffice
-                setNewState={handleSetUserData}
-                variant="default" // Добавляем обязательный пропс variant
-            />{/* Добавляем форму */}
+                <ModalPrivetOffice
+                    setNewState={handleSetUserData}
+                    variant="default" // Добавляем обязательный пропс variant
+                    isSpecial={true}  // Специальное место: активируем 20%/50% для инпутов
+
+                />{/* Добавляем форму */}
             </div>
-            
+
         </>
     );
 }
