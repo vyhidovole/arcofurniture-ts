@@ -167,7 +167,7 @@ if (!show) return null;
                             label="Name"
                             type="text"
                             name="name"
-                            value={formData.name}
+                            value={formData.name??''}
                             onChange={handleChange}
                             error={errors.name}
                         />
@@ -177,7 +177,7 @@ if (!show) return null;
                             label="Email"
                             type="email"
                             name="email"
-                            value={formData.email}
+                            value={formData.email??''}
                             onChange={handleChange}
                             error={errors.email}
                         />
@@ -187,7 +187,7 @@ if (!show) return null;
                             label="Password"
                             type="password"
                             name="password"
-                            value={formData.password}
+                            value={formData.password??''}
                             onChange={handleChange}
                             // onBlur={handleBlur} // Используем обработчик из useForm
                             error={errors.password}
