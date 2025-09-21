@@ -52,8 +52,9 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
     {
             name: "",
             phone:"",
+            
         },
-    onFormSubmit,  { passwordRequired: false } 
+    onFormSubmit,  { passwordRequired: false, confirmationRequired: false} 
   );
 
   // Управление открытием/закрытием диалога
