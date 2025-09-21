@@ -1,7 +1,7 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import clsx from 'clsx';
 import { useTheme } from "@/context/ThemeContext";
-import styles from  "./Input.module.css";
+import styles from "./Input.module.css";
 
 interface InputProps {
   value: string;
@@ -20,6 +20,9 @@ interface InputProps {
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
   className?: string;
+  style?: React.CSSProperties;  // Добавляем пропс для inline стилей
+  isSpecial?: boolean;  // Новый проп: true для специального места (20%/50%), false для всего остального (100%)
+
 }
 
 /**
@@ -44,16 +47,19 @@ const Input: React.FC<InputProps> = ({
   onBlur,
   onFocus,
   className,
+  style,
+  isSpecial = false,
 }) => {
   const inputClasses = clsx(
     styles.inputField,
-    { 
+    {
       [styles.inputDisabled]: disabled,
-      [styles.inputError]: error 
+      [styles.inputError]: error
     },
     className
   );
-const {isDarkMode} = useTheme()
+  const { isDarkMode } = useTheme()
+ 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(event);
@@ -78,6 +84,27 @@ const {isDarkMode} = useTheme()
     }
   };
 
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  // Динамическая ширина:
+  // - Если isSpecial = true: 20% на больших, 50% на малых (медиа переопределит на 50%)
+  // - Иначе: 100%
+  const dynamicWidth = isSpecial ? (isMobile ? '50%' : '20%') : '100%';
+
+  const dynamicStyle: React.CSSProperties = {
+    width: dynamicWidth,  // Inline-стиль
+    // ... другие стили, если нужно ...
+  };
   return (
     <div className={styles.inputContainer}>
       <label className={styles.inputLabel} htmlFor={name}>
@@ -97,10 +124,11 @@ const {isDarkMode} = useTheme()
         onInput={handleInput}
         onBlur={handleBlur}
         onFocus={handleFocus}
-          className={inputClasses}
+        className={inputClasses}
         style={{
           backgroundColor: isDarkMode ? 'rgb(54, 53, 53)' : '#ffffff',
-          color: isDarkMode ? 'beige' : '#111827'
+          color: isDarkMode ? 'beige' : '#111827',
+          ...style,  ...dynamicStyle // Распространяем переданные стили (например, width: 20%)
         }}
       />
       {error && (
