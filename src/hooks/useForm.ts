@@ -30,7 +30,8 @@ interface UseFormReturn {
  * Хук для управления состоянием формы, валидацией и обработки отправки данных.
  *
  * @param {Partial<InitialState>} initialState - Начальное состояние формы.
- * @param {(data: Partial<InitialState>) => void} setNewState - Функция для обновления состояния формы.
+ * @param {(data: Partial<InitialState>) => void} setNewState - Функция обратного вызова для обработки успешной отправки(для обновления внешнего состояния (например, в родительском компоненте)).
+ * @param options - Опции валидации формы. По умолчанию: { passwordRequired: true, confirmationRequired: true }.
  * @returns {UseFormReturn} - Объект с состоянием формы, ошибками и функциями.
  */
 function useForm(
@@ -48,7 +49,7 @@ function useForm(
     /**
      * Обработчик при смене данных на элементе формы
      *
-     * @param {Event} e - Объект события изменения данных на элементе формы
+     * @param {React.ChangeEvent<HTMLInputElement>} e - Объект события изменения данных (React SyntheticEvent для input-элементов).
      */
 
     // const validateEmail = (email: string): boolean => {
@@ -83,7 +84,10 @@ function useForm(
 
             case 'phone':
                 if ('phone' in initialState) {
-                    if (!validatePhone(value)) {
+                    // Проверка на пустую строку (после trim, чтобы игнорировать пробелы)
+                    if (value.trim() === '') {
+                        newErrors.phone = 'Поле обязательно для заполнения'; 
+                    } else if (!validatePhone(value)) {
                         newErrors.phone = 'Некорректный номер телефона';
                     } else {
                         delete newErrors.phone;
@@ -95,7 +99,7 @@ function useForm(
                 if ('email' in initialState) {
                     if (value.trim() === '') {
                         newErrors.email = 'Email обязателен';
-                    } else if (!/\S+@\S+\.\S+/.test(value)) {
+                    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
                         newErrors.email = 'Некорректный email';
                     } else {
                         delete newErrors.email;
@@ -107,8 +111,8 @@ function useForm(
                 if ('password' in initialState) {
                     if (options.passwordRequired && value.trim() === '') {
                         newErrors.password = 'Пароль обязателен';
-                    } else if (value.trim().length < 6) {
-                        newErrors.password = 'Пароль должен быть не менее 6 символов';
+                    } else if (value.trim().length < 8) {
+                        newErrors.password = 'Пароль должен быть не менее 8 символов';
                     } else {
                         delete newErrors.password;
                     }
@@ -125,9 +129,9 @@ function useForm(
                     }
                 }
                 break;
-                
+
             default:
-                break;
+
         }
         // Обновляем состояние ошибок
         setErrors(newErrors);
@@ -136,7 +140,7 @@ function useForm(
     /**
      * Обработчик при отправке данных
      *
-     * @param {Event} e - Объект события отправки формы
+     * @param {React.FormEvent<HTMLFormElement>} e - Объект события отправки формы
      */
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<boolean> => {
         e.preventDefault();
@@ -144,48 +148,38 @@ function useForm(
         console.log('Состояние формы перед отправкой:', formData);
         console.log('Ошибки перед отправкой:', errors);
         // Валидация только для полей из initialState
-        const fieldsToValidate = Object.keys(initialState);
-        const dataToValidate: Partial<InitialState> = {};
-        for (const key of fieldsToValidate) {
-            const value = formData[key as keyof InitialState];
-            if (value !== undefined) {
-                dataToValidate[key as keyof InitialState] = value;
-            }
-        }
-        // Проверка наличия ошибок
+        // const fieldsToValidate = Object.keys(initialState);
+        // const dataToValidate: Partial<InitialState> = {};
+        // for (const key of fieldsToValidate) {
+        //     const value = formData[key as keyof InitialState];
+        //     if (value !== undefined) {
+        //         dataToValidate[key as keyof InitialState] = value;
+        //     }
+        // }
+        // Альтернатива валидации только для полей из initialState(более компактный)
+        const dataToValidate: Partial<InitialState> = Object.fromEntries(//Собирает из массива пар новый объект dataToValidate
+            Object.entries(initialState)//Превращает initialState (ваш начальный объект формы) в массив пар [ключ, значение](например, [['name', ''], ['phone', '']].
+                .filter(([key]) => formData[key as keyof InitialState] !== undefined)
+                .map(([key]) => [key, formData[key as keyof InitialState]]) // Для этих ключей берёт актуальные значения из formData
+        );
+        // Валидация через внешнюю функцию 
         const validationErrors = validateForm(dataToValidate, options);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors); // Устанавливаем ошибки
             console.log("Форма содержит ошибки:", validationErrors);
             return false
         }
-        // Сохранение только присутствующих полей
-        // Если ошибок нет, передаем новые данные
-        if (setNewState && typeof setNewState === 'function') {
-            console.log('Состояние формы перед отправкой:', formData);
+       
+        // Передать новые данные
+        if (setNewState && typeof setNewState === "function") {
             setNewState(formData);
         }
+        // Сохраняем в localStorage
+        localStorage.setItem("userData", JSON.stringify(formData));
+        console.log("Данные сохранены в localStorage:", formData);
+        // Сбрасываем форму
+        resetForm();
 
-        // Сохраняем данные в localStorage
-        localStorage.setItem('formData', JSON.stringify(formData));
-        console.log('Данные сохранены в localStorage:', formData);
-        // Проверка наличия пустых полей
-        const isEmptyField = Object.values(formData).some(
-            (value) => value && value.trim() === ""
-        );
-
-        if (isEmptyField) {
-            console.log("Поля обязательны к заполнению");
-
-        } else {
-            // Передать новые данные
-            if (setNewState && typeof setNewState === "function") {
-                setNewState(formData);
-            }
-            localStorage.setItem("formData", JSON.stringify(formData));
-            console.log("Данные сохранены в localStorage:", formData);
-            resetForm();
-        }
 
         // Имитация отправки данных
         await new Promise((resolve) => {
@@ -203,6 +197,7 @@ function useForm(
     const resetForm = () => {
         setFormData(initialState);
         setErrors({});
+        localStorage.removeItem("userData"); // Если нужно очищать
     };
 
     return {
