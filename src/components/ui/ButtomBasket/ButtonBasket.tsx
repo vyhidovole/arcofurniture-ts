@@ -1,13 +1,14 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import Skeleton from 'react-loading-skeleton'; 
+import Skeleton from 'react-loading-skeleton';
 import catalogueStore from "@/store/CatalogueStore";
-import styles from "./ButtonBasket.module.css"; 
+import styles from "./ButtonBasket.module.css";
 import { useTheme } from '@/context/ThemeContext';
+
 interface ButtonBasketProps {
   loading: boolean;
   onClick: () => void;
-  
+
 }
 
 const ButtonBasket: React.FC<ButtonBasketProps> = observer(({ loading, onClick }) => {
@@ -15,18 +16,20 @@ const ButtonBasket: React.FC<ButtonBasketProps> = observer(({ loading, onClick }
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    setIsMounted(true);// Для доступа к геттеру который находится в сторе инициализированным в браузере
+
   }, []);
 
   const quantity = catalogueStore.totalQuantity;
 
   return (
-    <button type="button"
-     className={`${styles["button-basket"]} ${isDarkMode ? styles["dark"] : styles["light"]}`} // Применяем классы в зависимости от темы
-     onClick={onClick}
-     style={{ backgroundColor: isDarkMode ? '#333333' : '#ffffff' }}>
+    <button
+      type="button"
+      className={`${styles["button-basket"]} ${isDarkMode ? styles.dark : styles.light}`} // Применяем классы в зависимости от темы
+      onClick={onClick}
+      >
       {loading ? (
-        <div className={styles["round-skeleton"]}></div>
+        <div className={styles['round-skeleton']}></div>
       ) : (
         <svg
           data-slot="icon"
@@ -56,3 +59,15 @@ const ButtonBasket: React.FC<ButtonBasketProps> = observer(({ loading, onClick }
 });
 
 export default ButtonBasket;
+//isMounted — это локальное состояние компонента, которое вы создаёте с помощью:
+
+//const [isMounted, setIsMounted] = useState(false);
+
+// При первом рендере компонента isMounted будет false.
+// После того, как React отрендерит компонент и выполнит эффект useEffect (который запускается после монтирования компонента), isMounted станет true.
+// Это позволяет отличить первый рендер от последующих.
+
+
+// Иногда данные или значения могут быть недоступны или некорректны при первом рендере (например, из-за SSR — серверного рендеринга).
+// Чтобы избежать рассинхронизации между сервером и клиентом (например, разницы в разметке), показывают заглушку до того, как компонент «подключится» на клиенте.
+// Это помогает избежать ошибок и мерцаний UI.
