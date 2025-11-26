@@ -25,8 +25,13 @@ const PrivetOffice: React.FC<PrivetOfficeProps> = () => {
 
 
     const handleSetUserData = (data: Partial<InitialState>) => {
-        setUserData(data as UserData); // Обновляем состояние с данными пользователя
-        console.log("Данные пользователя:", data); // Логируем данные
+  if (data.name && data.email && data.password) {
+            const user: UserData = { ...data as InitialState, id: 'newId' };//Добавил проверку внутри функции: если name, email и password определены, то создаём полноценный UserData и обновляем состояние. Это обеспечивает безопасность — форма не сможет отправить неполные данные (в коде формы это уже учтено валидацией).
+            setUserData(user);
+            console.log('User updated:', user);
+        } else {
+            console.warn('Incomplete form data; cannot set user data.');
+        }
     };
 
     return (
