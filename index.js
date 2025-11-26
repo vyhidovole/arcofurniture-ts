@@ -1,19 +1,19 @@
+//index.js. В Next.js в нем нет нужды, только мешает
+// import React from 'react';
+// import ReactDOM from 'react-dom/client'; // Import createRoot instead of ReactDOM
+// import App from './App';
+// import './Header.css'; 
+// import './globals.css';
 
-import React from 'react';
-import ReactDOM from 'react-dom/client'; // Import createRoot instead of ReactDOM
-import App from './App';
-import './Header.css'; 
-import './globals.css';
+// const container = document.getElementById('app'); // Get the root container
+// const root = ReactDOM.createRoot(container); // Create a root
 
-const container = document.getElementById('app'); // Get the root container
-const root = ReactDOM.createRoot(container); // Create a root
-
-// Render the App component
-root.render(
+// // Render the App component
+// root.render(
   
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+//     <React.StrictMode>
+//       <App />
+//     </React.StrictMode>
  
 
-);
+// );
