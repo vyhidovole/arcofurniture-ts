@@ -87,21 +87,22 @@ const Input: React.FC<InputProps> = ({
 
   const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
+ useEffect(() => {
+  const mediaQuery = window.matchMedia('(max-width: 768px)');
+  const handleChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);// e: MediaQueryListEvent явно указывает, что e — это объект события медиа-запроса. Это встроенный интерфейс TypeScript, который включает свойства вроде matches (boolean), media (string) и другие.
+  
+  setIsMobile(mediaQuery.matches); // Начальная проверка
+  mediaQuery.addEventListener('change', handleChange);
+  return () => mediaQuery.removeEventListener('change', handleChange);
+}, []);
+
 
   // Динамическая ширина:
   // - Если isSpecial = true: 20% на больших, 50% на малых (медиа переопределит на 50%)
   // - Иначе: 100%
   const dynamicWidth = isSpecial ? (isMobile ? '50%' : '20%') : '100%';
 
-  const dynamicStyle: React.CSSProperties = {
+  const dynamicStyle: React.CSSProperties = {//используется для типизации объектов стилей (inline-стилей) в компонентах React
     width: dynamicWidth,  // Inline-стиль
     // ... другие стили, если нужно ...
   };
