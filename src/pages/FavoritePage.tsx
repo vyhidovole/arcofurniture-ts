@@ -1,5 +1,5 @@
 import React from "react";
-// import { useRouter } from 'next/router';
+import { useTheme } from '@/context/ThemeContext'
 import Link from 'next/link';
 import styles from './FavoritePage.module.css'
 /**
@@ -13,13 +13,14 @@ import styles from './FavoritePage.module.css'
  * return <FavoritePage />;
  */
 const FavoritePage = () => {
+    const {isDarkMode} = useTheme()
     // const router = useRouter();
     // Проверка, что router определён
   
     return (
         <>
             <h2 className={styles.title}>Мои заметки</h2>
-            <div className={styles.container}>
+            <div className={`${styles.container} ${isDarkMode?'bg-dark': 'bg-light'}`}>
                 <Link href="/" className={styles.link}>Главная</Link>
                 <span className={styles.separator}>-</span>
                 <Link href="/privetofficepage" className={styles.link}>Личный кабинет</Link>
