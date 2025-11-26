@@ -1,13 +1,15 @@
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --button-bg: #ffffff;
+
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --button-bg: #0a0a0a;
   }
 }
 
@@ -45,13 +47,14 @@ a {
 
 /* Для тёмного режима */
 .bg-dark {
-  background-color: #1f2937; /* bg-gray-800 */
+  background-color: #1f2937;
+  /* bg-gray-800 */
   color: #ededed;
 }
 
 /* Для светлого режима */
 .bg-light {
-  background-color: #b7b1b1; /* bg-white */
+  background-color: #b7b1b1;
+  /* bg-white */
   color: #1f2937;
 }
-
