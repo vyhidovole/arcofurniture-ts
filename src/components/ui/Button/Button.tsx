@@ -17,7 +17,7 @@ type ButtonProps = {
  * Компонент кнопки
  */
 const Button: React.FC<ButtonProps>=({
-    className = styles["my-button"],
+    className = "",
     onClick,
     variant = "primary",
     type = "submit",
@@ -30,11 +30,15 @@ const Button: React.FC<ButtonProps>=({
     //Формируем класс  с учетом стилей из css Modules
     const variantClassName = styles[variant]||""
     const combinedClassName = [
-        "my-button",
+        styles["my-button"],
         variantClassName,
         className,
-    ].filter(Boolean).join(" ")//альтернатива clsx и classnames
-
+    ].filter(Boolean).join(" ")//альтернатива clsx и classnames, но не умеет 
+    // обрабатывать вложенные массивы или объекты с условными классами.
+    // Если у вас нет вложенных условий в классах.
+    // Если классы уже вычислены и просто нужно объединить.
+    // Если хотите минимизировать зависимости.
+{/**Boolean-отбрасывает ложные значения (втроенная функция)*/}
     return (
         <button className={combinedClassName}
         disabled={disabled||isLoading}
@@ -47,7 +51,7 @@ const Button: React.FC<ButtonProps>=({
                 <>
                 {icon}
                 {children}
-                {suffix && <span className="ml-2">{suffix}</span>}
+                {suffix && <span className={styles["ml-2"]}>{suffix}</span>}
                 
                 </>
             )}
