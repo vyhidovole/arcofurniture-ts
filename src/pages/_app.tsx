@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import type { AppProps } from "next/app";
 import MainLayout from "@/Layouts/MainLayout";
 import { CartProvider } from '@/context/CartContext';
-import { ThemeProvider } from '@/context/ThemeContext'; 
+import { ThemeProvider } from '@/context/ThemeContext';
 import { LoadingProvider } from '@/context/LoadingContext';
 import MenuBar from "@/components/ui/MenuBar/MenuBar";
 import { Provider } from "@/components/ui/provider"
@@ -17,27 +17,28 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   useEffect(() => {
     const loadData = async () => {
-        if (isDrawerOpen) return; // не грузим каталог, если корзина открыта
+      if (!router.isReady) return;
+      if (isDrawerOpen) return; // не грузим каталог, если корзина открыта
 
-        const pathSegments = router.asPath.split("/").filter(Boolean);
-        const categoryKey = pathSegments[1] || 'kitchen';
+      const pathSegments = router.asPath.split("/").filter(Boolean);
+      const categoryKey = pathSegments[1] || 'kitchen';
 
-        try {
-            await catalogueStore.initializeBasket(); // Ждем инициализации корзины
-            await catalogueStore.loadInitialData(categoryKey); // Загружаем данные
-        } catch (error) {
-            console.error("Ошибка при загрузке данных:", error);
-        }
+      try {
+        await catalogueStore.initializeBasket(); // Ждем инициализации корзины
+        await catalogueStore.loadInitialData(categoryKey); // Загружаем данные
+      } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
+      }
     };
 
     loadData();
-}, [router.asPath, isDrawerOpen]);
+  }, [router.asPath, isDrawerOpen,router.isReady]);
 
   const handleOpenDrawer = () => setisDrawerOpen(true);
   const handleCloseDrawer = () => {
-  console.log("handleCloseDrawer вызван");
-  setisDrawerOpen(false);
-};
+    console.log("handleCloseDrawer вызван");
+    setisDrawerOpen(false);
+  };
 
 
   return (
@@ -45,9 +46,9 @@ const App = ({ Component, pageProps }: AppProps) => {
       <ThemeProvider>
         <Provider>
           <CartProvider>
-            <MainLayout 
-              isDrawerOpen={isDrawerOpen} 
-              onOpenDrawer={handleOpenDrawer} 
+            <MainLayout
+              isDrawerOpen={isDrawerOpen}
+              onOpenDrawer={handleOpenDrawer}
               onCloseDrawer={handleCloseDrawer}
             >
               <MenuBar />
