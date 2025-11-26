@@ -37,7 +37,7 @@ interface ModalCallProps {
 }
 type Variant = 'positive' | 'negative'; // пример типа Variant
 const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) => {
-  const{isDarkMode}=useTheme()
+  const { isDarkMode } = useTheme()
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isShowAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -45,16 +45,17 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
 
   const onFormSubmit = (data: InitialState) => {
     console.log('Форма отправлена', data);
-    setNewForm(false);
+    setNewForm(false);// говорит родительскому компоненту (через переданный prop-функцию), что форму больше не нужно показывать (например, закрывает модальное окно с формой)
   };
 
   const { formData, errors, handleChange, handleSubmit, resetForm } = useForm(
     {
-            name: "",
-            phone:"",
-            
-        },
-    onFormSubmit,  { passwordRequired: false, confirmationRequired: false} 
+      name: "",
+      phone: "",//Имеем дело с этой формой
+
+    },
+    onFormSubmit, //передаётся в хук useForm для setNewState
+    { passwordRequired: false, confirmationRequired: false }//в данной форме эти свойства не нужны
   );
 
   // Управление открытием/закрытием диалога
@@ -76,11 +77,11 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('pointerdown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('pointerdown', handleClickOutside);
     };
   }, [isOpen, onClose, resetForm]);
 
@@ -97,12 +98,11 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
     const isSuccess = await handleSubmit(e);
 
     if (isSuccess) {
-      localStorage.setItem("userData", JSON.stringify(formData));
+      // localStorage.setItem("formData", JSON.stringify(formData));
       setAlertMessage("Вам перезвонят в течении 30 минут");
       setAlertVariant('positive');
       setShowAlert(true);
-      resetForm();
-
+      // resetForm();
       setTimeout(() => {
         setShowAlert(false);
         onClose();
@@ -122,7 +122,7 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
   if (!isOpen) return null;
 
   return (
-    <div className={styles['modalCall-bg']}>
+    <div className={styles['modalCall-overlay']}>
       <dialog
         ref={dialogRef}
         className={styles.dialog}
@@ -135,7 +135,7 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
         }}
       >
         <form onSubmit={handleFormSubmit} method="dialog">
-          <div className={`${styles['modalCall-frame']} ${isDarkMode?'bg-dark': 'bg-lght'}`}>
+          <div className={`${styles['modalCall-frame']} ${isDarkMode ? 'bg-dark' : 'bg-lght'}`}>
             <div className={styles['modalCall-header']}>
               <h3 className={styles['modalCall-title']}>Заказать звонок</h3>
               <button
@@ -157,7 +157,7 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
               </button>
             </div>
 
-            <div className={styles['modalCall-largeContainer']}></div>
+            {/* <div className={styles['modalCall-largeContainer']}></div> */}
 
             <div className={styles['modalCall-containerMiddle']}>
               <div className={styles['modalCall-containerSmall']}>
@@ -185,9 +185,9 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
                 label="Name"
                 type="text"
                 name="name"
-                value={formData.name  ?? ""}
+                value={formData.name ?? ""}
                 onChange={handleChange}
-                error={errors.name }
+                error={errors.name ?? ''}
               />
 
               <Input
@@ -195,9 +195,9 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
                 label="Телефон"
                 type="tel"
                 name="phone"
-                value={formData.phone ?? "" }
+                value={formData.phone ?? ""}
                 onChange={handleChange}
-                error={errors.phone }
+                error={errors.phone ??''}
               />
 
               <Button type="submit" variant="secondary" className={styles.button}>
@@ -213,7 +213,7 @@ const ModalCall: React.FC<ModalCallProps> = ({ isOpen, onClose, setNewForm }) =>
                 </Alert>
               )}
               <p className={styles['modalCall-text']}>
-                Отправляя форму, я даю свое согласие 
+                Отправляя форму, я даю свое согласие
                 на обработку моих персональных данных.
               </p>
             </div>
