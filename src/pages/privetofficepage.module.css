@@ -1,5 +1,6 @@
 .container {
     display: flex;
+    padding: 1rem;
     margin-top: 24px; /* mt-6 */
     width: 100%;
     
