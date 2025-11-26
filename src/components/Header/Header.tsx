@@ -57,6 +57,10 @@ const Header: React.FC<HeaderProps> = ({ isDrawerOpen, onOpenDrawer, onCloseDraw
 
   const handleSetNewForm = (value: boolean) => {
     setNewFormState(value);
+    //    if (value) {  // Только при успехе
+  //   setEntryModalOpen(false);  // Закрываем модалку -  альтернатива на перспективу
+  // }
+  // При ошибке оставить открытой для исправлений
   };
 
   const handleOpenModal = () => {
