@@ -7,7 +7,7 @@ export interface ProductItem {
   color: string | string[];
   price: string ;
   imgSrc: string;
-  quantity: number;
+  quantity?: number;
 }
 export interface CatalogueItem {
   uid: string;
@@ -74,6 +74,11 @@ export interface UserData {
   id?: string;
   name: string;
   email: string;
+  password: string;
+  phone?: string;    // Добавьте опциональное поле, если нужно
   // добавьте другие поля по необходимости
 }
-
+import type { ParsedUrlQuery } from 'querystring';
+export interface CategoryQuery extends ParsedUrlQuery {
+  slug?: string | string[];  // slug может быть строкой или массивом (для [...slug])
+}
