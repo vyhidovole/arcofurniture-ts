@@ -65,3 +65,7 @@
     width: 100%;
     aspect-ratio: 550 / 285;
 }
+.error {
+  color: red;
+  font-weight: bold;
+}
