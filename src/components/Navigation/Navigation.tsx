@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import Link from 'next/link';
 import { useLoading } from '@/context/LoadingContext';
 import { useTheme } from '@/context/ThemeContext';
 import styles from './Navigation.module.css';
@@ -62,17 +63,16 @@ const Navigation: React.FC = () => {
             navItems.slice(0, 5).map((item) => {
               const isActive = item.name === activeLink;
               return (
-                <a
-                  key={item.path}
-                  onClick={() => onClickHandler(item.name, item.path)}
-                  className={`${styles.navLink} ${styles.relative} ${styles.cursorPointer} 
-                  ${styles.underlineAnimation} ${isActive ? `${styles.textSky500}
-                   ${styles.active}` : styles.textGray800
-                    }`}
-                  tabIndex={0}
-                >
-                  {item.name}
-                </a>
+               <Link
+      key={item.path}
+      href={item.path}
+      onClick={() => onClickHandler(item.name, item.path)}
+      className={`${styles.navLink} ${styles.relative} ${styles.cursorPointer} 
+        ${styles.underlineAnimation} ${isActive ? `${styles.textSky500} ${styles.active}` : styles.textGray800}`}
+      tabIndex={0}
+    >
+      {item.name}
+    </Link>
               );
             })
           )}
