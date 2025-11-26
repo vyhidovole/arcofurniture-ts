@@ -4,10 +4,10 @@ import { useLoading } from '@/context/LoadingContext'; // Импортируйт
 import { useTheme } from '@/context/ThemeContext'
 import Skeleton from 'react-loading-skeleton';
 import Image from "next/image";
-// import { WorkItem } from "@/types/types";
 import { observer } from 'mobx-react-lite'; // или 'mobx-react'
 import 'react-loading-skeleton/dist/skeleton.css';
 import styles from './work.module.css'; // Импортируйте ваш CSS-модуль
+
 
 
 /**
@@ -22,64 +22,55 @@ import styles from './work.module.css'; // Импортируйте ваш CSS-�
  */
 
 const Work = observer(() => {
-    const { loading, setLoading } = useLoading();
-    const [errorMessage, setErrorMessage] = useState('');
-    const { isDarkMode } = useTheme();
+    const { loading, setLoading } = useLoading()
+    const [errorMessage, setErrorMessage] = useState('')
+    const { isDarkMode } = useTheme()
 
     useEffect(() => {
-        console.log('Начинаем загрузку данных...');
-
-        setLoading(true);
-        setErrorMessage(''); // Сброс сообщения об ошибке перед новым запросом
+        setLoading(true)
+        setErrorMessage('')
 
         const fetchData = async () => {
             try {
-                const apiUrl = '/api/works';
-                console.log('Делаем запрос к', apiUrl);
+                const apiUrl = '/api/works'
+                const response = await fetch(apiUrl)
                 
-                
-                const response = await fetch(apiUrl);
-
-                console.log('Статус ответа:', response.status, response.statusText);
-                console.log('Заголовки:', Object.fromEntries(response.headers.entries()));
-
-                const text = await response.text();
-                console.log('Текст ответа (первые 200 символов):', text.substring(0, 200) + '...');
-
                 if (!response.ok) {
-                    throw new Error(`Ошибка HTTP: ${response.status}`);
+                    throw new Error(`Ошибка HTTP ${response.status}:${response.statusText}`)
                 }
-
-                const contentType = response.headers.get('content-type') || '';
+                // Проверка content-type (опционально, но полезно для логов)
+                const contentType = response.headers.get('content-type') || ''
                 if (!contentType.includes('application/json')) {
-                    console.warn('Ответ не JSON, Content-Type:', contentType);
-                    console.warn('Текст ответа:', text);
-                    throw new Error('Ответ сервера не является JSON');
+                    console.warn('Ответ не JSON, Content-Type:', contentType)
+                    
+                    throw new Error('Ответ сервера не является JSON')
+
                 }
-
-                // Парсим JSON из уже полученного текста
-                const data = JSON.parse(text);
-
-                catalogueStore.getWorkItems(data);
+                // Автоматический парсинг в объект с помощью .json()
+                const data = await response.json()
+                console.log('Разобранные данные:', data);  // Для отладки
+                catalogueStore.getWorkItems(data)
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error('Ошибка при получении данных:', error);
-                    setErrorMessage('Ошибка при получении данных: ' + error.message);
-                } else {
-                    console.error('Неизвестная ошибка:', error);
-                    setErrorMessage('Неизвестная ошибка при получении данных.');
+                if (error instanceof SyntaxError) {
+                     // Если .json() не смог распарсить (не валидный JSON)
+                    console.error('Ошибка парсинга JSON:', error)
+                    setErrorMessage('Ошибка парсинга  данных:')
+                } else if(error instanceof Error) {
+                    console.error('Ошибка при получении данных:', error)
+                    setErrorMessage(`Ошибка при получении данных: ${error.message}`)
+                } else{
+                    console.error('Неизвестная ошибка:', error)
+                    setErrorMessage('Неизвестная ошибка при получении данных')
                 }
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
+        }
+        fetchData()
+    }, [setLoading])
 
-        fetchData();
-    }, [setLoading]);
-
-    const workItems = Array.isArray(catalogueStore.workItems) ? catalogueStore.workItems : [];
-
-    console.log('Работы:', workItems);
+    const workItems = Array.isArray(catalogueStore.workItems) ? catalogueStore.workItems : []
+    console.log('Работы', workItems)
 
     const renderData = workItems.map((item) => (
         <div key={item.id} className={styles.card}>
@@ -87,29 +78,29 @@ const Work = observer(() => {
                 src={item.imgSrc || '/images/inst.jpg'}
                 alt={item.id.toString()}
                 className={styles.image}
-                fill // вместо width/height → растягивается на 100% родителя
+                fill
                 sizes="(min-width: 1024px) 400px, 100vw"
                 style={{ objectFit: 'cover' }}
             />
         </div>
-    ));
+    ))
 
     return (
         <div className={`${styles.container} ${isDarkMode ? 'bg-dark' : 'bg-light'}`}>
             <h2 className={styles.title}>Наши работы</h2>
             {loading ? (
                 <div className={styles.skeleton}>
-                    <Skeleton height="100%" />
+                    <Skeleton height='100%' />
                 </div>
             ) : errorMessage ? (
-                <div className={styles.error}>{errorMessage}</div> // Отображаем сообщение об ошибке
+                <div className={styles.error}>{errorMessage}</div>
             ) : renderData.length > 0 ? (
                 renderData
             ) : (
-                <div>Нет доступных работ.</div>
+                <div>Нет доступных работ</div>
             )}
         </div>
     );
-});
+})
 
 export default Work;
