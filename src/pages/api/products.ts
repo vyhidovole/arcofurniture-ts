@@ -1,5 +1,4 @@
 //products.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -48,3 +47,7 @@ export default async function handler(
     res.status(500).json({ error: 'Ошибка сервера при загрузке продуктов' });
   }
 }
+//Эти файлы — это серверные хендлеры (serverless functions) в Next.js, расположенные в папке /pages/api/.
+//  Они обрабатывают HTTP-запросы от клиента (например, из браузера) и возвращают данные в формате JSON.
+//  Основная цель — обеспечить CORS (Cross-Origin Resource Sharing), безопасность (только GET-запросы) и обработку ошибок,
+//  чтобы приложение могло работать в различных средах (локально или на сервере).
