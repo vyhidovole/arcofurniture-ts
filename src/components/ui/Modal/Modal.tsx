@@ -17,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className={`${styles['modal-bg']} }`}
+      className={`${styles['modal-bg']}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -25,7 +25,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       }}
     >
       <div
-        className={`${styles['modal-frame']} `}
+        className={styles['modal-frame']}
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles['modal-header']}>
