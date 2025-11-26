@@ -94,56 +94,56 @@ const validators: ValidatorProps = {
  * @returns {Object} - Объект с сообщениями об ошибках для каждого поля формы.
  */
 export function validateForm(
-  data: Partial<InitialState>,
-  options: { passwordRequired: boolean }
+  formData: Partial<InitialState>,
+  options: { passwordRequired: boolean; confirmationRequired: boolean }
 ): Record<string, string> {
   const errors: Record<string, string> = {};
 
   // Валидация name с использованием существующего валидатора и дополнительными проверками
-  if ('name' in data && data.name !== undefined) {
-    const baseError = validators.name(data.name);
+  if ('name' in formData && formData.name !== undefined) {
+    const baseError = validators.name(formData.name);
     if (baseError !== null) {  // Явная проверка на null
       errors.name = baseError;  // Теперь baseError - string
-    } else if (data.name.trim() === '') {
+    } else if (formData.name.trim() === '') {
       errors.name = 'Имя обязательно';
-    } else if (data.name.trim().length <= 1 || !/^[A-Za-zА-Яа-яЁё]+$/.test(data.name)) {
+    } else if (formData.name.trim().length <= 1 || !/^[A-Za-zА-Яа-яЁё]+$/.test(formData.name)) {
       errors.name = 'Имя должно содержать более одной буквы и состоять только из букв';
     }
   }
 
   // Валидация email с использованием существующего валидатора
-  if ('email' in data && data.email !== undefined) {
-    const baseError = validators.email(data.email);
+  if ('email' in formData && formData.email !== undefined) {
+    const baseError = validators.email(formData.email);
     if (baseError !== null) {  // Явная проверка на null
       errors.email = baseError;  // Теперь baseError - string
-    } else if (data.email.trim() === '') {
+    } else if (formData.email.trim() === '') {
       errors.email = 'Email обязателен';
     }
   }
 
   // Валидация phone с использованием существующего валидатора
-  if ('phone' in data && data.phone !== undefined) {
-    const baseError = validators.phone(data.phone);
+  if ('phone' in formData && formData.phone !== undefined) {
+    const baseError = validators.phone(formData.phone);
     if (baseError !== null) {  // Явная проверка на null
       errors.phone = baseError;  // Теперь baseError - string
     }
   }
 
   // Валидация password с использованием существующего валидатора и опциями
-  if ('password' in data && data.password !== undefined) {
-    const baseError = validators.password(data.password);
+  if ('password' in formData && formData.password !== undefined) {
+    const baseError = validators.password(formData.password);
     if (baseError !== null) {  // Явная проверка на null
       errors.password = baseError;  // Теперь baseError - string
-    } else if (options.passwordRequired && data.password.trim() === '') {
+    } else if (options.passwordRequired && formData.password.trim() === '') {
       errors.password = 'Пароль обязателен';
-    } else if (data.password.trim().length < 8) {
+    } else if (formData.password.trim().length < 8) {
       errors.password = 'Пароль должен быть не менее 8 символов';
     }
   }
 
   // Валидация confirmation с использованием нового валидатора
-  if ('confirmation' in data) {
-    const baseError = validators.confirmation(data.confirmation, data);  // Теперь типы совпадают
+  if ('confirmation' in formData) {
+    const baseError = validators.confirmation(formData.confirmation, formData);  
     if (baseError !== null) {  // Явная проверка на null
       errors.confirmation = baseError;  // Теперь baseError - string
     }
