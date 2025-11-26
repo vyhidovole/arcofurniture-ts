@@ -40,7 +40,7 @@ const Product: React.FC<ProductProps> = observer(({ item }) => {
   };
 
   const numericPrice = parseFloat(item.price); // Преобразуем в число
-  const total = Number((numericPrice * quantity).toFixed(2));
+  const total = Number((numericPrice * quantity).toFixed(2));//Преобразуем в число после .toFixed(2) через Number
 
 
 
@@ -83,8 +83,12 @@ const Product: React.FC<ProductProps> = observer(({ item }) => {
           >
             -
           </button>
-          <h3 className={styles["product-count"]}>{quantity}</h3> {/* Счетчик */}
-          <button className={styles["product-add"]} onClick={handleIncrement}>
+          <h3 className={styles["product-count"]}>
+            {quantity}
+            </h3> {/* Счетчик */}
+          <button 
+          className={styles["product-add"]}
+          onClick={handleIncrement}>
             +
           </button>
         </div>
