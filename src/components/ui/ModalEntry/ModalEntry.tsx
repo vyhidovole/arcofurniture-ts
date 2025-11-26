@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useTheme } from '@/context/ThemeContext';
 import Link from "next/link";
-import Alert,{ Variant } from "../Alert/Alert";
+import Alert, { Variant } from "../Alert/Alert";
 import useForm, { InitialState } from "@/hooks/useForm";
 import Input from "../Input/Input";
 import Button from "../Button/Button"
@@ -34,12 +34,12 @@ import styles from "./ModalEntry.module.css"
 interface ModalEntryProps {
     show: boolean
     onClose: () => void
-    setNewForm: (value:boolean) => void
+    setNewForm: (value: boolean) => void
 }
 const ModalEntry: React.FC<ModalEntryProps> = ({ show, onClose, setNewForm }) => {
-    const onFormSubmit = (data: InitialState) => {
-        console.log('Форма отправлена',data)
-        setNewForm(false)
+    const onFormSubmit = (data: Partial<InitialState>) => {
+        console.log('Форма отправлена', data)
+        setNewForm(false)// говорит родительскому компоненту (через переданный prop-функцию 'setNewState'в хуке), что форму больше не нужно показывать (например, закрывает модальное окно с формой)
     }
     const { isDarkMode } = useTheme(); // Получаем доступ к теме
     const { formData, errors, handleChange, handleSubmit, resetForm } = useForm(
@@ -60,44 +60,31 @@ const ModalEntry: React.FC<ModalEntryProps> = ({ show, onClose, setNewForm }) =>
 
     useEffect(() => {
         // Обработчик для клика по документу (нужно для закрытия модального окна при клике вне диалога)
-    const handleDocumentClick = (e: MouseEvent) => {
-        if (
-            dialogRef.current &&
-            e.target instanceof Node &&
-            !dialogRef.current.contains(e.target)
-        ) {
-            resetForm()
-            onClose()
-        }
-    }
-        if (dialogRef.current) {
-            if (show) {
-                dialogRef.current.show();
-                document.addEventListener("mousedown", handleDocumentClick);
-            } else {
-                dialogRef.current.close();
-                document.removeEventListener("mousedown", handleDocumentClick);
+        const handleDocumentClick = (e: MouseEvent) => {
+            if (
+                dialogRef.current && // Проверяем, что диалог существует
+                e.target instanceof Node && // Убеждаемся, что target — DOM-узел
+                !dialogRef.current.contains(e.target) // Проверяем, что клик НЕ внутри диалога
+            ) {
+                resetForm()
+                onClose()
             }
-
         }
-
-
+        if (dialogRef.current) {
+            if (show && !dialogRef.current.open) {
+                dialogRef.current.show();
+                document.addEventListener('pointerdown', handleDocumentClick);
+            } else if (!show && dialogRef.current.open) {
+                dialogRef.current.close();
+                document.removeEventListener('pointerdown', handleDocumentClick);
+            }
+        }
         return () => {
-            document.removeEventListener("mousedown", handleDocumentClick);
+            document.removeEventListener('pointerdown', handleDocumentClick);
         };
-    }, [show,resetForm, onClose]);
+    }, [show, resetForm, onClose]);
 
-    // Обработчик события для закрытия диалогового окна
-    const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        // Check if the click target is not the dialog or its children
-        if (dialogRef.current && e.target instanceof Node && !dialogRef.current.contains(e.target)) {
-            // Очищаем поля
-            resetForm();
-            onClose(); // Close the modal
-        }
-    };
 
-    
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // Устанавливаем состояние загрузки перед отправкой
@@ -107,7 +94,7 @@ const ModalEntry: React.FC<ModalEntryProps> = ({ show, onClose, setNewForm }) =>
         const isSuccess = await handleSubmit(e);
 
         if (isSuccess) {
-            localStorage.setItem("userData", JSON.stringify(formData));
+           
             setAlertMessage("Регистрация прошла успешно.");
             setAlertVariant('positive');
             setShowAlert(true);
@@ -137,23 +124,20 @@ const ModalEntry: React.FC<ModalEntryProps> = ({ show, onClose, setNewForm }) =>
     const handleCloseAlert = () => {
         setShowAlert(false);
     };
-    const isFormValid = Object.keys(errors).length === 0 && formData.name && formData.email && formData.password;
+    const isFormValid = Object.keys(errors).length === 0 && formData.name && formData.email && formData.password;//`formData.name && formData.email && formData.password` — Все поля (имя, email и пароль) должны быть заполнены (не пустые строки или null).
 
 
-    console.log("Form Data:", formData);
-    console.log("Errors:", errors);
-    console.log("Is Form Valid:", isFormValid);
-if (!show) return null;
+    if (!show) return null;
 
     return (
         <div
-            className={`${styles['modalEntry-bg']} ${show ? styles.block : styles.hidden}`}
-            onClick={handleBackgroundClick} // Добавляем обработчик клика
+            className={`${styles['modalEntry-overlay']} ${show ? styles.block : styles.hidden}`}
+
         >
             <dialog ref={dialogRef} className={styles.dialogEntry}>
                 <form onSubmit={handleFormSubmit} method="dialog">
                     <div
-                        className={`${styles['modalEntry-frame']} ${isDarkMode ? styles.dark :styles.light}`}
+                        className={`${styles['modalEntry-frame']} ${isDarkMode ? styles.dark : styles.light}`}
                         onClick={(e) => e.stopPropagation()} // Останавливаем всплытие клика на модалке
                     >
                         {/* Заголовок Модального окна */}
@@ -167,9 +151,9 @@ if (!show) return null;
                             label="Name"
                             type="text"
                             name="name"
-                            value={formData.name??''}
+                            value={formData.name ?? ''}
                             onChange={handleChange}
-                            error={errors.name}
+                            error={errors.name ?? ''}
                         />
 
                         <Input
@@ -177,9 +161,9 @@ if (!show) return null;
                             label="Email"
                             type="email"
                             name="email"
-                            value={formData.email??''}
+                            value={formData.email ?? ''}
                             onChange={handleChange}
-                            error={errors.email}
+                            error={errors.email ?? ''}
                         />
 
                         <Input
@@ -187,10 +171,9 @@ if (!show) return null;
                             label="Password"
                             type="password"
                             name="password"
-                            value={formData.password??''}
+                            value={formData.password ?? ''}
                             onChange={handleChange}
-                            // onBlur={handleBlur} // Используем обработчик из useForm
-                            error={errors.password}
+                            error={errors.password ?? ''}
                         />
                         <Link href="/forgot-password" className={styles.linkPassword} onClick={onClose}>
                             <p>Забыли пароль?</p>
