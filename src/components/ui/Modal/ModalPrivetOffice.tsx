@@ -54,7 +54,7 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState, isSp
         const isSuccess = await handleSubmit(e);
 
         if (isSuccess) {
-            localStorage.setItem('userData', JSON.stringify(formData));
+            // localStorage.setItem('userData', JSON.stringify(formData));
             setShowAlert(true);
             resetForm();
             setAlertMessage("Регистрация прошла успешно.");
@@ -89,7 +89,7 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState, isSp
                         name="name"
                         value={formData.name ?? ''}
                         onChange={handleChange}
-                        error={errors.name}
+                        error={errors.name??''}
                         isSpecial={isSpecial}  // Передаём проп в Input
                     />
                 </div>
@@ -101,7 +101,7 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState, isSp
                         name="email"
                         value={formData.email ?? ''}
                         onChange={handleChange}
-                        error={errors.email}
+                        error={errors.email??''}
                         isSpecial={isSpecial}  // Передаём проп в Input
                     />
                 </div>
@@ -113,12 +113,12 @@ const ModalPrivetOffice: React.FC<ModalPrivetOfficeProps> = ({ setNewState, isSp
                         name="password"
                         value={formData.password ?? ''}
                         onChange={handleChange}
-                        error={errors.password}
+                        error={errors.password??''}
                        isSpecial={isSpecial}  // Передаём проп в Input
                     />
                 </div>
                 <Link href="/forgot-password" className={styles.link}>
-                    <p className={`${`${styles['forgot-password']}`} ${isDarkMode ? 'bg-dark' : 'bg-lght'}`}>Забыли пароль?</p>
+                    <p className={`${styles['forgot-password']} ${isDarkMode ? 'bg-dark' : 'bg-lght'}`}>Забыли пароль?</p>
                 </Link>
                 <Button
                     type="submit"
