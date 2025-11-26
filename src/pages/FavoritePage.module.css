@@ -1,8 +1,7 @@
 .container {
     display: flex;
     margin-top: 24px; /* mt-6 */
-    margin-left: 2rem;
-    padding-bottom: 2rem;
+    padding: 2rem;
 }
 
 .title {
