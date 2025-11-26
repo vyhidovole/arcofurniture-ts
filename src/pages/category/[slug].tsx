@@ -1,23 +1,23 @@
 //[slug].tsx
 import React from "react";
 import { useRouter } from 'next/router';
+import {CategoryQuery} from '@/types/types'
 import CategoryPageContent from '@/components/CategoryPageContent';
 
 
 const CategoryPage = () => {
   const router = useRouter();
-  const { slug } = router.query;
+  const { slug } = router.query as CategoryQuery;
 
   const categoryStr = !slug || Array.isArray(slug) ? "all" : slug;
 
   // Проверка готовности (важно для SSR/SSG)
-  // if (!router.isReady) {
-  //   return <div>Loading...</div>;  // Или скелетон
-  // }
+  if (!router.isReady) {
+    return <div>Loading...</div>;  // Или скелетон
+  }
 
   return (
     <div>
-      {/* <h1>Категория: {categoryStr}</h1> */}
       <CategoryPageContent category={categoryStr} />
     </div>
   );
@@ -35,5 +35,5 @@ export default CategoryPage;
         Затем categoryStr передаётся в <CategoryPageContent category={categoryStr} />.
     Что происходит: Страница не "рисует" напрямую {category.label} из массива categories. 
     Вместо этого она передаёт slug в компонент 
-    CategoryPageContent, который, вероятно, использует этот slug для отображения контента (включая название категории).
+    CategoryPageContent, который использует этот slug для отображения контента (включая название категории).
  */}
