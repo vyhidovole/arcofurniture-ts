@@ -15,7 +15,20 @@ import { ProductItem } from "@/types/types";
 interface CategoryPageContentProps {
   category: string;
 }
-
+/**
+ * Компонент CategoryPageContent отвечает за загрузку и отображение товаров выбранной категории.
+ * Использует MobX-стор catalogueStore для получения и отображения данных о товарах.
+ * Показывает skeleton-лоадеры в момент загрузки, поддерживает светлую и тёмную темы.
+ * При добавлении товара в корзину отображает всплывающее уведомление (Alert).
+ *
+ * @component
+ * @param {Object} props - Свойства компонента.
+ * @param {string} props.category - Название категории для фильтрации товаров.
+ * @returns {JSX.Element} Компонент страницы выбранной категории с товарами.
+ *
+ * @example
+ * <CategoryPageContent category="Кухни" />
+ */
 const CategoryPageContent: React.FC<CategoryPageContentProps> = observer(({ category }) => {
   const { loading, setLoading } = useLoading();
   const {isDarkMode} = useTheme()
