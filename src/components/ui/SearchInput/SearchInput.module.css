@@ -1,14 +1,15 @@
 .searchInput-container {
     position: relative;
 }
+
 @media (max-width:768px) {
-    .searchInput-container{
+    .searchInput-container {
         display: none;
     }
-    
+
 }
+
 .searchInput {
-    /* display: none; */
     border-radius: 0.25rem;
     padding: 0.25rem;
     width: 100%;
@@ -46,12 +47,12 @@
 .searchInput-result {
     padding: 0.5rem;
     cursor: pointer;
-   
+
 }
 
 .searchInput-result:hover {
     background-color: #E5E7EB;
-   
+
 }
 
 .searchInput-resultLink {
@@ -64,6 +65,7 @@
     padding: 0.5rem;
     /* 8px */
 }
+
 .darkContainer {
     background-color: #333333;
     color: #ffffff;
@@ -73,12 +75,13 @@
     background-color: #ffffff;
     color: #000000;
 }
+
 .darkInput {
-  background-color: #333333;
-  color: #ffffff;
+    background-color: #333333;
+    color: #ffffff;
 }
 
 .lightInput {
-  background-color: #ffffff;
-  color: #000000;
+    background-color: #ffffff;
+    color: #000000;
 }
