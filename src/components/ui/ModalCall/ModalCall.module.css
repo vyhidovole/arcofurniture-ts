@@ -1,4 +1,4 @@
-.modalCall-bg {
+.modalCall-overlay {
     position: fixed;
     inset: 0;
     background-color: black;
@@ -63,14 +63,14 @@ color: black;
     font-weight: 700;
 }
 
-.modalCall-largeContainer {
+/* .modalCall-largeContainer {
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: #d1d5db;
     padding-bottom: 0.5rem;
     width: 100%;
 
-}
+} */
 
 .modalCall-containerMiddle {
     display: flex;
