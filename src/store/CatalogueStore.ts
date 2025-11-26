@@ -12,23 +12,14 @@ function addUidToCatalogueItem(item: CatalogueItem): CatalogueItem & { uid: stri
   };
 }
 
-// function addUidToProductItem(
-//   item: Omit<ProductItem, "uid"> & Partial<Pick<ProductItem, "quantity">>
-// ): ProductItem {
-//   return {
-//     ...item,
-//     uid: nanoid(),
-//   };
-// }
+
 
 class CatalogueStore extends BaseStore {
   catalogueproducts: CatalogueItem[] = [];
   products: ProductItem[] = [];
   basket: ProductItem[] = [];
   workItems: WorkItem[] = []; // Инициализируем массив работ
-
   error: string | null = null;
-
   selectedCategory: string = "all";
 
   constructor() {
@@ -37,7 +28,7 @@ class CatalogueStore extends BaseStore {
     makeObservable(this, {
       catalogueproducts: observable,
       products: observable,
-       workItems: observable,
+      workItems: observable,
       basket: observable,
       selectedCategory: observable,
       error: observable,
@@ -52,7 +43,7 @@ class CatalogueStore extends BaseStore {
       clearProduct: action.bound,
       initializeBasket: action.bound,
       setSelectedCategory: action.bound,
-       getWorkItems:action.bound,
+      getWorkItems: action.bound,
     });
 
     // Автоматическое сохранение корзины в localStorage при изменениях
@@ -117,10 +108,7 @@ class CatalogueStore extends BaseStore {
       const response = await fetch("/db.json");
       if (!response.ok) throw new Error(`Ошибка HTTP: ${response.status}`);
       const data = await response.json();
-      console.log("Данные из db.json:", data); // Отладка
-
-
-      // Нормализуем ключ
+       // Нормализуем ключ
       const normalizedKey = normalizeCategory(categorySlug);
       let productsRaw;
       // Проверяем наличие ключа
@@ -132,7 +120,6 @@ class CatalogueStore extends BaseStore {
         console.warn(`Категория '${normalizedKey}' не найдена.`);
         productsRaw = []; // Устанавливаем пустой массив, если категория не найдена
       }
-      console.log("Продукты по категории:", productsRaw); // Отладка
       // Проверяем, есть ли продукты по данному slug
       if (!Array.isArray(productsRaw)) {
         console.warn(`Категория '${categorySlug}' не найдена или не содержит продуктов.`);
@@ -184,7 +171,7 @@ class CatalogueStore extends BaseStore {
         // Если товара нет, добавляем его в корзину с количеством 1
         this.basket.push({ ...product, quantity: 1 });
       }
-      // this.saveBasketToLocalStorage();
+
     });
   }
 
@@ -200,7 +187,7 @@ class CatalogueStore extends BaseStore {
         // Увеличиваем количество товара
         product.quantity = (product.quantity ?? 0) + 1;
       }
-      //  this.saveBasketToLocalStorage();
+      
     });
   }
 
@@ -218,7 +205,7 @@ class CatalogueStore extends BaseStore {
           this.deleteProductFromBasket(productId, productCategory); // Удаляем товар, если количество 1
         }
       }
-      //  this.saveBasketToLocalStorage();
+      
     });
   }
 
@@ -226,58 +213,48 @@ class CatalogueStore extends BaseStore {
     runInAction(() => {
       // Удаляем товар из корзины по id и category
       this.basket = this.basket.filter(
-        item => String(item.id) !== String(productId) || item.category !== productCategory
+        item => String(item.id) !== String(productId) || item.category !== productCategory//в новый массив (который станет корзиной) попадают все элементы, у которых либо id не совпадает с удаляемым, либо категория не совпадает с удаляемой. Только если одновременно совпадают и id, и категория (то есть это тот самый товар, который мы хотим удалить), элемент НЕ попадает в новый массив и, соответственно, удаляется из корзины.
       );
-      //  this.saveBasketToLocalStorage();
+      
     });
   }
 
 
   clearProduct(productId: string, productCategory: string) {
     this.deleteProductFromBasket(productId, productCategory);
-    //  this.saveBasketToLocalStorage();
+    
   }
 
-  initializeBasket(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (typeof window === "undefined" || !window.localStorage) {
-        return resolve(); // Если localStorage недоступен, просто завершаем
-      }
+   async initializeBasket(): Promise<void> {
+  if (typeof window === "undefined" || !window.localStorage) {
+    return;  // Просто возвращаем, Promise автоматически resolve'ится
+  }
 
-      const basketJson = localStorage.getItem("basket");
-      console.log("Загруженные товары из localStorage:", basketJson); // Логируем загруженные данные
-      if (!basketJson) return resolve();
+  const basketJson = localStorage.getItem("basket");
+  console.log("Загруженные товары из localStorage:", basketJson);
 
-      try {
-        const savedItems = JSON.parse(basketJson);
-        if (!Array.isArray(savedItems)) throw new Error("Сохраненные данные не являются массивом.");
+  if (!basketJson) return;
 
-        // Обновляем корзину, добавляя недостающие параметры из products
-        const updatedBasket = savedItems.map(savedItem => {
-          const product = this.products.find(p => p.id === savedItem.id && p.category === savedItem.category);
-          if (product) {
-            return {
-              ...product, // добавляем все параметры продукта
-              quantity: savedItem.quantity // сохраняем количество
-            };
-          }
-          return savedItem; // Если продукта нет, возвращаем сохраненный элемент
-        });
+  try {
+    const savedItems = JSON.parse(basketJson);
+    if (!Array.isArray(savedItems)) throw new Error("Сохраненные данные не являются массивом.");
 
-        runInAction(() => {
-          this.basket = updatedBasket; // Обновляем состояние корзины
-        });
-        resolve(); // Успешно завершено
-      } catch (e) {
-        console.error("Ошибка при загрузке корзины:", e);
-        reject(e); // Завершение с ошибкой
-      }
+    const updatedBasket = savedItems.map(savedItem => {
+      const product = this.products.find(p => p.id === savedItem.id && p.category === savedItem.category);
+      return product ? { ...product, quantity: savedItem.quantity } : savedItem;
     });
+
+    runInAction(() => {
+      this.basket = updatedBasket;
+    });
+  } catch (e) {
+    console.error("Ошибка при загрузке корзины:", e);
+    throw e;  // Переброс ошибки наружу (можно поймать в вызывающем коде)
   }
+}
 
 
-
-  // Метод для сохранения корзины в localStorage
+  // Метод для сохранения корзины в localStorage. В проекте не применяется(на перспективу).
   saveBasketToLocalStorage() {
     const basketToSave = this.basket.map(item => ({
       id: item.id,
@@ -298,38 +275,35 @@ class CatalogueStore extends BaseStore {
     })
 
   }
-   async getWorkItems(url: string) {
+  async getWorkItems(url: string) {
     console.log(`Вызван getWorkItems с URL: ${url}`);
     try {
-        const response = await fetch('/api/works');
-        console.log('Запрос выполнен, проверяем статус...');
-        console.log('Статус ответа:', response.status);
-        
-        if (!response.ok) {
-            throw new Error(`Ошибка HTTP: ${response.status}`);
-        }
+      const response = await fetch('/api/works');
+      console.log('Запрос выполнен, проверяем статус...');
+      console.log('Статус ответа:', response.status);
 
-        // Получаем ответ как текст
-        const text = await response.text(); 
-        console.log('Ответ от сервера:', text); // Логируем текст ответа
+      if (!response.ok) {
+        throw new Error(`Ошибка HTTP: ${response.status}`);
+      }
 
-        // Проверяем, начинается ли ответ с { или [
-        if (text.trim().startsWith('{') || text.trim().startsWith('[')) {
-            const data = JSON.parse(text); 
-            console.log('Данные после парсинга:', data);
-            runInAction(() => {
-                this.workItems = Array.isArray(data) ? data : [];
-            });
-        } else {
-            console.error('Ответ не является JSON:', text);
-        }
+      // Получаем ответ как текст
+      const text = await response.text();
+      console.log('Ответ от сервера:', text); // Логируем текст ответа
+
+      // Проверяем, начинается ли ответ с { или [
+      if (text.trim().startsWith('{') || text.trim().startsWith('[')) {
+        const data = JSON.parse(text);
+        console.log('Данные после парсинга:', data);
+        runInAction(() => {
+          this.workItems = Array.isArray(data) ? data : [];
+        });
+      } else {
+        console.error('Ответ не является JSON:', text);
+      }
     } catch (error) {
-        console.error("Ошибка при загрузке работ:", error);
+      console.error("Ошибка при загрузке работ:", error);
     }
-}
-
-
-
+  }
 }
 
 const catalogueStore = new CatalogueStore();
